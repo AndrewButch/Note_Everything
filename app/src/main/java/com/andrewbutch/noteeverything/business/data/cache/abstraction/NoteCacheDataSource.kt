@@ -1,6 +1,6 @@
 package com.andrewbutch.noteeverything.business.data.cache.abstraction
 
-import com.andrewbutch.noteeverything.business.model.Note
+import com.andrewbutch.noteeverything.business.domain.model.Note
 
 interface NoteCacheDataSource {
 

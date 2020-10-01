@@ -1,4 +1,4 @@
-package com.andrewbutch.noteeverything.business.model
+package com.andrewbutch.noteeverything.business.domain.model
 
 
 data class NoteList(

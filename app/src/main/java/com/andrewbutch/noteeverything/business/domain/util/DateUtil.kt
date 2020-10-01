@@ -1,4 +1,4 @@
-package com.andrewbutch.noteeverything.business.util
+package com.andrewbutch.noteeverything.business.domain.util
 
 import android.util.Log
 import com.google.firebase.Timestamp

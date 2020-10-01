@@ -1,4 +1,4 @@
-package com.andrewbutch.noteeverything.business.model
+package com.andrewbutch.noteeverything.business.domain.model
 
 object ModelConstants {
     const val COLOR: String = "#fff"

@@ -1,4 +1,4 @@
-package com.andrewbutch.noteeverything.business.model
+package com.andrewbutch.noteeverything.business.domain.model
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize

@@ -1,6 +1,6 @@
-package com.andrewbutch.noteeverything.business.model
+package com.andrewbutch.noteeverything.business.domain.model
 
-import com.andrewbutch.noteeverything.business.util.DateUtil
+import com.andrewbutch.noteeverything.business.domain.util.DateUtil
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
