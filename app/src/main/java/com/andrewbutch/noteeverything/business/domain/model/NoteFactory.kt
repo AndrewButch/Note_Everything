@@ -17,12 +17,12 @@ constructor(
         id: String? = null,
         title: String,
         checked: Boolean = false,
-        color: String = ModelConstants.COLOR,
+        color: String? = null,
     ) = Note(
         id = id ?: UUID.randomUUID().toString(),
         title = title,
         checked = checked,
-        color = color,
+        color = color ?: ModelConstants.COLOR,
         createdAt = dateUtil.getCurrentTimestamp(),
         updatedAt = dateUtil.getCurrentTimestamp()
     )
