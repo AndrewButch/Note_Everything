@@ -23,10 +23,11 @@ class InsertNewNote(
         id: String? = null,
         title: String,
         color: String? = null,
+        ownerListId: String,
         stateEvent: StateEvent
     ): Flow<DataState<NoteListViewState>?> = flow {
 
-        val newNote = noteFactory.createNote(id, title, false, color)
+        val newNote = noteFactory.createNote(id, title, false, color, ownerListId)
 
         val cacheResult = safeCacheCall(Dispatchers.IO) {
             noteCacheDataSource.insertNote(newNote)

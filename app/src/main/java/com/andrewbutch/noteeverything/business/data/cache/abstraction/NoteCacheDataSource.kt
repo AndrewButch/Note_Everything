@@ -6,22 +6,22 @@ interface NoteCacheDataSource {
 
     suspend fun insertNote(note: Note): Long
 
-    suspend fun deleteNote(primaryKey: String): Int
+    suspend fun deleteNote(id: String): Int
 
     suspend fun deleteNotes(notes: List<Note>): Int
 
     suspend fun updateNote(
-        primaryKey: String,
+        id: String,
         newTitle: String,
-        isChecked: Boolean,
+        completed: Boolean,
         newColor: String
     ): Int
 
-    suspend fun searchNotes(
-        query: String,
-        filterAndOrder: String,
-        page: Int
-    ): List<Note>
+//    suspend fun searchNotes(
+//        query: String,
+//        filterAndOrder: String,
+//        page: Int
+//    ): List<Note>
 
     suspend fun getAllNotes(): List<Note>
 
