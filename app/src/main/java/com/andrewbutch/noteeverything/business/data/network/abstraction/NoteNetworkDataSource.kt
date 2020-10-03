@@ -8,7 +8,7 @@ interface NoteNetworkDataSource{
 
     suspend fun insertOrUpdateNotes(notes: List<Note>)
 
-    suspend fun deleteNote(primaryKey: String)
+    suspend fun deleteNote(id: String)
 
     suspend fun deleteAllNotes()
 
