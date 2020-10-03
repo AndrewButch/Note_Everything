@@ -6,13 +6,13 @@ interface NoteListCacheDataSource {
 
     suspend fun insertNoteList(noteList: NoteList): Long
 
-    suspend fun updateNoteList(title: String, color: String): Int
+    suspend fun updateNoteList(id: String, newTitle: String, newColor: String): Int
 
-    suspend fun deleteNoteList(id: String)
+    suspend fun deleteNoteList(id: String): Int
 
-    suspend fun deleteAllNoteLists()
+    suspend fun deleteAllNoteLists(): Int
 
-    suspend fun searchNoteListById(id: String)
+    suspend fun searchNoteListById(id: String): NoteList?
 
     suspend fun getAllNoteLists(): List<NoteList>
 
