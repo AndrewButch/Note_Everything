@@ -9,9 +9,9 @@ import java.util.*
 
 class DateUtilTest {
     private val dateFormat: SimpleDateFormat =
-        SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.ENGLISH)
+        SimpleDateFormat("dd.MM.yyyy hh:mm:ss", Locale.ENGLISH)
     private val dateUtil = DateUtil(dateFormat)
-    private val stringDate = "2020-10-03 10:36:26"
+    private val stringDate = "03.10.2020 10:36:26"
     private val secondsInDate = 1601710586L
 
     @Test
@@ -30,7 +30,7 @@ class DateUtilTest {
 
     @Test
     fun `remove time from date string`() {
-        val correct = "2020-10-03"
+        val correct = "03.10.2020"
         assertEquals(correct, dateUtil.removeTimeFromDateString(stringDate))
     }
 }
