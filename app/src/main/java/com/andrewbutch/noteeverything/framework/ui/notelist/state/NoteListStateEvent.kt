@@ -21,4 +21,20 @@ sealed class NoteListStateEvent : StateEvent {
 
         override fun shouldDisplayProgressBar() = true
     }
+
+    class InsertNewNoteListEvent(
+        val title: String,
+        val color: String,
+    ): NoteListStateEvent() {
+
+        override fun errorInfo(): String {
+            return "Error inserting new note list."
+        }
+
+        override fun eventName(): String {
+            return "InsertNewNoteListEvent"
+        }
+
+        override fun shouldDisplayProgressBar() = true
+    }
 }

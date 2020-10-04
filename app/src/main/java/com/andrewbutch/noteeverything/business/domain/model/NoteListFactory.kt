@@ -16,12 +16,12 @@ constructor(
     fun createNoteList(
         id: String? = null,
         title: String,
-        color: String = ModelConstants.COLOR,
+        color: String? = null,
         notes: List<Note>? = null
     ) = NoteList(
         id = id ?: UUID.randomUUID().toString(),
         title = title,
-        color = color,
+        color = color ?: ModelConstants.COLOR,
         created_at = dateUtil.getCurrentTimestamp(),
         updated_at = dateUtil.getCurrentTimestamp(),
         notes = notes ?: ArrayList()
