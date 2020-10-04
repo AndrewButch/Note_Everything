@@ -14,7 +14,8 @@ interface NoteCacheDataSource {
         id: String,
         newTitle: String,
         completed: Boolean,
-        newColor: String
+        newColor: String,
+        timestamp: String?
     ): Int
 
 //    suspend fun searchNotes(

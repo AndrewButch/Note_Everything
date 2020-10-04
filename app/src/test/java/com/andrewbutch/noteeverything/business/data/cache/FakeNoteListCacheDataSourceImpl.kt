@@ -19,7 +19,12 @@ class FakeNoteListCacheDataSourceImpl(
         }
     }
 
-    override suspend fun updateNoteList(id: String, newTitle: String, newColor: String): Int {
+    override suspend fun updateNoteList(
+        id: String,
+        newTitle: String,
+        newColor: String,
+        timestamp: String?
+    ): Int {
         return when (id) {
             FORCE_UPDATE_NOTE_LIST_EXCEPTION -> throw Exception(FORCE_UPDATE_NOTE_LIST_EXCEPTION)
             else -> {
@@ -30,7 +35,7 @@ class FakeNoteListCacheDataSourceImpl(
                         title = newTitle,
                         color = newColor,
                         created_at = oldNoteList.created_at,
-                        updated_at = dateUtil.getCurrentTimestamp(),
+                        updated_at = timestamp ?: dateUtil.getCurrentTimestamp(),
                         notes = oldNoteList.notes
                     )
                     data[id] = updatedNote

@@ -39,7 +39,8 @@ class FakeNoteCacheDataSourceImpl(
         id: String,
         newTitle: String,
         completed: Boolean,
-        newColor: String
+        newColor: String,
+        timestamp: String?
     ): Int {
         return when (id) {
             FORCE_UPDATE_NOTE_EXCEPTION -> throw Exception(FORCE_UPDATE_NOTE_EXCEPTION)
@@ -52,7 +53,7 @@ class FakeNoteCacheDataSourceImpl(
                         completed = oldNote.completed,
                         color = newColor,
                         createdAt = oldNote.createdAt,
-                        updatedAt = dateUtil.getCurrentTimestamp(),
+                        updatedAt = timestamp ?: dateUtil.getCurrentTimestamp(),
                         listId = oldNote.listId
                     )
                     data[id] = updatedNote
