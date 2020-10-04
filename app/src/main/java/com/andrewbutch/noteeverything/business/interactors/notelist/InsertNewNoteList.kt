@@ -1,4 +1,4 @@
-package com.andrewbutch.noteeverything.business.interactors
+package com.andrewbutch.noteeverything.business.interactors.notelist
 
 import com.andrewbutch.noteeverything.business.data.cache.CacheResultHandler
 import com.andrewbutch.noteeverything.business.data.cache.abstraction.NoteListCacheDataSource
