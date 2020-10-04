@@ -12,6 +12,7 @@ import com.andrewbutch.noteeverything.business.data.network.abstraction.NoteNetw
 import com.andrewbutch.noteeverything.business.domain.model.Note
 import com.andrewbutch.noteeverything.business.domain.model.NoteFactory
 import com.andrewbutch.noteeverything.business.domain.model.NoteList
+import com.andrewbutch.noteeverything.business.domain.model.NoteListFactory
 import com.andrewbutch.noteeverything.business.domain.util.DateUtil
 import java.text.SimpleDateFormat
 import java.util.*
@@ -25,6 +26,7 @@ class DependencyContainer {
     lateinit var noteListCacheDataSource: NoteListCacheDataSource
     lateinit var noteListNetworkDataSource: NoteListNetworkDataSource
     lateinit var noteFactory: NoteFactory
+    lateinit var noteListFactory: NoteListFactory
     lateinit var noteDataFactory: NoteDataFactory
 
     // data sets
@@ -46,6 +48,7 @@ class DependencyContainer {
             )
         }
         noteFactory = NoteFactory(dateUtil)
+        noteListFactory = NoteListFactory(dateUtil, noteFactory)
 
         noteNetworkDataSource = FakeNoteNetworkDataSourceImpl(
             data = notesData
