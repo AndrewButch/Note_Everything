@@ -48,7 +48,7 @@ class DependencyContainer {
             )
         }
         noteFactory = NoteFactory(dateUtil)
-        noteListFactory = NoteListFactory(dateUtil, noteFactory)
+        noteListFactory = NoteListFactory(dateUtil)
 
         noteNetworkDataSource = FakeNoteNetworkDataSourceImpl(
             data = notesData

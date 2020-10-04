@@ -37,4 +37,12 @@ constructor(
         }
         return list
     }
+
+    fun createNoteListIds(notes: List<Note>): List<String> {
+        val ids = ArrayList<String>()
+        for (note in notes) {
+            ids.add(note.id)
+        }
+        return ids
+    }
 }

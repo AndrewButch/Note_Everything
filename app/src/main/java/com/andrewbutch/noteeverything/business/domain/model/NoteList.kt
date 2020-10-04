@@ -10,5 +10,5 @@ data class NoteList(
     var color: String,
     val created_at: String,
     var updated_at: String,
-    var notes: List<Note>
+    var notes: ArrayList<String>
 ) : Parcelable

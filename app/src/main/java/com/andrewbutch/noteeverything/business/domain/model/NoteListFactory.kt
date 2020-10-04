@@ -11,13 +11,12 @@ class NoteListFactory
 @Inject
 constructor(
     private val dateUtil: DateUtil,
-    private val noteFactory: NoteFactory
 ) {
     fun createNoteList(
         id: String? = null,
         title: String,
         color: String? = null,
-        notes: List<Note>? = null
+        notes: ArrayList<String>? = null
     ) = NoteList(
         id = id ?: UUID.randomUUID().toString(),
         title = title,
@@ -32,8 +31,15 @@ constructor(
         val noteLists: ArrayList<NoteList> = ArrayList()
         for (i in 0 until noteListCount) {
             val noteList = createNoteList(title = UUID.randomUUID().toString())
-            noteList.notes = noteFactory.createNoteList(noteListCount,  noteList.id)
             noteLists.add(noteList)
         }
+    }
+
+    fun createNoteListWithNotes(notes: List<Note>): NoteList {
+        val noteList = createNoteList(title = UUID.randomUUID().toString())
+        for (i in notes.indices) {
+           noteList.notes.add(notes[i].id)
+        }
+        return noteList
     }
 }

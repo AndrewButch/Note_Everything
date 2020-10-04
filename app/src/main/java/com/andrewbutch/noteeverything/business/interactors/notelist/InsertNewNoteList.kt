@@ -5,7 +5,6 @@ import com.andrewbutch.noteeverything.business.data.cache.abstraction.NoteListCa
 import com.andrewbutch.noteeverything.business.data.network.abstraction.NoteListNetworkDataSource
 import com.andrewbutch.noteeverything.business.data.util.safeCacheCall
 import com.andrewbutch.noteeverything.business.data.util.safeNetworkCall
-import com.andrewbutch.noteeverything.business.domain.model.Note
 import com.andrewbutch.noteeverything.business.domain.model.NoteList
 import com.andrewbutch.noteeverything.business.domain.model.NoteListFactory
 import com.andrewbutch.noteeverything.business.domain.state.*
@@ -23,7 +22,7 @@ class InsertNewNoteList(
         id: String? = null,
         title: String,
         color: String? = null,
-        notes: List<Note>? = null,
+        notes: ArrayList<String>? = null,
         stateEvent: StateEvent
     ): Flow<DataState<NoteListViewState>?> = flow {
 
