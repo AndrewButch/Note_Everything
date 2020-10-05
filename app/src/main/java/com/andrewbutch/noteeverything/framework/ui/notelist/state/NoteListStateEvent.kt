@@ -1,5 +1,6 @@
 package com.andrewbutch.noteeverything.framework.ui.notelist.state
 
+import com.andrewbutch.noteeverything.business.domain.model.Note
 import com.andrewbutch.noteeverything.business.domain.state.StateEvent
 
 sealed class NoteListStateEvent : StateEvent {
@@ -33,6 +34,20 @@ sealed class NoteListStateEvent : StateEvent {
 
         override fun eventName(): String {
             return "InsertNewNoteListEvent"
+        }
+
+        override fun shouldDisplayProgressBar() = true
+    }
+
+    class DeleteNoteEvent(
+        val note: Note
+    ): NoteListStateEvent() {
+        override fun errorInfo(): String {
+            return "Error deleting note"
+        }
+
+        override fun eventName(): String {
+            return "DeleteNoteEvent"
         }
 
         override fun shouldDisplayProgressBar() = true
