@@ -52,13 +52,12 @@ class InsertNewNote(
                     )
                 } else {
                     // insert failure
-                    DataState.data(
+                    DataState.error(
                         stateMessage = StateMessage(
                             message = INSERT_NOTE_FAILED,
                             uiComponentType = UIComponentType.Toast,
                             messageType = MessageType.Error
                         ),
-                        data = null,
                         stateEvent = stateEvent
                     )
                 }
