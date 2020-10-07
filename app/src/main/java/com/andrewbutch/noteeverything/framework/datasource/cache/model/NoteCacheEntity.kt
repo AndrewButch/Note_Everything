@@ -2,9 +2,20 @@ package com.andrewbutch.noteeverything.framework.datasource.cache.model
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "notes")
+@Entity(
+    tableName = "notes",
+    foreignKeys = [
+        ForeignKey(
+            entity = NoteListCacheEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["listId"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ]
+)
 class NoteCacheEntity(
     @PrimaryKey(autoGenerate = false)
     val id: String,

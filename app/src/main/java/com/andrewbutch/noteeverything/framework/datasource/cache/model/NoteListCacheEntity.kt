@@ -16,6 +16,9 @@ data class NoteListCacheEntity(
 
     @ColumnInfo(name = "updated_at")
     var updatedAt: String,
+
+    var notes: List<NoteCacheEntity>
+
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
