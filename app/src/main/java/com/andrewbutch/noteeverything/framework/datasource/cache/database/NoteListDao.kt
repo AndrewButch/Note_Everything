@@ -1,7 +1,6 @@
 package com.andrewbutch.noteeverything.framework.datasource.cache.database
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import com.andrewbutch.noteeverything.framework.datasource.cache.model.NoteListCacheEntity
@@ -18,8 +17,8 @@ interface NoteListDao {
     @Query("SELECT * FROM note_lists")
     suspend fun getAllNoteLists(): List<NoteListCacheEntity>
 
-    @Delete
-    suspend fun deleteNoteList(noteList: NoteListCacheEntity)
+    @Query("DELETE FROM note_lists WHERE id = :id")
+    suspend fun deleteNoteList(id: String): Int
 
     @Query(
         """ 
@@ -30,7 +29,7 @@ interface NoteListDao {
       updated_at = :updatedAt 
       WHERE id = :id """
     )
-    suspend fun updateNote(
+    suspend fun updateNoteList(
         id: String,
         title: String,
         color: String?,
