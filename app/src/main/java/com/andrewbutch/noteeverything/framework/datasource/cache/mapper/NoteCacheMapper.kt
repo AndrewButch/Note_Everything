@@ -30,4 +30,20 @@ class NoteCacheMapper {
         )
     }
 
+    fun mapFromEntityList(entityList: List<NoteCacheEntity>): List<Note> {
+        val noteList: ArrayList<Note> = ArrayList()
+        for (entity in entityList) {
+            noteList.add(mapFromEntity(entity))
+        }
+        return noteList
+    }
+
+    fun mapToEntityList(notes: List<Note>): List<NoteCacheEntity> {
+        val noteEntityList: ArrayList<NoteCacheEntity> = ArrayList()
+        for (note in notes) {
+            noteEntityList.add(mapToEntity(note))
+        }
+        return noteEntityList
+    }
+
 }
