@@ -8,7 +8,7 @@ data class NoteList(
     val id: String,
     var title: String,
     var color: String,
-    val created_at: String,
-    var updated_at: String,
+    val createdAt: String,
+    var updatedAt: String,
     var notes: ArrayList<String>
 ) : Parcelable

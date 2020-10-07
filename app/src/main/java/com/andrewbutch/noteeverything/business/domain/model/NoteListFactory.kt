@@ -21,8 +21,8 @@ constructor(
         id = id ?: UUID.randomUUID().toString(),
         title = title,
         color = color ?: ModelConstants.COLOR,
-        created_at = dateUtil.getCurrentTimestamp(),
-        updated_at = dateUtil.getCurrentTimestamp(),
+        createdAt = dateUtil.getCurrentTimestamp(),
+        updatedAt = dateUtil.getCurrentTimestamp(),
         notes = notes ?: ArrayList()
     )
 
