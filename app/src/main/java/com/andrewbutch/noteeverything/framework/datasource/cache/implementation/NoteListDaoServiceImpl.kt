@@ -12,7 +12,7 @@ class NoteListDaoServiceImpl(
     private val dateUtil: DateUtil
 ) : NoteListDaoService {
     override suspend fun insertNoteList(noteList: NoteList): Long {
-        return dao.insertNoteList(mapper.mapToEntity(noteList, ArrayList()))
+        return dao.insertNoteList(mapper.mapToEntity(noteList))
     }
 
     override suspend fun updateNoteList(
@@ -39,11 +39,8 @@ class NoteListDaoServiceImpl(
 
     override suspend fun searchNoteListById(id: String): NoteList? {
         return dao.searchNoteListById(id)?.let {
-            val ids = ArrayList<String>()
-            for (note in it.notes) {
-                ids.add(note.id)
-            }
-            mapper.mapFromEntity(it, ids)
+
+            mapper.mapFromEntity(it)
         }
     }
 

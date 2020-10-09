@@ -22,7 +22,6 @@ class InsertNewNoteList(
         id: String? = null,
         title: String,
         color: String? = null,
-        notes: ArrayList<String>? = null,
         stateEvent: StateEvent
     ): Flow<DataState<NoteListViewState>?> = flow {
 
@@ -30,7 +29,6 @@ class InsertNewNoteList(
             id = id,
             title = title,
             color = color,
-            notes = notes
         )
 
         val cacheResult = safeCacheCall(IO) {

@@ -16,14 +16,14 @@ constructor(
         id: String? = null,
         title: String,
         color: String? = null,
-        notes: ArrayList<String>? = null
+//        notes: ArrayList<String>? = null
     ) = NoteList(
         id = id ?: UUID.randomUUID().toString(),
         title = title,
         color = color ?: ModelConstants.COLOR,
         createdAt = dateUtil.getCurrentTimestamp(),
         updatedAt = dateUtil.getCurrentTimestamp(),
-        notes = notes ?: ArrayList()
+//        notes = notes ?: ArrayList()
     )
 
     // for testing
@@ -35,11 +35,11 @@ constructor(
         }
     }
 
-    fun createNoteListWithNotes(notes: List<Note>): NoteList {
-        val noteList = createNoteList(title = UUID.randomUUID().toString())
-        for (i in notes.indices) {
-           noteList.notes.add(notes[i].id)
-        }
-        return noteList
-    }
+//    fun createNoteListWithNotes(notes: List<Note>): NoteList {
+//        val noteList = createNoteList(title = UUID.randomUUID().toString())
+//        for (i in notes.indices) {
+//           noteList.notes.add(notes[i].id)
+//        }
+//        return noteList
+//    }
 }
