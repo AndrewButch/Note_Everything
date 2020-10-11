@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "263175286240",
+    "firebase_url": "https://note-everything-dd71b.firebaseio.com",
+    "project_id": "note-everything-dd71b",
+    "storage_bucket": "note-everything-dd71b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:263175286240:android:cf3475dce94d0e91bd4f85",
+        "android_client_info": {
+          "package_name": "com.andrewbutch.noteeverything"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "263175286240-u7448qlsfuptsq22jcrcnq0krfvsnfsh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.andrewbutch.noteeverything",
+            "certificate_hash": "456942a2d1123eea5c88483aa74c6ecf7e042882"
+          }
+        },
+        {
+          "client_id": "263175286240-piihj7pl1k6oarpv9stsma01tmb55ieq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD7HIHu3gn5EXg1ipByzoBy7HrY5tINKLM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "263175286240-piihj7pl1k6oarpv9stsma01tmb55ieq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
