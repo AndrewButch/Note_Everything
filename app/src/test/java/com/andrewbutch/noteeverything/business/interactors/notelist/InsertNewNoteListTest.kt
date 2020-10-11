@@ -59,7 +59,6 @@ class InsertNewNoteListTest {
             id = newNoteList.id,
             title = newNoteList.title,
             color = newNoteList.color,
-            notes = newNoteList.notes,
             stateEvent = NoteListStateEvent.InsertNewNoteListEvent(
                 newNoteList.title,
                 newNoteList.color
@@ -96,7 +95,6 @@ class InsertNewNoteListTest {
             id = newNoteList.id,
             title = newNoteList.title,
             color = newNoteList.color,
-            notes = newNoteList.notes,
             stateEvent = NoteListStateEvent.InsertNewNoteListEvent(
                 newNoteList.title,
                 newNoteList.color
@@ -132,7 +130,6 @@ class InsertNewNoteListTest {
             id = newNoteList.id,
             title = newNoteList.title,
             color = newNoteList.color,
-            notes = newNoteList.notes,
             stateEvent = NoteListStateEvent.InsertNewNoteListEvent(
                 newNoteList.title,
                 newNoteList.color
