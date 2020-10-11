@@ -13,7 +13,7 @@ class NoteCacheDataSourceImpl(private val noteDaoService: NoteDaoService) : Note
         return noteDaoService.deleteNote(id)
     }
 
-    override suspend fun deleteNotes(notes: List<Note>): Int {
+    override suspend fun deleteNotes(notes: List<String>): Int {
         return noteDaoService.deleteNotes(notes)
     }
 
@@ -35,9 +35,6 @@ class NoteCacheDataSourceImpl(private val noteDaoService: NoteDaoService) : Note
         return noteDaoService.searchNoteById(id)
     }
 
-    override suspend fun getNumNotes(): Int {
-        return noteDaoService.getNumNotes()
-    }
 
     override suspend fun insertNotes(notes: List<Note>): LongArray {
         return noteDaoService.insertNotes(notes)

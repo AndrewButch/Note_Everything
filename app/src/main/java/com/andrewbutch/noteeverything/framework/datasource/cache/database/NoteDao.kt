@@ -2,6 +2,7 @@ package com.andrewbutch.noteeverything.framework.datasource.cache.database
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.andrewbutch.noteeverything.framework.datasource.cache.model.NoteCacheEntity
 
@@ -10,6 +11,9 @@ interface NoteDao {
 
     @Insert
     suspend fun insertNote(note: NoteCacheEntity): Long
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertMultipleNotes(notes: List<NoteCacheEntity>): LongArray
 
     @Query("SELECT * FROM notes WHERE id = :id")
     suspend fun searchNoteById(id: String): NoteCacheEntity?

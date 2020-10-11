@@ -8,7 +8,7 @@ interface NoteCacheDataSource {
 
     suspend fun deleteNote(id: String): Int
 
-    suspend fun deleteNotes(notes: List<Note>): Int
+    suspend fun deleteNotes(notes: List<String>): Int
 
     suspend fun updateNote(
         id: String,
@@ -27,8 +27,6 @@ interface NoteCacheDataSource {
     suspend fun getAllNotes(): List<Note>
 
     suspend fun searchNoteById(id: String): Note?
-
-    suspend fun getNumNotes(): Int
 
     suspend fun insertNotes(notes: List<Note>): LongArray
 }

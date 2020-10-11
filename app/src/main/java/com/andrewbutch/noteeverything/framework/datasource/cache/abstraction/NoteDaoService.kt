@@ -9,7 +9,7 @@ interface NoteDaoService {
 
     suspend fun deleteNote(id: String): Int
 
-    suspend fun deleteNotes(notes: List<Note>): Int
+    suspend fun deleteNotes(notes: List<String>): Int
 
     suspend fun updateNote(
         id: String,
@@ -22,6 +22,4 @@ interface NoteDaoService {
     suspend fun getAllNotes(): List<Note>
 
     suspend fun searchNoteById(id: String): Note?
-
-    suspend fun getNumNotes(): Int
 }

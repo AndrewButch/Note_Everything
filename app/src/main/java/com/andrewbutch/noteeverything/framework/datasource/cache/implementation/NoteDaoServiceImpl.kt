@@ -16,15 +16,15 @@ class NoteDaoServiceImpl(
     }
 
     override suspend fun insertNotes(notes: List<Note>): LongArray {
-        TODO("Not yet implemented")
+        return noteDao.insertMultipleNotes(mapper.mapToEntityList(notes))
     }
 
     override suspend fun deleteNote(id: String): Int {
         return noteDao.deleteNote(id)
     }
 
-    override suspend fun deleteNotes(notes: List<Note>): Int {
-        TODO("Not yet implemented")
+    override suspend fun deleteNotes(notes: List<String>): Int {
+        return noteDao.deleteNotes(notes)
     }
 
     override suspend fun updateNote(
@@ -50,9 +50,5 @@ class NoteDaoServiceImpl(
         return noteDao.searchNoteById(id)?.let {
             mapper.mapFromEntity(it)
         }
-    }
-
-    override suspend fun getNumNotes(): Int {
-        TODO("Not yet implemented")
     }
 }

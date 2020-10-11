@@ -16,7 +16,7 @@ import androidx.room.PrimaryKey
         )
     ]
 )
-class NoteCacheEntity(
+data class NoteCacheEntity(
     @PrimaryKey(autoGenerate = false)
     val id: String,
     var title: String,
