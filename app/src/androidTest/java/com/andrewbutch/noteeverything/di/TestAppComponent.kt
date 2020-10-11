@@ -1,5 +1,6 @@
 package com.andrewbutch.noteeverything.di
 
+import com.andrewbutch.noteeverything.framework.datasource.cache.NoteDaoServiceTest
 import com.andrewbutch.noteeverything.framework.datasource.cache.NoteListDaoServiceTest
 import com.andrewbutch.noteeverything.framework.ui.TestBaseApplication
 import dagger.BindsInstance
@@ -26,4 +27,5 @@ interface TestAppComponent : AppComponent {
     }
 
     fun inject(noteListDaoServiceTest: NoteListDaoServiceTest)
+    fun inject(noteDaoServiceTest: NoteDaoServiceTest)
 }
