@@ -86,22 +86,6 @@ class NoteListDaoServiceTest {
     }
 
     @Test
-    fun insertNoteList_deleteNoteList_confirmDelete() = runBlocking {
-        val newNoteList = dataFactory.createSingleNoteList(
-            id = null,
-            title = "Insert NoteList then delete",
-            color = null
-        )
-        daoService.insertNoteList(newNoteList)
-        var allNoteLists = daoService.getAllNoteLists()
-        assertTrue(allNoteLists.contains(newNoteList))
-
-        daoService.deleteNoteList(newNoteList.id)
-        allNoteLists = daoService.getAllNoteLists()
-        assertFalse(allNoteLists.contains(newNoteList))
-    }
-
-    @Test
     fun deleteRandomNoteLists_confirmDelete() = runBlocking {
         // get 3 random note list
         val noteListsToDelete = ArrayList<NoteList>()
@@ -170,9 +154,9 @@ class NoteListDaoServiceTest {
 
         // insert 1000 items
         daoService.insertMultipleNoteList(array1000)
-        val actualSize = daoService.getAllNoteLists().size
 
         // confirm size increase
+        val actualSize = daoService.getAllNoteLists().size
         assertEquals(prevSize + 1000, actualSize)
     }
 
