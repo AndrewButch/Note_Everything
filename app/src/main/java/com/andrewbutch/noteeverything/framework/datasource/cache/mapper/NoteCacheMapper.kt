@@ -2,8 +2,11 @@ package com.andrewbutch.noteeverything.framework.datasource.cache.mapper
 
 import com.andrewbutch.noteeverything.business.domain.model.Note
 import com.andrewbutch.noteeverything.framework.datasource.cache.model.NoteCacheEntity
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class NoteCacheMapper {
+@Singleton
+class NoteCacheMapper @Inject constructor() {
 
     fun mapFromEntity(entity: NoteCacheEntity): Note {
         return Note(

@@ -1,6 +1,9 @@
 package com.andrewbutch.noteeverything.di
 
 import com.andrewbutch.noteeverything.business.domain.util.DateUtil
+import com.andrewbutch.noteeverything.framework.datasource.cache.database.NoteDao
+import com.andrewbutch.noteeverything.framework.datasource.cache.database.NoteListDao
+import com.andrewbutch.noteeverything.framework.datasource.cache.database.NotesDatabase
 import dagger.Module
 import dagger.Provides
 import java.text.SimpleDateFormat
@@ -27,5 +30,19 @@ object AppModule {
         return DateUtil(
             dateFormat
         )
+    }
+
+    @JvmStatic
+    @Singleton
+    @Provides
+    fun provideNoteDao(database: NotesDatabase): NoteDao {
+        return database.noteDao()
+    }
+
+    @JvmStatic
+    @Singleton
+    @Provides
+    fun provideNoteListDao(database: NotesDatabase): NoteListDao {
+        return database.noteListDao()
     }
 }

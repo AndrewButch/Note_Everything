@@ -5,14 +5,21 @@ import com.andrewbutch.noteeverything.business.domain.util.DateUtil
 import com.andrewbutch.noteeverything.framework.datasource.cache.abstraction.NoteListDaoService
 import com.andrewbutch.noteeverything.framework.datasource.cache.database.NoteListDao
 import com.andrewbutch.noteeverything.framework.datasource.cache.mapper.NoteListCacheMapper
+import javax.inject.Inject
 
-class NoteListDaoServiceImpl(
+class NoteListDaoServiceImpl
+@Inject
+constructor(
     private val dao: NoteListDao,
     private val mapper: NoteListCacheMapper,
     private val dateUtil: DateUtil
 ) : NoteListDaoService {
     override suspend fun insertNoteList(noteList: NoteList): Long {
         return dao.insertNoteList(mapper.mapToEntity(noteList))
+    }
+
+    override suspend fun insertMultipleNoteList(noteLists: List<NoteList>): LongArray {
+        return dao.insertMultipleNoteList(mapper.mapToEntityList(noteLists))
     }
 
     override suspend fun updateNoteList(
@@ -34,7 +41,7 @@ class NoteListDaoServiceImpl(
     }
 
     override suspend fun deleteAllNoteLists(): Int {
-        TODO("Not yet implemented")
+        return dao.deleteAllNoteLists()
     }
 
     override suspend fun searchNoteListById(id: String): NoteList? {

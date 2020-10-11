@@ -27,12 +27,13 @@ constructor(
     )
 
     // for testing
-    fun createMultipleNoteList(noteListCount: Int) {
+    fun createMultipleNoteList(noteListCount: Int): List<NoteList> {
         val noteLists: ArrayList<NoteList> = ArrayList()
         for (i in 0 until noteListCount) {
             val noteList = createNoteList(title = UUID.randomUUID().toString())
             noteLists.add(noteList)
         }
+        return noteLists
     }
 
 //    fun createNoteListWithNotes(notes: List<Note>): NoteList {
