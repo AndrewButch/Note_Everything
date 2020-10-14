@@ -72,7 +72,7 @@ class DeleteNoteTest {
     fun `Delete failure (return -1), confirm NOT delete from cache and network`() = runBlocking {
         val noteToDelete = noteFactory.createNote(title = "", listId = "")
         val cacheSizeBefore = noteCacheDataSource.getAllNotes().size
-        val networkSizeBefore = noteNetworkDataSource.getAllNotes().size
+        val networkSizeBefore = noteNetworkDataSource.getNotesByOwnerListId("").size
 
 
         deleteNote.deleteNote(
@@ -94,7 +94,7 @@ class DeleteNoteTest {
         assertTrue("Assert not delete from cache", cacheSizeBefore == cacheSizeAfter)
 
         // confirm network unchanged
-        val networkSizeAfter = noteNetworkDataSource.getAllNotes().size
+        val networkSizeAfter = noteNetworkDataSource.getNotesByOwnerListId("").size
         assertTrue("Assert not delete from network", networkSizeBefore == networkSizeAfter)
     }
 
@@ -106,7 +106,7 @@ class DeleteNoteTest {
             listId = ""
         )
         val cacheSizeBefore = noteCacheDataSource.getAllNotes().size
-        val networkSizeBefore = noteNetworkDataSource.getAllNotes().size
+        val networkSizeBefore = noteNetworkDataSource.getNotesByOwnerListId("").size
 
 
         deleteNote.deleteNote(
@@ -129,7 +129,7 @@ class DeleteNoteTest {
         assertTrue("Assert not delete from cache", cacheSizeBefore == cacheSizeAfter)
 
         // confirm network unchanged
-        val networkSizeAfter = noteNetworkDataSource.getAllNotes().size
+        val networkSizeAfter = noteNetworkDataSource.getNotesByOwnerListId("").size
         assertTrue("Assert not delete from network", networkSizeBefore == networkSizeAfter)
     }
 }

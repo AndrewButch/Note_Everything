@@ -10,21 +10,15 @@ class FakeNoteNetworkDataSourceImpl(
         data[note.id] = note
     }
 
-    override suspend fun insertOrUpdateNotes(notes: List<Note>) {
-        for (note in notes) {
-            data[note.id] = note
-        }
+    override suspend fun deleteNote(note: Note) {
+        data.remove(note.id)
     }
 
-    override suspend fun deleteNote(id: String) {
-        data.remove(id)
-    }
-
-    override suspend fun deleteAllNotes() {
+    override suspend fun deleteNotesByOwnerListId(ownerListId: String) {
         data.clear()
     }
 
     override suspend fun searchNote(note: Note): Note? = data[note.id]
 
-    override suspend fun getAllNotes(): List<Note> = ArrayList(data.values)
+    override suspend fun getNotesByOwnerListId(ownerListId: String): List<Note> = ArrayList(data.values)
 }

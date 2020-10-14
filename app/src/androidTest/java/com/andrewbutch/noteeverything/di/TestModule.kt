@@ -6,7 +6,6 @@ import com.andrewbutch.noteeverything.business.domain.model.NoteListFactory
 import com.andrewbutch.noteeverything.framework.datasource.cache.database.NotesDatabase
 import com.andrewbutch.noteeverything.framework.datasource.data.NoteDataFactory
 import com.andrewbutch.noteeverything.framework.ui.TestBaseApplication
-import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
 import dagger.Provides
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -28,12 +27,12 @@ object TestModule {
             .build()
     }
 
-    @JvmStatic
-    @Singleton
-    @Provides
-    fun provideFirebaseFirestore(): FirebaseFirestore {
-        return FirebaseFirestore.getInstance()
-    }
+//    @JvmStatic
+//    @Singleton
+//    @Provides
+//    fun provideFirebaseFirestore(): FirebaseFirestore {
+//        return FirebaseFirestore.getInstance()
+//    }
 
     @JvmStatic
     @Singleton

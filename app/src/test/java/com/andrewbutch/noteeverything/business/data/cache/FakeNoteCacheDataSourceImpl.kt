@@ -26,14 +26,15 @@ class FakeNoteCacheDataSourceImpl(
         }
     }
 
-    override suspend fun deleteNotes(notes: List<Note>): Int {
+    override suspend fun deleteNotes(notes: List<String>): Int {
         for (note in notes) {
-            if (data.remove(note.id) == null) {
+            if (data.remove(note) == null) {
                 return -1
             }
         }
         return 1
     }
+
 
     override suspend fun updateNote(
         id: String,
@@ -66,8 +67,6 @@ class FakeNoteCacheDataSourceImpl(
     override suspend fun getAllNotes(): List<Note> = ArrayList(data.values)
 
     override suspend fun searchNoteById(id: String): Note? = data[id]
-
-    override suspend fun getNumNotes(): Int = data.size
 
     override suspend fun insertNotes(notes: List<Note>): LongArray {
         val result = LongArray(notes.size)
