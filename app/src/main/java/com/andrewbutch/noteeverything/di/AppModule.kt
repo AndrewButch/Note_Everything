@@ -4,9 +4,12 @@ import com.andrewbutch.noteeverything.business.domain.util.DateUtil
 import com.andrewbutch.noteeverything.framework.datasource.cache.database.NoteDao
 import com.andrewbutch.noteeverything.framework.datasource.cache.database.NoteListDao
 import com.andrewbutch.noteeverything.framework.datasource.cache.database.NotesDatabase
+import com.andrewbutch.noteeverything.framework.datasource.network.abstraction.NoteFirestoreService
 import com.andrewbutch.noteeverything.framework.datasource.network.abstraction.NoteListFirestoreService
+import com.andrewbutch.noteeverything.framework.datasource.network.implementation.NoteFirestoreServiceImpl
 import com.andrewbutch.noteeverything.framework.datasource.network.implementation.NoteListFirestoreServiceImpl
 import com.andrewbutch.noteeverything.framework.datasource.network.mapper.NoteListNetworkMapper
+import com.andrewbutch.noteeverything.framework.datasource.network.mapper.NoteNetworkMapper
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
 import dagger.Provides
@@ -65,6 +68,16 @@ object AppModule {
         mapper: NoteListNetworkMapper
     ): NoteListFirestoreService {
         return NoteListFirestoreServiceImpl(firestore, mapper)
+    }
+
+    @JvmStatic
+    @Singleton
+    @Provides
+    fun provideNoteFirestoreService(
+        firestore: FirebaseFirestore,
+        mapper: NoteNetworkMapper
+    ): NoteFirestoreService {
+        return NoteFirestoreServiceImpl(firestore, mapper)
     }
 
 }

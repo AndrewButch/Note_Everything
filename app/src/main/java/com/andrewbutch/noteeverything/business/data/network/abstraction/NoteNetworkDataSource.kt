@@ -6,15 +6,13 @@ interface NoteNetworkDataSource{
 
     suspend fun insertOrUpdateNote(note: Note)
 
-    suspend fun insertOrUpdateNotes(notes: List<Note>)
+    suspend fun deleteNote(note: Note)
 
-    suspend fun deleteNote(id: String)
-
-    suspend fun deleteAllNotes()
+    suspend fun deleteNotesByOwnerListId(ownerListId: String)
 
     suspend fun searchNote(note: Note): Note?
 
-    suspend fun getAllNotes(): List<Note>
+    suspend fun getNotesByOwnerListId(ownerListId: String): List<Note>
 
     // functions for delete UNDO
 //    suspend fun insertDeletedNote(note: Note)

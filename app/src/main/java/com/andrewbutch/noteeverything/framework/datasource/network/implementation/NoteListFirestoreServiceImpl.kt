@@ -26,9 +26,9 @@ constructor(
     override suspend fun insertOrUpdateNoteList(noteList: NoteList) {
         val entity = mapper.mapToEntity(noteList)
         store
-            .collection(NOTES_COLLECTION)
+            .collection(NOTE_LISTS_COLLECTION)
             .document(USER_ID)
-            .collection(NOTES_COLLECTION)
+            .collection(NOTE_LISTS_COLLECTION)
             .document(entity.id)
             .set(entity)
             .await()
@@ -36,9 +36,9 @@ constructor(
 
     override suspend fun deleteNoteList(id: String) {
         store
-            .collection(NOTES_COLLECTION)
+            .collection(NOTE_LISTS_COLLECTION)
             .document(USER_ID)
-            .collection(NOTES_COLLECTION)
+            .collection(NOTE_LISTS_COLLECTION)
             .document(id)
             .delete()
             .await()
@@ -46,7 +46,7 @@ constructor(
 
     override suspend fun deleteAllNotesLists() {
         store
-            .collection(NOTES_COLLECTION)
+            .collection(NOTE_LISTS_COLLECTION)
             .document(USER_ID)
             .delete()
             .await()
@@ -54,9 +54,9 @@ constructor(
 
     override suspend fun searchNoteList(noteList: NoteList): NoteList? {
         return store
-            .collection(NOTES_COLLECTION)
+            .collection(NOTE_LISTS_COLLECTION)
             .document(USER_ID)
-            .collection(NOTES_COLLECTION)
+            .collection(NOTE_LISTS_COLLECTION)
             .document(noteList.id)
             .get()
             .await()
@@ -68,9 +68,9 @@ constructor(
     override suspend fun getAllNotes(): List<NoteList> {
         return mapper.mapFromEntityList(
             store
-                .collection(NOTES_COLLECTION)
+                .collection(NOTE_LISTS_COLLECTION)
                 .document(USER_ID)
-                .collection(NOTES_COLLECTION)
+                .collection(NOTE_LISTS_COLLECTION)
                 .get()
                 .await()
                 .toObjects(NoteListNetworkEntity::class.java)
@@ -78,7 +78,7 @@ constructor(
     }
 
     companion object {
-        const val NOTES_COLLECTION = "notes"
+        const val NOTE_LISTS_COLLECTION = "note_lists"
         const val USER_ID = "jLfWxedaCBdpxvcdfVpdzQIfzDw2" // hardcoded for single user
     }
 }

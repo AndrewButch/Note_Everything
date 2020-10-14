@@ -63,7 +63,7 @@ class DeleteNote<ViewState>(
     private suspend fun updateNetwork(message: String?, note: Note) {
         if (message == DELETE_NOTE_SUCCESS) {
             safeNetworkCall(IO) {
-                noteNetworkDataSource.deleteNote(note.id)
+                noteNetworkDataSource.deleteNote(note)
             }
             // TODO(insert to deleted node)
         }

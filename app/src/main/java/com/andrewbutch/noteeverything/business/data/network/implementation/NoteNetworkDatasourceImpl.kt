@@ -11,24 +11,20 @@ class NoteNetworkDatasourceImpl(
         return noteFirestoreService.insertOrUpdateNote(note)
     }
 
-    override suspend fun insertOrUpdateNotes(notes: List<Note>) {
-        return noteFirestoreService.insertOrUpdateNotes(notes)
+    override suspend fun deleteNote(note: Note) {
+        return noteFirestoreService.deleteNote(note)
     }
 
-    override suspend fun deleteNote(id: String) {
-        return noteFirestoreService.deleteNote(id)
-    }
-
-    override suspend fun deleteAllNotes() {
-        return noteFirestoreService.deleteAllNotes()
+    override suspend fun deleteNotesByOwnerListId(ownerListId: String) {
+        return noteFirestoreService.deleteNotesByOwnerListId(ownerListId)
     }
 
     override suspend fun searchNote(note: Note): Note? {
         return noteFirestoreService.searchNote(note)
     }
 
-    override suspend fun getAllNotes(): List<Note> {
-        return noteFirestoreService.getAllNotes()
+    override suspend fun getNotesByOwnerListId(ownerListId: String): List<Note> {
+        return noteFirestoreService.getNotesByOwnerListId(ownerListId)
     }
 
 }
