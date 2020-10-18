@@ -45,11 +45,17 @@ constructor(
     }
 
     override suspend fun deleteAllNotesLists() {
-        store
-            .collection(NOTE_LISTS_COLLECTION)
-            .document(USER_ID)
-            .delete()
-            .await()
+        val allNoteLists: List<NoteListNetworkEntity> =
+            store
+                .collection(NOTE_LISTS_COLLECTION)
+                .document(USER_ID)
+                .collection(NOTE_LISTS_COLLECTION)
+                .get()
+                .await()
+                .toObjects(NoteListNetworkEntity::class.java)
+        for (noteList in allNoteLists) {
+            deleteNoteList(noteList.id)
+        }
     }
 
     override suspend fun searchNoteList(noteList: NoteList): NoteList? {
@@ -65,7 +71,7 @@ constructor(
             }
     }
 
-    override suspend fun getAllNotes(): List<NoteList> {
+    override suspend fun getAllNoteLists(): List<NoteList> {
         return mapper.mapFromEntityList(
             store
                 .collection(NOTE_LISTS_COLLECTION)
