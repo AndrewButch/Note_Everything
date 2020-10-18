@@ -14,7 +14,15 @@ data class NoteListNetworkEntity(
 
     val updatedAt: Timestamp = Timestamp.now(),
 
-    ) {
+    )
+{
+    constructor(): this(
+        "",
+        "",
+        "",
+        Timestamp.now(),
+        Timestamp.now()
+    )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
