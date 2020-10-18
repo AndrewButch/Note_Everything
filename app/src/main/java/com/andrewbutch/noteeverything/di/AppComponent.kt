@@ -12,7 +12,10 @@ import javax.inject.Singleton
 @FlowPreview
 @Singleton
 @Component(
-    modules = [AppModule::class]
+    modules = [
+        AppModule::class,
+        ProductionModule::class
+    ]
 )
 interface AppComponent {
 
@@ -20,5 +23,6 @@ interface AppComponent {
     interface Factory {
         fun create(@BindsInstance app: BaseApplication): AppComponent
     }
+
     fun inject(mainActivity: MainActivity)
 }

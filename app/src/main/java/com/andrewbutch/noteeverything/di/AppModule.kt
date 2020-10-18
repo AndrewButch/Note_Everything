@@ -53,12 +53,6 @@ object AppModule {
         return database.noteListDao()
     }
 
-    @JvmStatic
-    @Singleton
-    @Provides
-    fun provideFirebaseFirestore(): FirebaseFirestore {
-        return FirebaseFirestore.getInstance()
-    }
 
     @JvmStatic
     @Singleton
