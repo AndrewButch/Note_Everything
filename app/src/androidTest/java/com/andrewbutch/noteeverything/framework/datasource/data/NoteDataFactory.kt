@@ -61,8 +61,10 @@ constructor(
         title: String,
         completed: Boolean,
         color: String? = null,
+        createdAt: String? = null,
+        updatedAt: String? = null,
         listId: String
-    ) = noteFactory.createNote(id, title, completed, color, listId)
+    ) = noteFactory.createNote(id, title, completed, color, createdAt, updatedAt, listId)
 
     fun createMultipleNotes(numNotes: Int, ownerListId: String) =
         noteFactory.createNoteList(numNotes, ownerListId)
@@ -73,8 +75,10 @@ constructor(
     fun createSingleNoteList(
         id: String? = null,
         title: String,
-        color: String? = null
-    ) = noteListFactory.createNoteList(id, title, color)
+        color: String? = null,
+        createdAt: String? = null,
+        updatedAt: String? = null
+    ) = noteListFactory.createNoteList(id, title, color, createdAt, updatedAt)
 
     fun createMultipleNoteLists(numList: Int): List<NoteList> =
         noteListFactory.createMultipleNoteList(numList)
