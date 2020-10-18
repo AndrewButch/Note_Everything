@@ -18,14 +18,16 @@ constructor(
         title: String,
         checked: Boolean = false,
         color: String? = null,
+        createdAt: String? = null,
+        updatedAt: String? = null,
         listId: String
     ) = Note(
         id = id ?: UUID.randomUUID().toString(),
         title = title,
         completed = checked,
         color = color ?: ModelConstants.COLOR,
-        createdAt = dateUtil.getCurrentTimestamp(),
-        updatedAt = dateUtil.getCurrentTimestamp(),
+        createdAt = createdAt ?: dateUtil.getCurrentTimestamp(),
+        updatedAt = updatedAt ?: dateUtil.getCurrentTimestamp(),
         listId = listId
     )
 

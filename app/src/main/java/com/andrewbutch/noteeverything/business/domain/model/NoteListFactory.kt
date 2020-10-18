@@ -16,14 +16,14 @@ constructor(
         id: String? = null,
         title: String,
         color: String? = null,
-//        notes: ArrayList<String>? = null
+        createdAt: String? = null,
+        updatedAt: String? = null
     ) = NoteList(
         id = id ?: UUID.randomUUID().toString(),
         title = title,
         color = color ?: ModelConstants.COLOR,
-        createdAt = dateUtil.getCurrentTimestamp(),
-        updatedAt = dateUtil.getCurrentTimestamp(),
-//        notes = notes ?: ArrayList()
+        createdAt = createdAt ?: dateUtil.getCurrentTimestamp(),
+        updatedAt = updatedAt ?: dateUtil.getCurrentTimestamp(),
     )
 
     // for testing
