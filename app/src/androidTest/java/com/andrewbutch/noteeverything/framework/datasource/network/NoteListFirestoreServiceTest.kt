@@ -57,11 +57,6 @@ class NoteListFirestoreServiceTest {
         )
     }
 
-    @BeforeTest
-    fun beforeTest() {
-        insertTestData()
-    }
-
     private fun insertTestData() = runBlocking {
         for (entity in testEntities) {
             firestore
@@ -73,11 +68,6 @@ class NoteListFirestoreServiceTest {
                 .await()
 
         }
-    }
-
-    @BeforeTest
-    fun afterTest() {
-        clearStoreData()
     }
 
     private fun clearStoreData() = runBlocking {
@@ -100,17 +90,32 @@ class NoteListFirestoreServiceTest {
         }
     }
 
+    @BeforeTest
+    fun beforeTest() {
+        insertTestData()
+    }
+
+    @BeforeTest
+    fun afterTest() {
+        clearStoreData()
+    }
+
 
     /**
      *  Insert note list:
-     *  1) Insert note list
-     *  2) Confirm by search
+     *  1) create note list
+     *  2) insert note list
+     *  3) confirm by search
      */
     @Test
     fun insertSingleNoteList_confirmBySearch() = runBlocking {
+        // create note list
         val noteList = dataFactory.createSingleNoteList(title = "new list")
+
+        // insert note list
         noteListFirestoreService.insertOrUpdateNoteList(noteList)
 
+        // confirm by search
         val searchResult = noteListFirestoreService.searchNoteList(noteList)
         assertEquals(noteList, searchResult)
     }
@@ -123,11 +128,10 @@ class NoteListFirestoreServiceTest {
      * 4) get network updated note list
      * 5) confirm equals
      */
-
     @Test
     fun getNoteList_update_confirmUpdate() = runBlocking {
         // get random note list
-        val randomNoteList = noteListFirestoreService.getAllNoteLists().shuffled().first()
+        val randomNoteList = mapper.mapFromEntity(testEntities.shuffled().first())
 
         // modify note list
         val updatedNoteList = dataFactory.createSingleNoteList(
@@ -157,7 +161,7 @@ class NoteListFirestoreServiceTest {
     @Test
     fun deleteExistingNoteList_confirmDeleting() = runBlocking {
         // get random note list
-        val randomNoteList = noteListFirestoreService.getAllNoteLists().shuffled().first()
+        val randomNoteList = mapper.mapFromEntity(testEntities.shuffled().first())
 
         // delete note list
         noteListFirestoreService.deleteNoteList(randomNoteList.id)
@@ -177,7 +181,6 @@ class NoteListFirestoreServiceTest {
      * 3) check size note change
      * 4) check note list not exists
      */
-
     @Test
     fun deleteNotExistingNoteLIst_confirmSizeNotChange() = runBlocking {
         // create note list
@@ -202,8 +205,8 @@ class NoteListFirestoreServiceTest {
      * 1) confirm note list collection not empty
      * 2) delete all note
      * 3) confirm collection is empty
+     * 4)
      */
-
     @Test
     fun deleteAllNotesList_confirmEmpty() = runBlocking {
         // confirm note list collection not empty
@@ -212,16 +215,12 @@ class NoteListFirestoreServiceTest {
             noteListFirestoreService.getAllNoteLists().isNotEmpty()
         )
 
-        val randomNoteList = noteListFirestoreService.getAllNoteLists().shuffled().first()
-
-
         // delete all note
         noteListFirestoreService.deleteAllNotesLists()
 
-        assertNull(
-            "Confirm random note list is null",
-            noteListFirestoreService.searchNoteList(randomNoteList)
-        )
+        val randomNoteList = mapper.mapFromEntity(testEntities.shuffled().first())
+        val networkResult = noteListFirestoreService.searchNoteList(randomNoteList)
+        assertNull("Confirm random note list is null", networkResult)
 
         // confirm collection is empty
         assertTrue("Confirm empty", noteListFirestoreService.getAllNoteLists().isEmpty())
