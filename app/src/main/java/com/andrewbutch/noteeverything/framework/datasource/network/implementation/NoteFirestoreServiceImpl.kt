@@ -29,8 +29,6 @@ constructor(
             .collection(NOTES_COLLECTION)
             .document(USER_ID)
             .collection(NOTES_COLLECTION)
-            .document(entity.listId)
-            .collection(NOTES_COLLECTION)
             .document(entity.id)
             .set(entity)
             .await()
@@ -41,27 +39,35 @@ constructor(
             .collection(NOTES_COLLECTION)
             .document(USER_ID)
             .collection(NOTES_COLLECTION)
-            .document(note.listId)
-            .collection(NOTES_COLLECTION)
             .document(note.id)
             .delete()
     }
 
     override suspend fun deleteNotesByOwnerListId(ownerListId: String) {
-        store
+        val notes = store
             .collection(NOTES_COLLECTION)
             .document(USER_ID)
             .collection(NOTES_COLLECTION)
-            .document(ownerListId)
-            .delete()
+            .whereEqualTo("listId", ownerListId)
+            .get()
+            .await()
+            .toObjects(NoteNetworkEntity::class.java)
+
+        for (note in notes) {
+            store
+                .collection(NOTES_COLLECTION)
+                .document(USER_ID)
+                .collection(NOTES_COLLECTION)
+                .document(note.id)
+                .delete()
+                .await()
+        }
     }
 
     override suspend fun searchNote(note: Note): Note? {
         return store
             .collection(NOTES_COLLECTION)
             .document(USER_ID)
-            .collection(NOTES_COLLECTION)
-            .document(note.listId)
             .collection(NOTES_COLLECTION)
             .document(note.id)
             .get()
@@ -77,8 +83,7 @@ constructor(
                 .collection(NOTES_COLLECTION)
                 .document(USER_ID)
                 .collection(NOTES_COLLECTION)
-                .document(ownerListId)
-                .collection(NOTES_COLLECTION)
+                .whereEqualTo("listId", ownerListId)
                 .get()
                 .await()
                 .toObjects(NoteNetworkEntity::class.java)

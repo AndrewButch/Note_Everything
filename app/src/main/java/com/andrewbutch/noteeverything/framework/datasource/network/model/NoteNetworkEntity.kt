@@ -18,6 +18,15 @@ data class NoteNetworkEntity(
 
     val listId: String,
 ) {
+    constructor() : this(
+        "",
+        "",
+        false,
+        "",
+        Timestamp.now(),
+        Timestamp.now(),
+        ""
+    )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

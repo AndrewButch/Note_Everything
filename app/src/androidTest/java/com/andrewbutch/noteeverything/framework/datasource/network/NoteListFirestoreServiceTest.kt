@@ -20,7 +20,6 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 import javax.inject.Inject
-import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.assertEquals
 
@@ -62,6 +61,7 @@ class NoteListFirestoreServiceTest {
     fun beforeTest() {
         insertTestData()
     }
+
     private fun insertTestData() = runBlocking {
         for (entity in testEntities) {
             firestore
@@ -70,10 +70,12 @@ class NoteListFirestoreServiceTest {
                 .collection(NoteListFirestoreServiceImpl.NOTE_LISTS_COLLECTION)
                 .document(entity.id)
                 .set(entity)
+                .await()
+
         }
     }
 
-    @AfterTest
+    @BeforeTest
     fun afterTest() {
         clearStoreData()
     }
