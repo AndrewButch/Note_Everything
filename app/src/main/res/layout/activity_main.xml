@@ -16,4 +16,34 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <Button
+        android:id="@+id/insert_list_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Insert list"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/delete_list_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Delete list"
+        app:layout_constraintStart_toEndOf="@id/insert_list_btn"
+        app:layout_constraintTop_toTopOf="parent" />
+    <Button
+        android:id="@+id/insert_note_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Insert note"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/insert_list_btn"/>
+    <Button
+        android:id="@+id/delete_note_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="delete note"
+        app:layout_constraintStart_toEndOf="@id/insert_note_btn"
+        app:layout_constraintTop_toBottomOf="@id/delete_list_btn" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
