@@ -1,9 +1,11 @@
 package com.andrewbutch.noteeverything.di
 
-import com.andrewbutch.noteeverything.MainActivity
+import android.app.Application
 import com.andrewbutch.noteeverything.framework.BaseApplication
 import dagger.BindsInstance
 import dagger.Component
+import dagger.android.AndroidInjector
+import dagger.android.support.AndroidSupportInjectionModule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import javax.inject.Singleton
@@ -13,16 +15,20 @@ import javax.inject.Singleton
 @Singleton
 @Component(
     modules = [
+        AndroidSupportInjectionModule::class,
+        ActivityBuildersModule::class,
         AppModule::class,
         ProductionModule::class
     ]
 )
-interface AppComponent {
+interface AppComponent : AndroidInjector<BaseApplication>{
 
-    @Component.Factory
-    interface Factory {
-        fun create(@BindsInstance app: BaseApplication): AppComponent
+    @Component.Builder
+    interface Builder {
+
+        @BindsInstance
+        fun application(application: Application): Builder
+
+        fun build(): AppComponent
     }
-
-    fun inject(mainActivity: MainActivity)
 }

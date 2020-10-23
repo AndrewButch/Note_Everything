@@ -1,27 +1,19 @@
 package com.andrewbutch.noteeverything.framework
 
-import android.app.Application
-import com.andrewbutch.noteeverything.di.AppComponent
 import com.andrewbutch.noteeverything.di.DaggerAppComponent
+import dagger.android.AndroidInjector
+import dagger.android.support.DaggerApplication
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 
 @FlowPreview
 @ExperimentalCoroutinesApi
-open class BaseApplication : Application(){
+open class BaseApplication : DaggerApplication() {
 
-    lateinit var appComponent: AppComponent
-
-    override fun onCreate() {
-        super.onCreate()
-        initAppComponent()
+    override fun applicationInjector(): AndroidInjector<out DaggerApplication>? {
+        return DaggerAppComponent.builder().application(this).build()
     }
 
-    open fun initAppComponent(){
-        appComponent = DaggerAppComponent
-            .factory()
-            .create(this)
-    }
 
 
 }

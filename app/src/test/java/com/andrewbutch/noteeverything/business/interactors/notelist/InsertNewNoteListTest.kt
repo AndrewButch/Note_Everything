@@ -9,8 +9,8 @@ import com.andrewbutch.noteeverything.business.domain.state.DataState
 import com.andrewbutch.noteeverything.business.interactors.notelist.InsertNewNoteList.Companion.INSERT_NOTE_LIST_FAILED
 import com.andrewbutch.noteeverything.business.interactors.notelist.InsertNewNoteList.Companion.INSERT_NOTE_LIST_SUCCESS
 import com.andrewbutch.noteeverything.di.DependencyContainer
-import com.andrewbutch.noteeverything.framework.ui.notelist.state.NoteListStateEvent
-import com.andrewbutch.noteeverything.framework.ui.notelist.state.NoteListViewState
+import com.andrewbutch.noteeverything.framework.ui.notes.state.NoteListStateEvent
+import com.andrewbutch.noteeverything.framework.ui.notes.state.NoteListViewState
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.runBlocking

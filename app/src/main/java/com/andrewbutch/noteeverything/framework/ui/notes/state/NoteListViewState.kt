@@ -1,4 +1,4 @@
-package com.andrewbutch.noteeverything.framework.ui.notelist.state
+package com.andrewbutch.noteeverything.framework.ui.notes.state
 
 import android.os.Parcelable
 import com.andrewbutch.noteeverything.business.domain.model.Note

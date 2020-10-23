@@ -1,4 +1,4 @@
-package com.andrewbutch.noteeverything.framework.ui.notelist.state
+package com.andrewbutch.noteeverything.framework.ui.notes.state
 
 import com.andrewbutch.noteeverything.business.domain.model.Note
 import com.andrewbutch.noteeverything.business.domain.state.StateEvent
