@@ -8,12 +8,15 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.andrewbutch.noteeverything.R
+import com.andrewbutch.noteeverything.business.domain.model.Note
 import com.andrewbutch.noteeverything.business.domain.model.NoteFactory
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.notes_fragment.*
 import javax.inject.Inject
 
-class NotesFragment : DaggerFragment() {
+class NotesFragment :
+    DaggerFragment(),
+    NotesRecyclerAdapter.Interaction {
 
     lateinit var viewModel: NotesViewModel
 
@@ -29,11 +32,7 @@ class NotesFragment : DaggerFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         notesFragmentFab.setOnClickListener { _ ->
-            Toast.makeText(
-                requireContext(),
-                "click fab",
-                Toast.LENGTH_SHORT
-            ).show()
+            showToast("Click fab")
         }
     }
 
@@ -41,12 +40,20 @@ class NotesFragment : DaggerFragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(NotesViewModel::class.java)
         // TODO: Use the ViewModel
-        val notesAdapter = NotesRecyclerAdapter()
+        val notesAdapter = NotesRecyclerAdapter(interaction = this)
         recycler.apply {
             adapter = notesAdapter
             layoutManager = LinearLayoutManager(requireContext())
         }
 
         notesAdapter.submitList(noteFactory.createNoteList(20, "23"))
+    }
+
+    override fun onItemSelected(position: Int, item: Note) {
+        showToast("Clicked $position, title: ${item.title}")
+    }
+
+    private fun showToast(msg: String) {
+        Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
     }
 }

@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.andrewbutch.noteeverything.R
+import com.andrewbutch.noteeverything.business.domain.model.NoteList
 import com.andrewbutch.noteeverything.business.domain.model.NoteListFactory
 import com.andrewbutch.noteeverything.framework.ui.notes.drawer.NavMenuAdapter
 import dagger.android.support.DaggerAppCompatActivity
@@ -17,7 +18,7 @@ import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
 @FlowPreview
-class MainActivity : DaggerAppCompatActivity() {
+class MainActivity : DaggerAppCompatActivity(), NavMenuAdapter.Interaction {
 
     @Inject
     lateinit var noteListFactory: NoteListFactory
@@ -50,7 +51,7 @@ class MainActivity : DaggerAppCompatActivity() {
         addNoteListBtn.setOnClickListener { showToast("Click add list") }
 
         // recycler view
-        val navMenuAdapter = NavMenuAdapter()
+        val navMenuAdapter = NavMenuAdapter(interaction = this)
         navRecyclerMenu.apply {
             layoutManager = LinearLayoutManager(this@MainActivity)
             adapter = navMenuAdapter
@@ -60,6 +61,10 @@ class MainActivity : DaggerAppCompatActivity() {
 
     private fun showToast(msg: String) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onItemSelected(position: Int, item: NoteList) {
+        showToast("Clicked $position, title: ${item.title}")
     }
 
 }
