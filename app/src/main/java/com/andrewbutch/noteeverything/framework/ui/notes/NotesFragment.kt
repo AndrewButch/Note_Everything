@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.andrewbutch.noteeverything.R
@@ -24,6 +25,16 @@ class NotesFragment : DaggerFragment() {
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.notes_fragment, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        notesFragmentFab.setOnClickListener { _ ->
+            Toast.makeText(
+                requireContext(),
+                "click fab",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
