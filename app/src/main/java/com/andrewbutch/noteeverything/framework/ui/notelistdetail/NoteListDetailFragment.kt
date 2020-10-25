@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.navigation.fragment.findNavController
 import com.andrewbutch.noteeverything.R
 import com.andrewbutch.noteeverything.business.domain.model.NoteList
 import dagger.android.support.DaggerFragment
@@ -23,11 +24,12 @@ class NoteListDetailFragment : DaggerFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         getSelectedNoteListFromArguments()
+        saveBtn.setOnClickListener { navToNotesList() }
     }
 
     private fun getSelectedNoteListFromArguments() {
         arguments?.let { args ->
-            val noteList = args.getParcelable("NOTE_DETAIL_SELECTED_NOTE_BUNDLE_KEY") as NoteList?
+            val noteList = args.getParcelable("NOTE_LIST_DETAIL_SELECTED_NOTE_BUNDLE_KEY") as NoteList?
             noteList?.let {
                 noteListTitle.setText(it.title, TextView.BufferType.EDITABLE)
                 noteListColorPicker.setBackgroundColor(Color.parseColor(it.color))
@@ -37,5 +39,9 @@ class NoteListDetailFragment : DaggerFragment() {
 
     private fun showToast(msg: String) {
         Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun navToNotesList() {
+        findNavController().navigate(R.id.action_noteListDetailFragment_to_notesFragment)
     }
 }

@@ -9,14 +9,22 @@
         android:id="@+id/notesFragment"
         android:name="com.andrewbutch.noteeverything.framework.ui.notes.NotesFragment"
         android:label="notes_fragment"
-        tools:layout="@layout/notes_fragment" >
+        tools:layout="@layout/fragment_notes" >
         <action
             android:id="@+id/action_notesFragment_to_noteListDetailFragment"
             app:destination="@id/noteListDetailFragment"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
             />
         <action
             android:id="@+id/action_notesFragment_to_noteDetailFragment"
-            app:destination="@id/noteDetailFragment" />
+            app:destination="@id/noteDetailFragment"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"/>
     </fragment>
     <fragment
         android:id="@+id/noteListDetailFragment"
@@ -25,6 +33,10 @@
         <action
             android:id="@+id/action_noteListDetailFragment_to_notesFragment"
             app:destination="@id/notesFragment"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_right"
             app:popUpTo="@id/notesFragment"
             app:popUpToInclusive="true"/>
     </fragment>
@@ -36,6 +48,10 @@
         <action
             android:id="@+id/action_noteDetailFragment_to_notesFragment"
             app:destination="@id/notesFragment"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_right"
             app:popUpTo="@id/notesFragment"
             app:popUpToInclusive="true"/>
     </fragment>

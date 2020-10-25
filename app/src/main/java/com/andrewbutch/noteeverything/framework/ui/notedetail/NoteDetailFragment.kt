@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.navigation.fragment.findNavController
 import com.andrewbutch.noteeverything.R
 import com.andrewbutch.noteeverything.business.domain.model.Note
 import dagger.android.support.DaggerFragment
@@ -23,6 +24,7 @@ class NoteDetailFragment : DaggerFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         getSelectedNoteListFromArguments()
+        saveBtn.setOnClickListener { navToNotesList() }
     }
 
     private fun getSelectedNoteListFromArguments() {
@@ -37,5 +39,9 @@ class NoteDetailFragment : DaggerFragment() {
 
     private fun showToast(msg: String) {
         Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun navToNotesList() {
+        findNavController().navigate(R.id.action_noteDetailFragment_to_notesFragment)
     }
 }
