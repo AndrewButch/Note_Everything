@@ -14,13 +14,12 @@ import androidx.navigation.ui.NavigationUI
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.andrewbutch.noteeverything.R
 import com.andrewbutch.noteeverything.business.domain.model.Note
-import com.andrewbutch.noteeverything.business.domain.model.NoteFactory
 import com.andrewbutch.noteeverything.business.domain.model.NoteList
-import com.andrewbutch.noteeverything.business.domain.model.NoteListFactory
+import com.andrewbutch.noteeverything.framework.datasource.NoteDataFactory
 import com.andrewbutch.noteeverything.framework.ui.notes.drawer.NavMenuAdapter
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_notes.*
-import kotlinx.android.synthetic.main.fragment_notes_content.*
+import kotlinx.android.synthetic.main.layout_fragment_notes_content.*
 import kotlinx.android.synthetic.main.nav_header.*
 import javax.inject.Inject
 
@@ -30,12 +29,15 @@ class NotesFragment :
     NavMenuAdapter.Interaction{
 
     lateinit var viewModel: NotesViewModel
-
+//
+//    @Inject
+//    lateinit var noteFactory: NoteFactory
+//
+//    @Inject
+//    lateinit var noteListFactory: NoteListFactory
+//
     @Inject
-    lateinit var noteFactory: NoteFactory
-
-    @Inject
-    lateinit var noteListFactory: NoteListFactory
+    lateinit var noteDataFactory: NoteDataFactory
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -77,7 +79,8 @@ class NotesFragment :
             layoutManager = LinearLayoutManager(requireContext())
             adapter = navMenuAdapter
         }
-        navMenuAdapter.submitList(noteListFactory.createMultipleNoteList(20))
+//        navMenuAdapter.submitList(noteListFactory.createMultipleNoteList(20))
+        navMenuAdapter.submitList(noteDataFactory.produceListOfNoteList())
 
         NavigationUI.setupActionBarWithNavController(
             requireActivity() as AppCompatActivity,
@@ -97,7 +100,8 @@ class NotesFragment :
             layoutManager = LinearLayoutManager(requireContext())
         }
 
-        notesAdapter.submitList(noteFactory.createNoteList(20, "23"))
+//        notesAdapter.submitList(noteFactory.createNoteList(20, "23"))
+        notesAdapter.submitList(noteDataFactory.produceListOfNotes())
     }
 
     override fun onItemSelected(position: Int, item: Note) {

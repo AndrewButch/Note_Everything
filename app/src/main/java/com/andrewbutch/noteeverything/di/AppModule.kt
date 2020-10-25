@@ -1,6 +1,10 @@
 package com.andrewbutch.noteeverything.di
 
+import android.app.Application
+import com.andrewbutch.noteeverything.business.domain.model.NoteFactory
+import com.andrewbutch.noteeverything.business.domain.model.NoteListFactory
 import com.andrewbutch.noteeverything.business.domain.util.DateUtil
+import com.andrewbutch.noteeverything.framework.datasource.NoteDataFactory
 import com.andrewbutch.noteeverything.framework.datasource.cache.database.NoteDao
 import com.andrewbutch.noteeverything.framework.datasource.cache.database.NoteListDao
 import com.andrewbutch.noteeverything.framework.datasource.cache.database.NotesDatabase
@@ -72,6 +76,17 @@ object AppModule {
         mapper: NoteNetworkMapper
     ): NoteFirestoreService {
         return NoteFirestoreServiceImpl(firestore, mapper)
+    }
+
+    @JvmStatic
+    @Singleton
+    @Provides
+    fun provideNoteDataFactory(
+        application: Application,
+        noteFactory: NoteFactory,
+        noteListFactory: NoteListFactory
+    ): NoteDataFactory {
+        return NoteDataFactory(application, noteFactory, noteListFactory)
     }
 
 

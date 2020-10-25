@@ -20,5 +20,7 @@
     <!-- Note detail fragment -->
     <string name="note_title_hint">Название</string>
 
+    <!-- Menu detail -->
+    <string name="menu_delete">Удалить</string>
 
 </resources>

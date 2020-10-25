@@ -1,6 +1,7 @@
 package com.andrewbutch.noteeverything.framework.ui
 
 import android.os.Bundle
+import android.view.Menu
 import com.andrewbutch.noteeverything.R
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -15,7 +16,9 @@ class MainActivity : DaggerAppCompatActivity() {
         setContentView(R.layout.activity_main)
     }
 
-
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        return true
+    }
 
 //    override fun onSupportNavigateUp(): Boolean {
 //        return NavigationUI.navigateUp(findNavController(R.id.navHostFragmentContainer), drawer)
