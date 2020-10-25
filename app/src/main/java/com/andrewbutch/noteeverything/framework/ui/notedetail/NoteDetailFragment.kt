@@ -3,29 +3,20 @@ package com.andrewbutch.noteeverything.framework.ui.notedetail
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
-import android.view.*
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.fragment.findNavController
 import com.andrewbutch.noteeverything.R
 import com.andrewbutch.noteeverything.business.domain.model.Note
-import dagger.android.support.DaggerFragment
+import com.andrewbutch.noteeverything.framework.ui.BaseFragment
 import kotlinx.android.synthetic.main.fragment_note_detail.*
 
-class NoteDetailFragment : DaggerFragment() {
+class NoteDetailFragment : BaseFragment(
+    R.layout.fragment_note_detail) {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_note_detail, container, false)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setupUI()
@@ -69,13 +60,7 @@ class NoteDetailFragment : DaggerFragment() {
         }
     }
 
-    private fun showToast(msg: String) {
-        Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
-    }
 
-    private fun navToNotesList() {
-        findNavController().navigate(R.id.action_noteDetailFragment_to_notesFragment)
-    }
 
 
 
