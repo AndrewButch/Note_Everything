@@ -5,7 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.andrewbutch.noteeverything.R
 import com.andrewbutch.noteeverything.business.domain.model.Note
@@ -51,9 +53,18 @@ class NotesFragment :
 
     override fun onItemSelected(position: Int, item: Note) {
         showToast("Clicked $position, title: ${item.title}")
+        navToNoteDetail(item)
     }
 
     private fun showToast(msg: String) {
         Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun navToNoteDetail(selectedNote: Note) {
+        val bundle = bundleOf("NOTE_DETAIL_SELECTED_NOTE_BUNDLE_KEY" to selectedNote)
+        findNavController().navigate(
+            R.id.action_notesFragment_to_noteDetailFragment,
+            bundle
+        )
     }
 }

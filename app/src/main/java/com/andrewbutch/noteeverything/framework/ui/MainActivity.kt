@@ -3,6 +3,10 @@ package com.andrewbutch.noteeverything.framework.ui
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.core.os.bundleOf
+import androidx.core.view.GravityCompat
+import androidx.navigation.findNavController
+import androidx.navigation.ui.NavigationUI
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.andrewbutch.noteeverything.R
 import com.andrewbutch.noteeverything.business.domain.model.NoteList
@@ -34,17 +38,18 @@ class MainActivity : DaggerAppCompatActivity(), NavMenuAdapter.Interaction {
         // Toolbar
         setSupportActionBar(toolbar)
         setupNavDrawer()
+
     }
 
     private fun setupNavDrawer() {
         // Toggle listener
         val toggle = ActionBarDrawerToggle(
             this,
-            drawer_layout,
+            drawer,
             toolbar,
             R.string.navigation_drawer_open, R.string.navigation_drawer_close
         )
-        drawer_layout.addDrawerListener(toggle)
+        drawer.addDrawerListener(toggle)
         toggle.syncState()
 
         // button "add list"
@@ -57,6 +62,12 @@ class MainActivity : DaggerAppCompatActivity(), NavMenuAdapter.Interaction {
             adapter = navMenuAdapter
         }
         navMenuAdapter.submitList(noteListFactory.createMultipleNoteList(20))
+
+        NavigationUI.setupActionBarWithNavController(
+            this,
+            findNavController(R.id.navHostFragmentContainer),
+            drawer
+        )
     }
 
     private fun showToast(msg: String) {
@@ -65,6 +76,28 @@ class MainActivity : DaggerAppCompatActivity(), NavMenuAdapter.Interaction {
 
     override fun onItemSelected(position: Int, item: NoteList) {
         showToast("Clicked $position, title: ${item.title}")
+        navToNoteDetail(item)
     }
+
+    override fun onSupportNavigateUp(): Boolean {
+        return NavigationUI.navigateUp(findNavController(R.id.navHostFragmentContainer), drawer)
+    }
+
+    override fun onBackPressed() {
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START)
+        } else {
+            super.onBackPressed()
+        }
+    }
+    private fun navToNoteDetail(selectedNoteList: NoteList) {
+        val bundle = bundleOf("NOTE_LIST_DETAIL_SELECTED_NOTE_BUNDLE_KEY" to selectedNoteList)
+        findNavController(R.id.navHostFragmentContainer).navigate(
+            R.id.action_notesFragment_to_noteListDetailFragment,
+            bundle
+        )
+    }
+
+
 
 }

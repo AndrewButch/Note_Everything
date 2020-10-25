@@ -9,5 +9,34 @@
         android:id="@+id/notesFragment"
         android:name="com.andrewbutch.noteeverything.framework.ui.notes.NotesFragment"
         android:label="notes_fragment"
-        tools:layout="@layout/notes_fragment" />
+        tools:layout="@layout/notes_fragment" >
+        <action
+            android:id="@+id/action_notesFragment_to_noteListDetailFragment"
+            app:destination="@id/noteListDetailFragment"
+            />
+        <action
+            android:id="@+id/action_notesFragment_to_noteDetailFragment"
+            app:destination="@id/noteDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/noteListDetailFragment"
+        android:name="com.andrewbutch.noteeverything.framework.ui.notelistdetail.NoteListDetailFragment"
+        android:label="NoteListDetailFragment" >
+        <action
+            android:id="@+id/action_noteListDetailFragment_to_notesFragment"
+            app:destination="@id/notesFragment"
+            app:popUpTo="@id/notesFragment"
+            app:popUpToInclusive="true"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/noteDetailFragment"
+        android:name="com.andrewbutch.noteeverything.framework.ui.notedetail.NoteDetailFragment"
+        android:label="NoteDetailFragment" >
+        <action
+            android:id="@+id/action_noteDetailFragment_to_notesFragment"
+            app:destination="@id/notesFragment"
+            app:popUpTo="@id/notesFragment"
+            app:popUpToInclusive="true"/>
+    </fragment>
 </navigation>

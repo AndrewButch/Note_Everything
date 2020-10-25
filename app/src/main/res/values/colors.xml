@@ -6,7 +6,7 @@
     <color name="colorSecondaryVariant">#A81E14</color>
     <color name="colorAccent">#E2F54E</color>
 
-    <color name="background">#fff</color>
+    <color name="background">#FFFFFF</color>
     <color name="error">#B00020</color>
 
     <color name="fab">#F44336</color>
