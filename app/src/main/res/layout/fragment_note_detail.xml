@@ -36,8 +36,7 @@
             app:layout_scrollFlags="scroll|enterAlways|snap"
             app:navigationIcon="@drawable/ic_arrow_back_24"
             app:titleTextColor="@color/background"
-            tools:title="Hello world">
-        </androidx.appcompat.widget.Toolbar>
+            tools:title="Hello world" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -69,7 +68,7 @@
     <LinearLayout
         android:id="@+id/colorPickerContainer"
         android:layout_width="0dp"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="16dp"
         android:orientation="horizontal"
@@ -83,14 +82,15 @@
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:gravity="center"
-            android:text="@string/color_text" />
+            android:text="@string/color_text"
+            android:textColor="#000000" />
 
         <FrameLayout
             android:id="@+id/noteColorPicker"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:layout_marginStart="16dp"
-            android:background="@drawable/black_border"/>
+            android:background="@drawable/black_border" />
 
     </LinearLayout>
 
@@ -100,11 +100,28 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="16dp"
         android:text="@string/save_btn_text"
+        app:backgroundTint="@color/buttonAddList"
         app:layout_constraintEnd_toStartOf="@+id/guideline2"
         app:layout_constraintStart_toStartOf="@+id/guideline"
-        app:layout_constraintTop_toBottomOf="@id/colorPickerContainer" />
+        app:layout_constraintTop_toBottomOf="@+id/switchComplete" />
 
+
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/switchComplete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="16dp"
+        android:text="Выполнено"
+        android:textOff="Нет"
+        android:textOn="Да"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toBottomOf="@+id/colorPickerContainer"
+        app:showText="false"
+        app:switchPadding="16dp"
+        app:switchTextAppearance="@style/TextAppearance.AppCompat.Body1"
+        tools:checked="true" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

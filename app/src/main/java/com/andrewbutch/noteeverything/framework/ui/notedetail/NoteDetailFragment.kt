@@ -45,6 +45,13 @@ class NoteDetailFragment : BaseDetailFragment(R.layout.fragment_note_detail) {
 
         // handle Bundle and init fields
         getSelectedNoteListFromArguments()
+
+        addListeners()
+    }
+
+    private fun addListeners() {
+        switchComplete.setOnClickListener { showToast("Switch clicked") }
+        noteColorPicker.setOnClickListener { showToast("Color picker clicked") }
     }
 
     private fun getSelectedNoteListFromArguments() {
@@ -56,6 +63,7 @@ class NoteDetailFragment : BaseDetailFragment(R.layout.fragment_note_detail) {
                     Color.parseColor(it.color),
                     PorterDuff.Mode.MULTIPLY
                 )
+                switchComplete.isChecked = it.completed
             }
         }
     }

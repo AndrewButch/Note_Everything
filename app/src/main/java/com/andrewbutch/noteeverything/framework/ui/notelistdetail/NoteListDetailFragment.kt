@@ -26,16 +26,24 @@ class NoteListDetailFragment : BaseDetailFragment(R.layout.fragment_note_list_de
 
         // handle Bundle and init fields
         getSelectedNoteListFromArguments()
+
+        addListeners()
+    }
+
+    private fun addListeners() {
+        noteListColorPicker.setOnClickListener { showToast("Color picker clicked") }
     }
 
     private fun getSelectedNoteListFromArguments() {
         arguments?.let { args ->
-            val noteList = args.getParcelable("NOTE_LIST_DETAIL_SELECTED_NOTE_BUNDLE_KEY") as NoteList?
+            val noteList =
+                args.getParcelable("NOTE_LIST_DETAIL_SELECTED_NOTE_BUNDLE_KEY") as NoteList?
             noteList?.let {
                 noteListTitle.setText(it.title, TextView.BufferType.EDITABLE)
                 noteListColorPicker.background.setColorFilter(
                     Color.parseColor(it.color),
-                    PorterDuff.Mode.MULTIPLY)
+                    PorterDuff.Mode.MULTIPLY
+                )
             }
         }
     }

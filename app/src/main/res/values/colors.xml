@@ -4,7 +4,7 @@
     <color name="colorPrimaryDark">#1D62A8</color>
     <color name="colorSecondary">#F44336</color>
     <color name="colorSecondaryVariant">#A81E14</color>
-    <color name="colorAccent">#E2F54E</color>
+    <color name="colorAccent">#F44336</color>
 
     <color name="background">#FFFFFF</color>
     <color name="error">#B00020</color>
