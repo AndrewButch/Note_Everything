@@ -9,13 +9,13 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.fragment.findNavController
 import com.andrewbutch.noteeverything.R
 import com.andrewbutch.noteeverything.business.domain.model.Note
-import com.andrewbutch.noteeverything.framework.ui.BaseFragment
+import com.andrewbutch.noteeverything.framework.ui.BaseDetailFragment
 import kotlinx.android.synthetic.main.fragment_note_detail.*
 
-class NoteDetailFragment : BaseFragment(
-    R.layout.fragment_note_detail) {
+class NoteDetailFragment : BaseDetailFragment(R.layout.fragment_note_detail) {
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -61,7 +61,9 @@ class NoteDetailFragment : BaseFragment(
     }
 
 
-
+    private fun navToNotesList() {
+        findNavController().navigate(R.id.action_noteDetailFragment_to_notesFragment)
+    }
 
 
 }

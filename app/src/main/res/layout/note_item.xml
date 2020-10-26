@@ -4,9 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
-    android:layout_marginBottom="16dp"
     android:elevation="8dp"
     android:focusable="true"
     android:foreground="?android:attr/selectableItemBackground">
@@ -20,6 +17,7 @@
             android:id="@+id/color_indicator"
             android:layout_width="4dp"
             android:layout_height="match_parent"
+            android:layout_marginLeft="4dp"
             tools:background="@color/colorError">
         </FrameLayout>
 

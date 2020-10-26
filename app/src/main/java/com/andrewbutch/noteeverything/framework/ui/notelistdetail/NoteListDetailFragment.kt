@@ -1,30 +1,31 @@
 package com.andrewbutch.noteeverything.framework.ui.notelistdetail
 
 import android.graphics.Color
+import android.graphics.PorterDuff
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.findNavController
 import com.andrewbutch.noteeverything.R
 import com.andrewbutch.noteeverything.business.domain.model.NoteList
-import dagger.android.support.DaggerFragment
+import com.andrewbutch.noteeverything.framework.ui.BaseDetailFragment
 import kotlinx.android.synthetic.main.fragment_note_list_detail.*
 
-class NoteListDetailFragment : DaggerFragment() {
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_note_list_detail, container, false)
-    }
+class NoteListDetailFragment : BaseDetailFragment(R.layout.fragment_note_list_detail) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        getSelectedNoteListFromArguments()
+        setupUI()
         saveBtn.setOnClickListener { navToNotesList() }
+    }
+
+    private fun setupUI() {
+        // Toolbar
+        (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar)
+        toolbar.setNavigationOnClickListener { navToNotesList() }
+
+        // handle Bundle and init fields
+        getSelectedNoteListFromArguments()
     }
 
     private fun getSelectedNoteListFromArguments() {
@@ -32,13 +33,11 @@ class NoteListDetailFragment : DaggerFragment() {
             val noteList = args.getParcelable("NOTE_LIST_DETAIL_SELECTED_NOTE_BUNDLE_KEY") as NoteList?
             noteList?.let {
                 noteListTitle.setText(it.title, TextView.BufferType.EDITABLE)
-                noteListColorPicker.setBackgroundColor(Color.parseColor(it.color))
+                noteListColorPicker.background.setColorFilter(
+                    Color.parseColor(it.color),
+                    PorterDuff.Mode.MULTIPLY)
             }
         }
-    }
-
-    private fun showToast(msg: String) {
-        Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
     }
 
     private fun navToNotesList() {

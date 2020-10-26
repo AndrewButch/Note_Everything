@@ -6,11 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.LayoutRes
-import androidx.navigation.fragment.findNavController
-import com.andrewbutch.noteeverything.R
 import dagger.android.support.DaggerFragment
 
-open class BaseFragment(
+open class BaseDetailFragment(
     @LayoutRes private val layoutId: Int
 ) : DaggerFragment() {
 
@@ -30,7 +28,4 @@ open class BaseFragment(
         Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
     }
 
-    fun navToNotesList() {
-        findNavController().navigate(R.id.action_noteDetailFragment_to_notesFragment)
-    }
 }

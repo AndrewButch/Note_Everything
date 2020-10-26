@@ -14,24 +14,4 @@ class MainActivity : DaggerAppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
     }
-
-//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-//        return true
-//    }
-
-//    override fun onSupportNavigateUp(): Boolean {
-//        return NavigationUI.navigateUp(findNavController(R.id.navHostFragmentContainer), drawer)
-//    }
-//
-//    override fun onBackPressed() {
-//        if (drawer.isDrawerOpen(GravityCompat.START)) {
-//            drawer.closeDrawer(GravityCompat.START)
-//        } else {
-//            super.onBackPressed()
-//        }
-//    }
-
-
-
-
 }

@@ -8,15 +8,16 @@ import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
+import androidx.core.view.GravityCompat
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.NavigationUI
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.andrewbutch.noteeverything.R
 import com.andrewbutch.noteeverything.business.domain.model.Note
 import com.andrewbutch.noteeverything.business.domain.model.NoteList
 import com.andrewbutch.noteeverything.framework.datasource.NoteDataFactory
 import com.andrewbutch.noteeverything.framework.ui.notes.drawer.NavMenuAdapter
+import com.andrewbutch.noteeverything.framework.ui.utils.VerticalItemDecoration
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_notes.*
 import kotlinx.android.synthetic.main.layout_fragment_notes_content.*
@@ -26,16 +27,10 @@ import javax.inject.Inject
 class NotesFragment :
     DaggerFragment(),
     NotesRecyclerAdapter.Interaction,
-    NavMenuAdapter.Interaction{
+    NavMenuAdapter.Interaction {
 
     lateinit var viewModel: NotesViewModel
-//
-//    @Inject
-//    lateinit var noteFactory: NoteFactory
-//
-//    @Inject
-//    lateinit var noteListFactory: NoteListFactory
-//
+
     @Inject
     lateinit var noteDataFactory: NoteDataFactory
 
@@ -49,9 +44,7 @@ class NotesFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setupViews()
         setupNavDrawer()
-        notesFragmentFab.setOnClickListener { _ ->
-            showToast("Click fab")
-        }
+        notesFragmentFab.setOnClickListener { showToast("Click fab") }
     }
 
     private fun setupViews() {
@@ -79,14 +72,8 @@ class NotesFragment :
             layoutManager = LinearLayoutManager(requireContext())
             adapter = navMenuAdapter
         }
-//        navMenuAdapter.submitList(noteListFactory.createMultipleNoteList(20))
+        navRecyclerMenu.addItemDecoration(VerticalItemDecoration(30))
         navMenuAdapter.submitList(noteDataFactory.produceListOfNoteList())
-
-        NavigationUI.setupActionBarWithNavController(
-            requireActivity() as AppCompatActivity,
-            findNavController(),
-            drawer
-        )
     }
 
 
@@ -99,8 +86,7 @@ class NotesFragment :
             adapter = notesAdapter
             layoutManager = LinearLayoutManager(requireContext())
         }
-
-//        notesAdapter.submitList(noteFactory.createNoteList(20, "23"))
+        recycler.addItemDecoration(VerticalItemDecoration(30))
         notesAdapter.submitList(noteDataFactory.produceListOfNotes())
     }
 
@@ -120,6 +106,7 @@ class NotesFragment :
 
     private fun navToNoteDetail(selectedNote: Note) {
         val bundle = bundleOf("NOTE_DETAIL_SELECTED_NOTE_BUNDLE_KEY" to selectedNote)
+
         findNavController().navigate(
             R.id.action_notesFragment_to_noteDetailFragment,
             bundle
@@ -128,9 +115,11 @@ class NotesFragment :
 
     private fun navToNoteListDetail(selectedNoteList: NoteList) {
         val bundle = bundleOf("NOTE_LIST_DETAIL_SELECTED_NOTE_BUNDLE_KEY" to selectedNoteList)
+
         findNavController().navigate(
             R.id.action_notesFragment_to_noteListDetailFragment,
             bundle
         )
+        drawer.closeDrawer(GravityCompat.START)
     }
 }
