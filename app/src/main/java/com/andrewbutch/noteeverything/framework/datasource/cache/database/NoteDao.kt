@@ -18,8 +18,8 @@ interface NoteDao {
     @Query("SELECT * FROM notes WHERE id = :id")
     suspend fun searchNoteById(id: String): NoteCacheEntity?
 
-    @Query("SELECT * FROM notes")
-    suspend fun getAllNotes(): List<NoteCacheEntity>
+    @Query("SELECT * FROM notes WHERE listId = :ownerId")
+    suspend fun getNotesByOwnerListId(ownerId: String): List<NoteCacheEntity>
 
     @Query("DELETE FROM notes WHERE id = :id")
     suspend fun deleteNote(id: String): Int

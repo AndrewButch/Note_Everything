@@ -42,8 +42,8 @@ class NoteDaoServiceImpl(
         }
     }
 
-    override suspend fun getAllNotes(): List<Note> {
-        return mapper.mapFromEntityList(noteDao.getAllNotes())
+    override suspend fun getNotesByOwnerListId(ownerListId: String): List<Note> {
+        return mapper.mapFromEntityList(noteDao.getNotesByOwnerListId(ownerListId))
     }
 
     override suspend fun searchNoteById(id: String): Note? {

@@ -27,8 +27,8 @@ class NoteCacheDataSourceImpl(private val noteDaoService: NoteDaoService) : Note
         return noteDaoService.updateNote(id, newTitle, completed, newColor, timestamp)
     }
 
-    override suspend fun getAllNotes(): List<Note> {
-        return noteDaoService.getAllNotes()
+    override suspend fun getNotesByOwnerListId(ownerListId: String): List<Note> {
+        return noteDaoService.getNotesByOwnerListId(ownerListId)
     }
 
     override suspend fun searchNoteById(id: String): Note? {
