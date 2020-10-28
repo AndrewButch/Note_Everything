@@ -26,6 +26,8 @@ class DeleteNoteTest {
     private val noteCacheDataSource: NoteCacheDataSource
     private val noteNetworkDataSource: NoteNetworkDataSource
     private val noteFactory: NoteFactory
+    
+    private val ownerListId = "cfc3414d-5778-4abc-8a2d-d38dbc2c18ae"
 
     init {
         dependencyContainer.build()
@@ -43,7 +45,7 @@ class DeleteNoteTest {
      */
     @Test
     fun `Delete success (return 1), confirm delete from cache and network`() = runBlocking {
-        val randomNote = noteCacheDataSource.getAllNotes().shuffled().first()
+        val randomNote = noteCacheDataSource.getNotesByOwnerListId(ownerListId).shuffled().first()
 
         deleteNote.deleteNote(
             note = randomNote,
@@ -71,7 +73,7 @@ class DeleteNoteTest {
     @Test
     fun `Delete failure (return -1), confirm NOT delete from cache and network`() = runBlocking {
         val noteToDelete = noteFactory.createNote(title = "", listId = "")
-        val cacheSizeBefore = noteCacheDataSource.getAllNotes().size
+        val cacheSizeBefore = noteCacheDataSource.getNotesByOwnerListId(ownerListId).size
         val networkSizeBefore = noteNetworkDataSource.getNotesByOwnerListId("").size
 
 
@@ -90,7 +92,7 @@ class DeleteNoteTest {
         }
 
         // confirm cache unchanged
-        val cacheSizeAfter = noteCacheDataSource.getAllNotes().size
+        val cacheSizeAfter = noteCacheDataSource.getNotesByOwnerListId(ownerListId).size
         assertTrue("Assert not delete from cache", cacheSizeBefore == cacheSizeAfter)
 
         // confirm network unchanged
@@ -105,7 +107,7 @@ class DeleteNoteTest {
             title = "",
             listId = ""
         )
-        val cacheSizeBefore = noteCacheDataSource.getAllNotes().size
+        val cacheSizeBefore = noteCacheDataSource.getNotesByOwnerListId(ownerListId).size
         val networkSizeBefore = noteNetworkDataSource.getNotesByOwnerListId("").size
 
 
@@ -125,7 +127,7 @@ class DeleteNoteTest {
         }
 
         // confirm cache unchanged
-        val cacheSizeAfter = noteCacheDataSource.getAllNotes().size
+        val cacheSizeAfter = noteCacheDataSource.getNotesByOwnerListId(ownerListId).size
         assertTrue("Assert not delete from cache", cacheSizeBefore == cacheSizeAfter)
 
         // confirm network unchanged

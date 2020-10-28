@@ -64,7 +64,15 @@ class FakeNoteCacheDataSourceImpl(
         }
     }
 
-    override suspend fun getAllNotes(): List<Note> = ArrayList(data.values)
+    override suspend fun getNotesByOwnerListId(ownerListId: String): List<Note> {
+        val notes = ArrayList<Note>()
+        for (note in data.values) {
+            if (note.listId == ownerListId) {
+                notes.add(note)
+            }
+        }
+        return notes
+    }
 
     override suspend fun searchNoteById(id: String): Note? = data[id]
 

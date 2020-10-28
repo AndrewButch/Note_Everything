@@ -88,7 +88,7 @@ class NoteDaoServiceTest {
 
     @Test
     fun a_checkNotEmpty() = runBlocking {
-        val dataSize = daoService.getAllNotes().size
+        val dataSize = daoService.getNotesByOwnerListId(ownerNoteList.id).size
         assertTrue(dataSize > 0)
     }
 
@@ -103,7 +103,7 @@ class NoteDaoServiceTest {
         )
 
         daoService.insertNote(newNote)
-        val allNotes = daoService.getAllNotes()
+        val allNotes = daoService.getNotesByOwnerListId(ownerNoteList.id)
         assertTrue(allNotes.contains(newNote))
     }
 
@@ -120,17 +120,17 @@ class NoteDaoServiceTest {
             daoService.insertNote(newNote)
             fail("SQLiteConstraintException expected")
         } catch (e: SQLiteConstraintException) {
-            val allNotes = daoService.getAllNotes()
+            val allNotes = daoService.getNotesByOwnerListId(ownerNoteList.id)
             assertFalse(allNotes.contains(newNote))
         }
     }
 
     @Test
     fun deleteNote_confirmDeleting() = runBlocking {
-        val randomNote = daoService.getAllNotes().shuffled().first()
+        val randomNote = daoService.getNotesByOwnerListId(ownerNoteList.id).shuffled().first()
         daoService.deleteNote(randomNote.id)
 
-        val allNotes = daoService.getAllNotes()
+        val allNotes = daoService.getNotesByOwnerListId(ownerNoteList.id)
         assertFalse(allNotes.contains(randomNote))
     }
 
@@ -138,7 +138,7 @@ class NoteDaoServiceTest {
     fun deleteMultipleNotes() = runBlocking {
         // get 3 random note list
         val notesToDelete = ArrayList<Note>()
-        var allNotes = daoService.getAllNotes().shuffled()
+        var allNotes = daoService.getNotesByOwnerListId(ownerNoteList.id).shuffled()
         notesToDelete.add(allNotes[0])
         notesToDelete.add(allNotes[1])
         notesToDelete.add(allNotes[2])
@@ -153,14 +153,14 @@ class NoteDaoServiceTest {
         )
 
         // confirm deleted
-        allNotes = daoService.getAllNotes()
+        allNotes = daoService.getNotesByOwnerListId(ownerNoteList.id)
         assertFalse(allNotes.containsAll(notesToDelete))
     }
 
     // update
     @Test
     fun updateNote() = runBlocking {
-        val randomNote = daoService.getAllNotes().shuffled().first()
+        val randomNote = daoService.getNotesByOwnerListId(ownerNoteList.id).shuffled().first()
 
         randomNote.completed = !randomNote.completed
         randomNote.title = "new title"
@@ -189,13 +189,13 @@ class NoteDaoServiceTest {
         array1000.addAll(dataFactory.createMultipleNotes(1000, ownerNoteList.id))
 
         // save previous size
-        val prevSize = daoService.getAllNotes().size
+        val prevSize = daoService.getNotesByOwnerListId(ownerNoteList.id).size
 
         // insert 1000 items
         daoService.insertNotes(array1000)
 
         // confirm size increase
-        val actualSize = daoService.getAllNotes().size
+        val actualSize = daoService.getNotesByOwnerListId(ownerNoteList.id).size
         assertEquals(prevSize + 1000, actualSize)
     }
 
@@ -209,14 +209,14 @@ class NoteDaoServiceTest {
         daoService.insertNotes(array10)
 
         // confirm inserting
-        var allNotes = daoService.getAllNotes()
+        var allNotes = daoService.getNotesByOwnerListId(ownerNoteList.id)
         assertTrue("Assert inserting", allNotes.containsAll(array10))
 
         // delete 1 NoteList - owner of 1000 Notes
         noteListDao.deleteNoteList(ownerNoteList.id)
 
         // confirm delete notes
-        allNotes = daoService.getAllNotes()
+        allNotes = daoService.getNotesByOwnerListId(ownerNoteList.id)
         assertFalse("Assert deleting", allNotes.containsAll(array10))
     }
 }
