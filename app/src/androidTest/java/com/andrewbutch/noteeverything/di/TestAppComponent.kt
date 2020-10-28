@@ -21,7 +21,7 @@ import javax.inject.Singleton
         AppModule::class
     ]
 )
-interface TestAppComponent : AppComponent {
+interface TestAppComponent {
 
     @Component.Factory
     interface Factory {
