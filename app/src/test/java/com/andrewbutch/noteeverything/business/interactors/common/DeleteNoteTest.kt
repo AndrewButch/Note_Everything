@@ -74,7 +74,7 @@ class DeleteNoteTest {
     fun `Delete failure (return -1), confirm NOT delete from cache and network`() = runBlocking {
         val noteToDelete = noteFactory.createNote(title = "", listId = "")
         val cacheSizeBefore = noteCacheDataSource.getNotesByOwnerListId(ownerListId).size
-        val networkSizeBefore = noteNetworkDataSource.getNotesByOwnerListId("").size
+        val networkSizeBefore = noteNetworkDataSource.getNotesByOwnerListId(ownerListId).size
 
 
         deleteNote.deleteNote(

@@ -67,4 +67,18 @@ sealed class NoteListStateEvent : StateEvent {
 
         override fun shouldDisplayProgressBar() = true
     }
+
+    class DeleteMultipleNotesEvent(
+        val notes: List<Note>
+    ): NoteListStateEvent() {
+        override fun errorInfo(): String {
+            return "Error deleting selected notes"
+        }
+
+        override fun eventName(): String {
+            return "DeleteMultipleNotesEvent"
+        }
+
+        override fun shouldDisplayProgressBar() = true
+    }
 }
