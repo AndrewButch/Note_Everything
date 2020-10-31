@@ -20,5 +20,5 @@ class FakeNoteListNetworkDataSourceImpl(
 
     override suspend fun searchNoteList(noteList: NoteList): NoteList? = data[noteList.id]
 
-    override suspend fun getAllNotes(): List<NoteList> = ArrayList(data.values)
+    override suspend fun getAllNoteLists(): List<NoteList> = ArrayList(data.values)
 }

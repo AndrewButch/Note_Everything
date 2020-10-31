@@ -23,7 +23,7 @@ class NoteListNetworkDataSourceImpl(
         return noteListFirestoreService.searchNoteList(noteList)
     }
 
-    override suspend fun getAllNotes(): List<NoteList> {
+    override suspend fun getAllNoteLists(): List<NoteList> {
         return noteListFirestoreService.getAllNoteLists()
     }
 }

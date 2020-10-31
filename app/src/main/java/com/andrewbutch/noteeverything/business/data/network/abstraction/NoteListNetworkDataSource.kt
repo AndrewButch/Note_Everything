@@ -12,5 +12,5 @@ interface NoteListNetworkDataSource {
 
     suspend fun searchNoteList(noteList: NoteList): NoteList?
 
-    suspend fun getAllNotes(): List<NoteList>
+    suspend fun getAllNoteLists(): List<NoteList>
 }
