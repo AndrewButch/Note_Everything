@@ -20,7 +20,7 @@ import java.util.*
 class DependencyContainer {
 
     private val dateFormat = SimpleDateFormat("dd.MM.yyyy hh:mm:ss", Locale.ENGLISH)
-    private val dateUtil = DateUtil(dateFormat)
+    val dateUtil = DateUtil(dateFormat)
     lateinit var noteNetworkDataSource: NoteNetworkDataSource
     lateinit var noteCacheDataSource: NoteCacheDataSource
     lateinit var noteListCacheDataSource: NoteListCacheDataSource

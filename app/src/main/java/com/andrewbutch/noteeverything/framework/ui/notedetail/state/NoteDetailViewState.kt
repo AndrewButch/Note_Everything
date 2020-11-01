@@ -7,5 +7,5 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 class NoteDetailViewState(
-    private var note: Note? = null
+    var note: Note? = null
 ) : Parcelable, ViewState

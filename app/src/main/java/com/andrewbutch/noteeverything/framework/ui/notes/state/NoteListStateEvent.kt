@@ -81,4 +81,17 @@ sealed class NoteListStateEvent : StateEvent {
 
         override fun shouldDisplayProgressBar() = true
     }
+
+    class GetAllNoteListsEvent : NoteListStateEvent() {
+        override fun errorInfo(): String {
+            return "Error deleting selected notes"
+        }
+
+        override fun eventName(): String {
+            return "DeleteMultipleNotesEvent"
+        }
+
+        override fun shouldDisplayProgressBar() = true
+
+    }
 }

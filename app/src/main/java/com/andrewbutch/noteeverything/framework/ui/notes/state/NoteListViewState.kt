@@ -8,12 +8,12 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class NoteListViewState(
-    private var notes: List<Note>? = null,
-    private var noteLists: List<NoteList>? = null,
-    private var newNote: Note? = null, // note that can be created with fab
-    private var page: Int? = null,
-    private var newNoteList: NoteList? = null,
-    private var selectedNoteList: NoteList? = null
+    var notes: List<Note>? = null,
+    var noteLists: List<NoteList>? = null,
+    var newNote: Note? = null, // note that can be created with fab
+    var page: Int? = null,
+    var newNoteList: NoteList? = null,
+    var selectedNoteList: NoteList? = null
     // filter,
     // order,
     // search,
