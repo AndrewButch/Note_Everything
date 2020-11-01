@@ -84,14 +84,28 @@ sealed class NoteListStateEvent : StateEvent {
 
     class GetAllNoteListsEvent : NoteListStateEvent() {
         override fun errorInfo(): String {
-            return "Error deleting selected notes"
+            return "Error getting all note lists"
         }
 
         override fun eventName(): String {
-            return "DeleteMultipleNotesEvent"
+            return "GetAllNoteListsEvent"
         }
 
         override fun shouldDisplayProgressBar() = true
 
+    }
+
+    class GetNotesByNoteListEvent(
+        val noteList: NoteList
+    ): NoteListStateEvent() {
+        override fun errorInfo(): String {
+            return "Error getting notes by owner list"
+        }
+
+        override fun eventName(): String {
+            return "GetNotesByNoteList"
+        }
+
+        override fun shouldDisplayProgressBar() = true
     }
 }

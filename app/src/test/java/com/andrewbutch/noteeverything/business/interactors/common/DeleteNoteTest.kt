@@ -96,7 +96,7 @@ class DeleteNoteTest {
         assertTrue("Assert not delete from cache", cacheSizeBefore == cacheSizeAfter)
 
         // confirm network unchanged
-        val networkSizeAfter = noteNetworkDataSource.getNotesByOwnerListId("").size
+        val networkSizeAfter = noteNetworkDataSource.getNotesByOwnerListId(ownerListId).size
         assertTrue("Assert not delete from network", networkSizeBefore == networkSizeAfter)
     }
 
