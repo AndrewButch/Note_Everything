@@ -76,5 +76,6 @@ class UpdateNote(
     companion object {
         const val UPDATE_NOTE_SUCCESS = "Successfully updated note"
         const val UPDATE_NOTE_FAILURE = "Failed to update note"
+        const val UPDATE_NOTE_EXCEPTION = "Exception while update note"
     }
 }

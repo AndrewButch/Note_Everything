@@ -35,7 +35,7 @@ class FakeNoteListCacheDataSourceImpl(
                         title = newTitle,
                         color = newColor,
                         createdAt = oldNoteList.createdAt,
-                        updatedAt = timestamp ?: dateUtil.getCurrentTimestamp(),
+                        updatedAt = dateUtil.getCurrentTimestamp(),
                     )
                     data[id] = updatedNote
                     1
