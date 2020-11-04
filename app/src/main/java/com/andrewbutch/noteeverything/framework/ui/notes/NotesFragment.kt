@@ -9,13 +9,12 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.core.view.GravityCompat
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.andrewbutch.noteeverything.R
 import com.andrewbutch.noteeverything.business.domain.model.Note
 import com.andrewbutch.noteeverything.business.domain.model.NoteList
-import com.andrewbutch.noteeverything.framework.datasource.NoteDataFactory
 import com.andrewbutch.noteeverything.framework.ui.notes.drawer.NavMenuAdapter
 import com.andrewbutch.noteeverything.framework.ui.utils.VerticalItemDecoration
 import dagger.android.support.DaggerFragment
@@ -32,12 +31,14 @@ class NotesFragment :
     lateinit var viewModel: NotesViewModel
 
     @Inject
-    lateinit var noteDataFactory: NoteDataFactory
+    lateinit var providerFactory: ViewModelProvider.Factory
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        viewModel =
+            ViewModelProvider(viewModelStore, providerFactory).get(NotesViewModel::class.java)
         return inflater.inflate(R.layout.fragment_notes, container, false)
     }
 
@@ -73,21 +74,21 @@ class NotesFragment :
             adapter = navMenuAdapter
         }
         navRecyclerMenu.addItemDecoration(VerticalItemDecoration(30))
-        navMenuAdapter.submitList(noteDataFactory.produceListOfNoteList())
+        navMenuAdapter.submitList(viewModel.getNoteLists())
     }
 
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(NotesViewModel::class.java)
-        // TODO: Use the ViewModel
+
+
         val notesAdapter = NotesRecyclerAdapter(interaction = this)
         recycler.apply {
             adapter = notesAdapter
             layoutManager = LinearLayoutManager(requireContext())
         }
         recycler.addItemDecoration(VerticalItemDecoration(30))
-        notesAdapter.submitList(noteDataFactory.produceListOfNotes())
+        notesAdapter.submitList(viewModel.getNotes())
     }
 
     override fun onItemSelected(position: Int, item: Note) {
