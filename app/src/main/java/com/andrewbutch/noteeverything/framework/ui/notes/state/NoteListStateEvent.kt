@@ -108,4 +108,20 @@ sealed class NoteListStateEvent : StateEvent {
 
         override fun shouldDisplayProgressBar() = true
     }
+
+    class SelectNoteListEvent(
+        val noteList: NoteList
+    ): NoteListStateEvent() {
+        override fun errorInfo(): String {
+            return "Error selection note list"
+        }
+
+        override fun eventName(): String {
+            return "SelectNoteListEvent"
+        }
+
+        override fun shouldDisplayProgressBar() = true
+    }
+
+
 }

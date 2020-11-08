@@ -10,6 +10,11 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import javax.inject.Singleton
 
+
+/**
+ * Dependencies in this module have test fakes. See in TestModule.kt (androidTest)
+ */
+
 @ExperimentalCoroutinesApi
 @FlowPreview
 @Module

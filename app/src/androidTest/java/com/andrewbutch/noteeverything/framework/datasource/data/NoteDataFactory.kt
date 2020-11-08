@@ -10,12 +10,8 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.io.IOException
 import java.io.InputStream
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class NoteDataFactory
-@Inject
 constructor(
     private val application: Application,
     private val noteFactory: NoteFactory,

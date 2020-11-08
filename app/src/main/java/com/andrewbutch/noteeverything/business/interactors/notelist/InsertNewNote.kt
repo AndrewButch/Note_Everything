@@ -13,7 +13,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class InsertNewNote(
+class InsertNewNote
+constructor(
     private val noteCacheDataSource: NoteCacheDataSource,
     private val noteNetworkDataSource: NoteNetworkDataSource,
     private val noteFactory: NoteFactory
@@ -32,7 +33,8 @@ class InsertNewNote(
             title = title,
             checked = false,
             color = color,
-            listId = ownerListId)
+            listId = ownerListId
+        )
 
         val cacheResult = safeCacheCall(Dispatchers.IO) {
             noteCacheDataSource.insertNote(newNote)

@@ -4,9 +4,11 @@ import com.andrewbutch.noteeverything.business.data.network.abstraction.NoteList
 import com.andrewbutch.noteeverything.business.domain.model.NoteList
 import com.andrewbutch.noteeverything.framework.datasource.network.abstraction.NoteListFirestoreService
 
-class NoteListNetworkDataSourceImpl(
+class NoteListNetworkDataSourceImpl
+constructor(
     private val noteListFirestoreService: NoteListFirestoreService
-) : NoteListNetworkDataSource{
+
+) : NoteListNetworkDataSource {
     override suspend fun insertOrUpdateNoteList(noteList: NoteList) {
         return noteListFirestoreService.insertOrUpdateNoteList(noteList)
     }

@@ -6,8 +6,6 @@ import com.andrewbutch.noteeverything.framework.datasource.network.mapper.NoteNe
 import com.andrewbutch.noteeverything.framework.datasource.network.model.NoteNetworkEntity
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
-import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * Firestore doc refs:
@@ -16,9 +14,7 @@ import javax.inject.Singleton
  * 3. update: https://firebase.google.com/docs/firestore/manage-data/add-data#update-data
  * 4. query: https://firebase.google.com/docs/firestore/query-data/queries
  */
-@Singleton
 class NoteFirestoreServiceImpl
-@Inject
 constructor(
     private val store: FirebaseFirestore,
     private val mapper: NoteNetworkMapper

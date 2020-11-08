@@ -9,7 +9,11 @@ import dagger.android.ContributesAndroidInjector
 @Module
 abstract class MainFragmentsBuilderModule {
 
-    @ContributesAndroidInjector
+    @ContributesAndroidInjector(
+        modules = [
+            MainViewModelsModule::class,
+        ]
+    )
     abstract fun contributeNotesFragment(): NotesFragment
 
     @ContributesAndroidInjector

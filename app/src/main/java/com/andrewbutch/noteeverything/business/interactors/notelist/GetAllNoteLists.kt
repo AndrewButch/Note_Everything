@@ -10,7 +10,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class GetAllNoteLists(
+class GetAllNoteLists
+constructor(
     private val noteListCacheDataSource: NoteListCacheDataSource
 ) {
     fun getAllNoteLists(stateEvent: StateEvent): Flow<DataState<NoteListViewState>?> = flow {

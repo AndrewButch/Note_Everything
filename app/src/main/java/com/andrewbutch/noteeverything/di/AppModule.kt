@@ -1,13 +1,30 @@
 package com.andrewbutch.noteeverything.di
 
-import android.app.Application
+import com.andrewbutch.noteeverything.business.data.cache.abstraction.NoteCacheDataSource
+import com.andrewbutch.noteeverything.business.data.cache.abstraction.NoteListCacheDataSource
+import com.andrewbutch.noteeverything.business.data.cache.implementation.NoteCacheDataSourceImpl
+import com.andrewbutch.noteeverything.business.data.cache.implementation.NoteListCacheDataSourceImpl
+import com.andrewbutch.noteeverything.business.data.network.abstraction.NoteListNetworkDataSource
+import com.andrewbutch.noteeverything.business.data.network.abstraction.NoteNetworkDataSource
+import com.andrewbutch.noteeverything.business.data.network.implementation.NoteListNetworkDataSourceImpl
+import com.andrewbutch.noteeverything.business.data.network.implementation.NoteNetworkDatasourceImpl
 import com.andrewbutch.noteeverything.business.domain.model.NoteFactory
 import com.andrewbutch.noteeverything.business.domain.model.NoteListFactory
 import com.andrewbutch.noteeverything.business.domain.util.DateUtil
+import com.andrewbutch.noteeverything.business.interactors.common.DeleteNote
+import com.andrewbutch.noteeverything.business.interactors.common.DeleteNoteList
+import com.andrewbutch.noteeverything.business.interactors.notelist.*
+import com.andrewbutch.noteeverything.framework.BaseApplication
 import com.andrewbutch.noteeverything.framework.datasource.NoteDataFactory
+import com.andrewbutch.noteeverything.framework.datasource.cache.abstraction.NoteDaoService
+import com.andrewbutch.noteeverything.framework.datasource.cache.abstraction.NoteListDaoService
 import com.andrewbutch.noteeverything.framework.datasource.cache.database.NoteDao
 import com.andrewbutch.noteeverything.framework.datasource.cache.database.NoteListDao
 import com.andrewbutch.noteeverything.framework.datasource.cache.database.NotesDatabase
+import com.andrewbutch.noteeverything.framework.datasource.cache.implementation.NoteDaoServiceImpl
+import com.andrewbutch.noteeverything.framework.datasource.cache.implementation.NoteListDaoServiceImpl
+import com.andrewbutch.noteeverything.framework.datasource.cache.mapper.NoteCacheMapper
+import com.andrewbutch.noteeverything.framework.datasource.cache.mapper.NoteListCacheMapper
 import com.andrewbutch.noteeverything.framework.datasource.network.abstraction.NoteFirestoreService
 import com.andrewbutch.noteeverything.framework.datasource.network.abstraction.NoteListFirestoreService
 import com.andrewbutch.noteeverything.framework.datasource.network.implementation.NoteFirestoreServiceImpl
@@ -17,10 +34,14 @@ import com.andrewbutch.noteeverything.framework.datasource.network.mapper.NoteNe
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
 import dagger.Provides
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Singleton
 
+@ExperimentalCoroutinesApi
+@FlowPreview
 @Module
 object AppModule {
 
@@ -82,12 +103,82 @@ object AppModule {
     @Singleton
     @Provides
     fun provideNoteDataFactory(
-        application: Application,
-        noteFactory: NoteFactory,
-        noteListFactory: NoteListFactory
+        application: BaseApplication,
     ): NoteDataFactory {
-        return NoteDataFactory(application, noteFactory, noteListFactory)
+        return NoteDataFactory(application)
     }
 
+    @JvmStatic
+    @Singleton
+    @Provides
+    fun provideNotesInteractors(
+        noteListCacheDataSource: NoteListCacheDataSource,
+        noteListNetworkDataSource: NoteListNetworkDataSource,
+        noteCacheDataSource: NoteCacheDataSource,
+        noteNetworkDataSource: NoteNetworkDataSource,
+        noteFactory: NoteFactory,
+        noteListFactory: NoteListFactory
+    ): NotesInteractors =
+        NotesInteractors(
+            GetAllNoteLists(noteListCacheDataSource),
+            GetNotesByNoteList(noteCacheDataSource),
+            DeleteMultipleNotes(noteCacheDataSource, noteNetworkDataSource),
+            InsertNewNote(noteCacheDataSource, noteNetworkDataSource, noteFactory),
+            InsertNewNoteList(noteListCacheDataSource, noteListNetworkDataSource, noteListFactory),
+            DeleteNote(noteCacheDataSource, noteNetworkDataSource),
+            DeleteNoteList(noteListCacheDataSource, noteListNetworkDataSource)
+        )
+
+    @JvmStatic
+    @Singleton
+    @Provides
+    fun provideNoteListCacheDataSource(
+        noteListDaoService: NoteListDaoService
+    ): NoteListCacheDataSource =
+        NoteListCacheDataSourceImpl(noteListDaoService)
+
+    @JvmStatic
+    @Singleton
+    @Provides
+    fun provideNoteListDaoService(
+        noteListDao: NoteListDao,
+        mapper: NoteListCacheMapper,
+        dateUtil: DateUtil
+    ): NoteListDaoService =
+        NoteListDaoServiceImpl(noteListDao, mapper, dateUtil)
+
+    @JvmStatic
+    @Singleton
+    @Provides
+    fun provideNoteListNetworkDataSource(
+        noteListFirestoreService: NoteListFirestoreService
+    ): NoteListNetworkDataSource =
+        NoteListNetworkDataSourceImpl(noteListFirestoreService)
+
+    @JvmStatic
+    @Singleton
+    @Provides
+    fun provideNoteCacheDataSource(
+        noteDaoService: NoteDaoService
+    ): NoteCacheDataSource =
+        NoteCacheDataSourceImpl(noteDaoService)
+
+    @JvmStatic
+    @Singleton
+    @Provides
+    fun provideNoteDaoService(
+        noteDao: NoteDao,
+        mapper: NoteCacheMapper,
+        dateUtil: DateUtil
+    ): NoteDaoService =
+        NoteDaoServiceImpl(noteDao, mapper, dateUtil)
+
+    @JvmStatic
+    @Singleton
+    @Provides
+    fun provideNoteNetworkDataSource(
+        noteFirestoreService: NoteFirestoreService
+    ): NoteNetworkDataSource =
+        NoteNetworkDatasourceImpl(noteFirestoreService)
 
 }

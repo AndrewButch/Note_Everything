@@ -8,10 +8,10 @@ import dagger.Module
 import dagger.multibindings.IntoMap
 
 @Module
-abstract class MainViewModelModule {
+abstract class MainViewModelsModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(value = NotesViewModel::class)
-    abstract fun bindNotesViewModel(notesViewModel: NotesViewModel) : ViewModel
+    @ViewModelKey(NotesViewModel::class)
+    abstract fun providesNotesViewModel(viewModel: NotesViewModel): ViewModel
 }

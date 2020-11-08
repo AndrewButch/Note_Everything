@@ -4,7 +4,6 @@ import com.andrewbutch.noteeverything.business.domain.model.Note
 import com.andrewbutch.noteeverything.framework.datasource.cache.model.NoteCacheEntity
 import javax.inject.Inject
 import javax.inject.Singleton
-
 @Singleton
 class NoteCacheMapper @Inject constructor() {
 

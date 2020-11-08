@@ -16,6 +16,7 @@ import com.andrewbutch.noteeverything.R
 import com.andrewbutch.noteeverything.business.domain.model.Note
 import com.andrewbutch.noteeverything.business.domain.model.NoteList
 import com.andrewbutch.noteeverything.framework.ui.notes.drawer.NavMenuAdapter
+import com.andrewbutch.noteeverything.framework.ui.notes.state.NoteListStateEvent
 import com.andrewbutch.noteeverything.framework.ui.utils.VerticalItemDecoration
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_notes.*
@@ -74,13 +75,15 @@ class NotesFragment :
             adapter = navMenuAdapter
         }
         navRecyclerMenu.addItemDecoration(VerticalItemDecoration(30))
-        navMenuAdapter.submitList(viewModel.getNoteLists())
+
+        viewModel.lists.observe(viewLifecycleOwner) {
+            navMenuAdapter.submitList(it)
+        }
     }
 
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
 
         val notesAdapter = NotesRecyclerAdapter(interaction = this)
         recycler.apply {
@@ -88,7 +91,13 @@ class NotesFragment :
             layoutManager = LinearLayoutManager(requireContext())
         }
         recycler.addItemDecoration(VerticalItemDecoration(30))
-        notesAdapter.submitList(viewModel.getNotes())
+        viewModel.setStateEvent(NoteListStateEvent.GetAllNoteListsEvent())
+
+        viewModel.notes.observe(viewLifecycleOwner) {
+            notesAdapter.submitList(it)
+        }
+
+        viewModel.insertTestData()
     }
 
     override fun onItemSelected(position: Int, item: Note) {
@@ -98,7 +107,8 @@ class NotesFragment :
 
     override fun onItemSelected(position: Int, item: NoteList) {
         showToast("Clicked $position, title: ${item.title}")
-        navToNoteListDetail(item)
+//        navToNoteListDetail(item)
+        viewModel.setStateEvent(NoteListStateEvent.SelectNoteListEvent(item))
     }
 
     private fun showToast(msg: String) {

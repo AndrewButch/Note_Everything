@@ -10,7 +10,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class GetNotesByNoteList(
+class GetNotesByNoteList
+constructor(
     private val noteCacheDataSource: NoteCacheDataSource
 
 ) {

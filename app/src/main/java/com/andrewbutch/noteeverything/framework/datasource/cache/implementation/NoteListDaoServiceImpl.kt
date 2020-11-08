@@ -5,10 +5,8 @@ import com.andrewbutch.noteeverything.business.domain.util.DateUtil
 import com.andrewbutch.noteeverything.framework.datasource.cache.abstraction.NoteListDaoService
 import com.andrewbutch.noteeverything.framework.datasource.cache.database.NoteListDao
 import com.andrewbutch.noteeverything.framework.datasource.cache.mapper.NoteListCacheMapper
-import javax.inject.Inject
 
 class NoteListDaoServiceImpl
-@Inject
 constructor(
     private val dao: NoteListDao,
     private val mapper: NoteListCacheMapper,

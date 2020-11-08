@@ -3,8 +3,10 @@ package com.andrewbutch.noteeverything.framework.datasource.cache.mapper
 import com.andrewbutch.noteeverything.business.domain.model.NoteList
 import com.andrewbutch.noteeverything.framework.datasource.cache.model.NoteListCacheEntity
 import javax.inject.Inject
+import javax.inject.Singleton
 
-class NoteListCacheMapper @Inject constructor(){
+@Singleton
+class NoteListCacheMapper @Inject constructor() {
 
     fun mapToEntity(noteList: NoteList): NoteListCacheEntity {
         return NoteListCacheEntity(

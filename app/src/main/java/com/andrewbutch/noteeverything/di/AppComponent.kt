@@ -1,6 +1,5 @@
 package com.andrewbutch.noteeverything.di
 
-import android.app.Application
 import com.andrewbutch.noteeverything.framework.BaseApplication
 import dagger.BindsInstance
 import dagger.Component
@@ -19,7 +18,7 @@ import javax.inject.Singleton
         ActivityBuildersModule::class,
         AppModule::class,
         ProductionModule::class,
-        ViewModelFactoryModule::class
+        ViewModelBuilderModule::class
     ]
 )
 interface AppComponent : AndroidInjector<BaseApplication>{
@@ -28,8 +27,10 @@ interface AppComponent : AndroidInjector<BaseApplication>{
     interface Builder {
 
         @BindsInstance
-        fun application(application: Application): Builder
+        fun application(application: BaseApplication): Builder
 
         fun build(): AppComponent
     }
+
+
 }

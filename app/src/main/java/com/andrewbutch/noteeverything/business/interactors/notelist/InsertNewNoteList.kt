@@ -13,7 +13,8 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class InsertNewNoteList(
+class InsertNewNoteList
+constructor(
     private val noteListCacheDataSource: NoteListCacheDataSource,
     private val noteListNetworkDataSource: NoteListNetworkDataSource,
     private val noteListFactory: NoteListFactory

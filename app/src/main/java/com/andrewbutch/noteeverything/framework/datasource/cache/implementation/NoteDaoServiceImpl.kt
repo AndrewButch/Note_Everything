@@ -6,7 +6,8 @@ import com.andrewbutch.noteeverything.framework.datasource.cache.abstraction.Not
 import com.andrewbutch.noteeverything.framework.datasource.cache.database.NoteDao
 import com.andrewbutch.noteeverything.framework.datasource.cache.mapper.NoteCacheMapper
 
-class NoteDaoServiceImpl(
+class NoteDaoServiceImpl
+constructor(
     private val noteDao: NoteDao,
     private val mapper: NoteCacheMapper,
     private val dateUtil: DateUtil

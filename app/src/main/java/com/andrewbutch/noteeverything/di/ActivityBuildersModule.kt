@@ -1,7 +1,6 @@
 package com.andrewbutch.noteeverything.di
 
 import com.andrewbutch.noteeverything.di.main.MainFragmentsBuilderModule
-import com.andrewbutch.noteeverything.di.main.MainViewModelModule
 import com.andrewbutch.noteeverything.framework.ui.MainActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -16,7 +15,6 @@ abstract class ActivityBuildersModule {
     @ContributesAndroidInjector(
         modules = [
             MainFragmentsBuilderModule::class,
-            MainViewModelModule::class
         ]
     )
     abstract fun contributeMainActivity(): MainActivity

@@ -4,10 +4,10 @@ import com.andrewbutch.noteeverything.business.data.cache.abstraction.NoteListCa
 import com.andrewbutch.noteeverything.business.domain.model.NoteList
 import com.andrewbutch.noteeverything.framework.datasource.cache.abstraction.NoteListDaoService
 
-class NoteListCacheDataSourceImpl(
+class NoteListCacheDataSourceImpl
+constructor(
     private val noteListDaoService: NoteListDaoService
-) :
-    NoteListCacheDataSource{
+) : NoteListCacheDataSource {
     override suspend fun insertNoteList(noteList: NoteList): Long {
         return noteListDaoService.insertNoteList(noteList)
     }
