@@ -16,7 +16,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class SyncNoteLists(
-    private val noteListCacheDataSource: NoteListCacheDataSource,
+    val noteListCacheDataSource: NoteListCacheDataSource,
     private val noteListNetworkDataSource: NoteListNetworkDataSource
 ) {
     suspend fun syncNoteLists() {
