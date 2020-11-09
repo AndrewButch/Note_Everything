@@ -5,7 +5,7 @@ import com.andrewbutch.noteeverything.business.domain.state.*
 
 abstract class CacheResultHandler<ViewState, Data>(
     private val result: CacheResult<Data?>,
-    private val stateEvent: StateEvent
+    private val stateEvent: StateEvent?
 ) {
 
     suspend fun getResult(): DataState<ViewState>? {
@@ -13,8 +13,8 @@ abstract class CacheResultHandler<ViewState, Data>(
             is CacheResult.Error -> {
                 DataState.error(
                     stateMessage = StateMessage(
-                        message = "Event: ${stateEvent.eventName()}, " +
-                                "Info: ${stateEvent.errorInfo()}, " +
+                        message = "Event: ${stateEvent?.eventName()}, " +
+                                "Info: ${stateEvent?.errorInfo()}, " +
                                 "Reason: ${result.errorMessage}",
                         uiComponentType = UIComponentType.Dialog,
                         messageType = MessageType.Error
@@ -27,8 +27,8 @@ abstract class CacheResultHandler<ViewState, Data>(
                 if (result.value == null) {
                     return DataState.error(
                         stateMessage = StateMessage(
-                            message = "Event: ${stateEvent.eventName()}, " +
-                                    "Info: ${stateEvent.errorInfo()}, " +
+                            message = "Event: ${stateEvent?.eventName()}, " +
+                                    "Info: ${stateEvent?.errorInfo()}, " +
                                     "Reason: $CACHE_DATA_NULL",
                             uiComponentType = UIComponentType.Dialog,
                             messageType = MessageType.Error

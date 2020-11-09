@@ -4,8 +4,8 @@ import com.andrewbutch.noteeverything.business.data.network.NetworkConstants.NET
 import com.andrewbutch.noteeverything.business.domain.state.*
 
 abstract class NetworkResultHandler<ViewState, Data>(
-    private val result: NetworkResult<Data>,
-    private val stateEvent: StateEvent,
+    private val result: NetworkResult<Data?>,
+    private val stateEvent: StateEvent?,
 ) {
 
     suspend fun getResult(): DataState<ViewState>? {
@@ -13,8 +13,8 @@ abstract class NetworkResultHandler<ViewState, Data>(
             is NetworkResult.Error -> {
                 DataState.error(
                     stateMessage = StateMessage(
-                        message = "Event: ${stateEvent.eventName()}, " +
-                                "Info: ${stateEvent.errorInfo()}, " +
+                        message = "Event: ${stateEvent?.eventName()}, " +
+                                "Info: ${stateEvent?.errorInfo()}, " +
                                 "Reason: ${result.errorMessage}",
                         uiComponentType = UIComponentType.Dialog,
                         messageType = MessageType.Error
@@ -26,8 +26,8 @@ abstract class NetworkResultHandler<ViewState, Data>(
             is NetworkResult.NetworkError -> {
                 DataState.error(
                     stateMessage = StateMessage(
-                        message = "Event: ${stateEvent.eventName()}, " +
-                                "Info: ${stateEvent.errorInfo()}, " +
+                        message = "Event: ${stateEvent?.eventName()}, " +
+                                "Info: ${stateEvent?.errorInfo()}, " +
                                 "Reason: $NETWORK_ERROR",
                         uiComponentType = UIComponentType.Dialog,
                         messageType = MessageType.Error
@@ -40,8 +40,8 @@ abstract class NetworkResultHandler<ViewState, Data>(
                 if (result.value == null) {
                     return DataState.error(
                         stateMessage = StateMessage(
-                            message = "Event: ${stateEvent.eventName()}, " +
-                                    "Info: ${stateEvent.errorInfo()}, " +
+                            message = "Event: ${stateEvent?.eventName()}, " +
+                                    "Info: ${stateEvent?.errorInfo()}, " +
                                     "Reason: $NETWORK_ERROR",
                             uiComponentType = UIComponentType.Dialog,
                             messageType = MessageType.Error
@@ -54,5 +54,5 @@ abstract class NetworkResultHandler<ViewState, Data>(
         }
     }
 
-    abstract suspend fun handleSuccess(resultValue: Data): DataState<ViewState>
+    abstract suspend fun handleSuccess(resultValue: Data): DataState<ViewState>?
 }
