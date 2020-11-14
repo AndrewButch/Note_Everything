@@ -3,9 +3,9 @@ package com.andrewbutch.noteeverything.framework.ui.notes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.andrewbutch.noteeverything.business.domain.model.Note
 import com.andrewbutch.noteeverything.business.domain.model.NoteList
 import com.andrewbutch.noteeverything.business.domain.state.DataState
+import com.andrewbutch.noteeverything.business.domain.state.StateMessage
 import com.andrewbutch.noteeverything.business.interactors.notelist.NotesInteractors
 import com.andrewbutch.noteeverything.framework.datasource.NoteDataFactory
 import com.andrewbutch.noteeverything.framework.ui.notes.state.NoteListStateEvent
@@ -26,16 +26,21 @@ constructor(
     private val notesInteractors: NotesInteractors
 ) : ViewModel() {
 
-    private val _lists = MutableLiveData<List<NoteList>>()
-    val lists: LiveData<List<NoteList>> = _lists
-
-    private val _notes = MutableLiveData<List<Note>>()
-    val notes: LiveData<List<Note>> = _notes
+    private val _viewState = MutableLiveData<NoteListViewState>()
+    val viewState: LiveData<NoteListViewState>
+        get() = _viewState
 
 
     fun setStateEvent(stateEvent: NoteListStateEvent) {
         val job: Flow<DataState<NoteListViewState>?> = when (stateEvent) {
-            is NoteListStateEvent.InsertNewNoteEvent -> TODO()
+            is NoteListStateEvent.InsertNewNoteEvent -> {
+                notesInteractors.insertNewNote.insertNote(
+                    title = stateEvent.title,
+                    color = stateEvent.color,
+                    ownerListId = stateEvent.listId,
+                    stateEvent = stateEvent
+                )
+            }
             is NoteListStateEvent.InsertNewNoteListEvent -> {
                 notesInteractors.insertNewNoteList.insertNewNote(
                     title = stateEvent.title,
@@ -60,27 +65,40 @@ constructor(
 
         job
             .onEach {
-                it?.data?.let { viewState ->
-                    withContext(Main) {
-                        handleNewViewState(viewState)
+                withContext(Main) {
+                    it?.data?.let { viewState ->
+                        handleViewState(viewState)
+                    }
+                    it?.stateMessage?.let { stateMessage ->
+                        handleStateMessage(stateMessage)
                     }
                 }
             }
             .launchIn(CoroutineScope(IO))
     }
 
-    private fun handleNewViewState(viewState: NoteListViewState?) {
+    private fun handleStateMessage(stateMessage: StateMessage) {
+
+    }
+
+    private fun handleViewState(viewState: NoteListViewState?) {
         viewState?.newNoteList?.let {
             // TODO(Handle note list inserting)
         }
         viewState?.newNote?.let {
-            // TODO(Handle note inserting)
+            val updated = getCurrentViewStateOrNew()
+            updated.newNote = it
+            setViewState(updated)
         }
         viewState?.noteLists?.let {
-            _lists.value = it
+            val updated = getCurrentViewStateOrNew()
+            updated.noteLists = it
+            setViewState(updated)
         }
         viewState?.notes?.let {
-            _notes.value = it
+            val updated = getCurrentViewStateOrNew()
+            updated.notes = it
+            setViewState(updated)
         }
         viewState?.selectedNoteList?.let {
         }
@@ -88,6 +106,21 @@ constructor(
             // TODO(handle page in long list of notes)
         }
     }
+
+    fun setSelectedList(selectedList: NoteList) {
+        val updated = getCurrentViewStateOrNew()
+        updated.selectedNoteList = selectedList
+        setViewState(updated)
+    }
+
+    private fun setViewState(viewState: NoteListViewState) {
+        _viewState.value = viewState
+    }
+
+    private fun getCurrentViewStateOrNew() = _viewState.value ?: getNewViewState()
+
+    private fun getNewViewState() = NoteListViewState()
+
 
     /** ONLY FOR INSERT ONCE */
     fun insertTestData() {

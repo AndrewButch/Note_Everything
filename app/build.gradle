@@ -64,6 +64,12 @@ dependencies {
     def material_version = "1.2.1"
     implementation "com.google.android.material:material:$material_version"
 
+    // material dialogs
+    def material_dialogs = "3.3.0"
+    implementation "com.afollestad.material-dialogs:core:$material_dialogs"
+    implementation "com.afollestad.material-dialogs:input:$material_dialogs"
+    implementation "com.afollestad.material-dialogs:color:$material_dialogs"
+
     // Firebase
     implementation 'com.google.firebase:firebase-auth:19.4.0'
     implementation 'com.google.firebase:firebase-firestore:21.7.1'

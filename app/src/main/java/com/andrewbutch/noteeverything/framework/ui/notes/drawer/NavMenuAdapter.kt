@@ -65,11 +65,16 @@ class NavMenuAdapter(private val interaction: Interaction? = null) :
             itemView.setOnClickListener {
                 interaction?.onItemSelected(adapterPosition, item)
             }
+            itemView.setOnLongClickListener {
+                interaction?.onLongClick(adapterPosition, item)
+                true
+            }
             title.text = item.title
         }
     }
 
     interface Interaction {
         fun onItemSelected(position: Int, item: NoteList)
+        fun onLongClick(position: Int, item: NoteList)
     }
 }

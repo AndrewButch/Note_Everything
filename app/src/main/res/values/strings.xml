@@ -23,4 +23,7 @@
     <!-- Menu detail -->
     <string name="menu_delete">Удалить</string>
 
+    <!-- Dialogs -->
+    <string name="dialog_done">Готово</string>
+
 </resources>

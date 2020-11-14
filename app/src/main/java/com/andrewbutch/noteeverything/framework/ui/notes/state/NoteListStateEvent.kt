@@ -8,8 +8,8 @@ sealed class NoteListStateEvent : StateEvent {
 
     class InsertNewNoteEvent(
         val title: String,
-        val completed: Boolean,
-        val color: String,
+        val completed: Boolean = false,
+        val color: String? = null,
         val listId: String
     ): NoteListStateEvent() {
 
