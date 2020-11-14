@@ -1,5 +1,6 @@
 package com.andrewbutch.noteeverything.framework.ui.notes
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,7 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.andrewbutch.noteeverything.R
 import com.andrewbutch.noteeverything.business.domain.model.Note
 import com.andrewbutch.noteeverything.business.domain.model.NoteList
-import com.andrewbutch.noteeverything.framework.ui.MainActivity
+import com.andrewbutch.noteeverything.framework.ui.UIController
 import com.andrewbutch.noteeverything.framework.ui.notes.drawer.NavMenuAdapter
 import com.andrewbutch.noteeverything.framework.ui.notes.state.NoteListStateEvent
 import com.andrewbutch.noteeverything.framework.ui.utils.VerticalItemDecoration
@@ -34,9 +35,15 @@ class NotesFragment :
     private lateinit var navMenuAdapter: NavMenuAdapter
     private lateinit var notesAdapter: NotesRecyclerAdapter
     private lateinit var listID: String
+    private lateinit var uiController: UIController
 
     @Inject
     lateinit var providerFactory: ViewModelProvider.Factory
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        uiController = (context as UIController)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,10 +59,10 @@ class NotesFragment :
         setupNavDrawer()
         // FAB
         notesFragmentFab.setOnClickListener {
-            (activity as MainActivity).showDialog(
-                "Hello dialog",
-                object : MainActivity.DialogCallback {
-                    override fun onDoneClick(text: String) {
+            uiController.displayInputDialog(
+                "Новая заметка",
+                object : UIController.Companion.InputDialogCallback {
+                    override fun onInputComplete(text: String) {
                         viewModel.setStateEvent(
                             NoteListStateEvent.InsertNewNoteEvent(
                                 title = text,
