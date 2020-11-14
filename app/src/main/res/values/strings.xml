@@ -26,4 +26,7 @@
     <!-- Dialogs -->
     <string name="dialog_done">Готово</string>
 
+    <!-- Splash fragment -->
+    <string name="sync">Синхронизация…</string>
+
 </resources>
