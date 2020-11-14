@@ -1,4 +1,4 @@
-package com.andrewbutch.noteeverything.di.main
+package com.andrewbutch.noteeverything.di.notes
 
 import androidx.lifecycle.ViewModel
 import com.andrewbutch.noteeverything.di.ViewModelKey
@@ -8,7 +8,7 @@ import dagger.Module
 import dagger.multibindings.IntoMap
 
 @Module
-abstract class MainViewModelsModule {
+abstract class NotesViewModelsModule {
 
     @Binds
     @IntoMap
