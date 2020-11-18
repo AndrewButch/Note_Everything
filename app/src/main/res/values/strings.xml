@@ -16,6 +16,7 @@
     <string name="list_title_hint">Название</string>
     <string name="save_btn_text">Сохранить</string>
     <string name="color_text">Цвет</string>
+    <string name="completed_text">Выполнено</string>
 
     <!-- Note detail fragment -->
     <string name="note_title_hint">Название</string>
@@ -25,6 +26,7 @@
 
     <!-- Dialogs -->
     <string name="dialog_done">Готово</string>
+    <string name="color_chooser_title">Выбор цвета</string>
 
     <!-- Splash fragment -->
     <string name="sync">Синхронизация…</string>

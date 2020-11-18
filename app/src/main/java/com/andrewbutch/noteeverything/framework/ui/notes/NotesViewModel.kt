@@ -1,8 +1,10 @@
 package com.andrewbutch.noteeverything.framework.ui.notes
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.andrewbutch.noteeverything.business.domain.model.Note
 import com.andrewbutch.noteeverything.business.domain.model.NoteList
 import com.andrewbutch.noteeverything.business.domain.state.DataState
 import com.andrewbutch.noteeverything.business.domain.state.StateMessage
@@ -30,6 +32,9 @@ constructor(
     val viewState: LiveData<NoteListViewState>
         get() = _viewState
 
+    init {
+        Log.d(TAG, "INIT")
+    }
 
     fun setStateEvent(stateEvent: NoteListStateEvent) {
         val job: Flow<DataState<NoteListViewState>?> = when (stateEvent) {
@@ -113,10 +118,22 @@ constructor(
         setViewState(updated)
     }
 
+    fun setNote(note: Note?) {
+        val updated = getCurrentViewStateOrNew()
+        updated.newNote = note
+        setViewState(updated)
+    }
+
     private fun setViewState(viewState: NoteListViewState) {
         _viewState.value = viewState
     }
 
+    fun reloadListItems() {
+        val currentNoteList = getCurrentViewStateOrNew().selectedNoteList
+        currentNoteList?.let {
+            setStateEvent(NoteListStateEvent.SelectNoteListEvent(currentNoteList))
+        }
+    }
     private fun getCurrentViewStateOrNew() = _viewState.value ?: getNewViewState()
 
     private fun getNewViewState() = NoteListViewState()
@@ -157,7 +174,7 @@ constructor(
 
 
     companion object {
-        const val TAG = "NotesViewModel"
+        const val TAG = "!@#NotesViewModel"
     }
 
 }

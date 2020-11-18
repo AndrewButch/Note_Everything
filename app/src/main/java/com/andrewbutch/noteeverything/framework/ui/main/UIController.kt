@@ -1,4 +1,4 @@
-package com.andrewbutch.noteeverything.framework.ui
+package com.andrewbutch.noteeverything.framework.ui.main
 
 interface UIController {
 
@@ -8,7 +8,7 @@ interface UIController {
 
     fun displayInputDialog(title: String, callback: InputDialogCallback)
 
-    fun displayColorDialog(title: String, callback: ColorDialogCallback)
+    fun displayColorDialog(colors: IntArray, callback: ColorDialogCallback)
 
 
     companion object {
@@ -17,7 +17,7 @@ interface UIController {
         }
 
         interface ColorDialogCallback {
-            fun onColorChoose(color: String)
+            fun onColorChoose(color: Int)
         }
     }
 

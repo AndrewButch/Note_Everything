@@ -1,5 +1,7 @@
 package com.andrewbutch.noteeverything.di.main
 
+import com.andrewbutch.noteeverything.di.notedetail.NoteDetailModule
+import com.andrewbutch.noteeverything.di.notedetail.NoteDetailViewModelsModule
 import com.andrewbutch.noteeverything.di.notes.NotesViewModelsModule
 import com.andrewbutch.noteeverything.di.splash.SplashFragmentModule
 import com.andrewbutch.noteeverything.di.splash.SplashViewModelModule
@@ -22,7 +24,8 @@ abstract class MainFragmentsBuilderModule {
 
     @ContributesAndroidInjector(
         modules = [
-            NotesViewModelsModule::class,
+            NoteDetailViewModelsModule::class,
+            NoteDetailModule::class
         ]
     )
     abstract fun contributeNoteDetailFragment(): NoteDetailFragment

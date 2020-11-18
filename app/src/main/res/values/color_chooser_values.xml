@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer-array name="color_chooser_values">
+        <item>0xFF000000</item>
+        <item>0xFF444444</item>
+        <item>0xFF888888</item>
+        <item>0xFFCCCCCC</item>
+        <item>0xFFFFFFFF</item>
+        <item>0xFFFF0000</item>
+        <item>0xFF00FF00</item>
+        <item>0xFF0000FF</item>
+        <item>0xFFFFFF00</item>
+        <item>0xFF00FFFF</item>
+        <item>0xFFFF00FF</item>
+    </integer-array>
+    
+</resources>

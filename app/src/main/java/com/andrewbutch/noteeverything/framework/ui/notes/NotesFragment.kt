@@ -2,6 +2,7 @@ package com.andrewbutch.noteeverything.framework.ui.notes
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.andrewbutch.noteeverything.R
 import com.andrewbutch.noteeverything.business.domain.model.Note
 import com.andrewbutch.noteeverything.business.domain.model.NoteList
-import com.andrewbutch.noteeverything.framework.ui.UIController
+import com.andrewbutch.noteeverything.framework.ui.main.UIController
 import com.andrewbutch.noteeverything.framework.ui.notes.drawer.NavMenuAdapter
 import com.andrewbutch.noteeverything.framework.ui.notes.state.NoteListStateEvent
 import com.andrewbutch.noteeverything.framework.ui.utils.VerticalItemDecoration
@@ -43,18 +44,29 @@ class NotesFragment :
     override fun onAttach(context: Context) {
         super.onAttach(context)
         uiController = (context as UIController)
+        Log.d("!@#Notes Fragment", "onAttach: ")
+
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        Log.d("!@#Notes Fragment", "onCreate: ")
+
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        Log.d("!@#Notes Fragment", "onCreateView: ")
+
         viewModel =
             ViewModelProvider(viewModelStore, providerFactory).get(NotesViewModel::class.java)
         return inflater.inflate(R.layout.fragment_notes, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        Log.d("!@#Notes Fragment", "onViewCreated: ")
         setupViews()
         setupNavDrawer()
         // FAB
@@ -146,13 +158,11 @@ class NotesFragment :
 
     // Note clicked
     override fun onItemSelected(position: Int, item: Note) {
-        showToast("Clicked $position, title: ${item.title}")
         navToNoteDetail(item)
     }
 
     // List clicked
     override fun onItemSelected(position: Int, item: NoteList) {
-        showToast("Clicked $position, title: ${item.title}")
         drawer.closeDrawer(GravityCompat.START)
         viewModel.setStateEvent(NoteListStateEvent.SelectNoteListEvent(item))
         viewModel.setSelectedList(item)
@@ -160,7 +170,6 @@ class NotesFragment :
 
     // List long click
     override fun onLongClick(position: Int, item: NoteList) {
-        showToast("Long clicked $position, title: ${item.title}")
         navToNoteListDetail(item)
     }
 
@@ -176,6 +185,7 @@ class NotesFragment :
             bundle
         )
         drawer.closeDrawer(GravityCompat.START)
+        viewModel.setNote(null)
     }
 
     private fun navToNoteListDetail(selectedNoteList: NoteList) {
@@ -187,4 +197,11 @@ class NotesFragment :
         )
         drawer.closeDrawer(GravityCompat.START)
     }
+
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.reloadListItems()
+    }
+
 }
