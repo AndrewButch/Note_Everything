@@ -180,7 +180,12 @@ class NoteDetailFragment : BaseDetailFragment(R.layout.fragment_note_detail) {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.delete_note -> {
-                showToast("Delete note")
+                viewModel.getNote()?.let {
+                    viewModel.setStateEvent(
+                        NoteDetailStateEvent.DeleteNoteEvent(it)
+                    )
+                    findNavController().popBackStack()
+                }
                 true
             }
             else -> super.onOptionsItemSelected(item)

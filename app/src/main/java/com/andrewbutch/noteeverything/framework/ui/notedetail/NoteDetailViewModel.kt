@@ -48,9 +48,13 @@ constructor(
                 }
 
             }
-//            is NoteDetailStateEvent.DeleteNoteEvent -> {
-//                // todo
-//            }
+            is NoteDetailStateEvent.DeleteNoteEvent -> {
+                val note = getNote()!!
+                interactors.deleteNote.deleteNote(
+                    note = note,
+                    stateEvent = event
+                )
+            }
 
             is NoteDetailStateEvent.CreateMessageDialogEvent -> {
                 emitStateMessageEvent(
