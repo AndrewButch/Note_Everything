@@ -8,7 +8,7 @@ interface UIController {
 
     fun displayInputDialog(title: String, callback: InputDialogCallback)
 
-    fun displayColorDialog(colors: IntArray, callback: ColorDialogCallback)
+    fun displayColorDialog(initColor: Int?, callback: ColorDialogCallback)
 
 
     companion object {

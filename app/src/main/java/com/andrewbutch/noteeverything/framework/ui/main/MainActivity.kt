@@ -20,10 +20,12 @@ import kotlinx.coroutines.FlowPreview
 @FlowPreview
 class MainActivity : DaggerAppCompatActivity(), UIController {
     private var dialogInView: MaterialDialog? = null
+    private lateinit var colors: IntArray
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        colors = resources.getIntArray(R.array.color_chooser_values)
     }
 
     fun showToast(text: String) {
@@ -81,14 +83,15 @@ class MainActivity : DaggerAppCompatActivity(), UIController {
     }
 
     override fun displayColorDialog(
-        colors: IntArray,
+        initColor: Int?,
         callback: UIController.Companion.ColorDialogCallback
     ) {
         dialogInView = MaterialDialog(this).show {
             title(res = R.string.color_chooser_title)
             colorChooser(
                 colors = colors,
-                allowCustomArgb = true
+                allowCustomArgb = true,
+                initialSelection = initColor ?: 0
             ) { _, color ->
                 callback.onColorChoose(color)
             }

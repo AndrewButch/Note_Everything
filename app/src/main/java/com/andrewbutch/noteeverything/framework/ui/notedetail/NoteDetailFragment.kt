@@ -87,9 +87,10 @@ class NoteDetailFragment : BaseDetailFragment(R.layout.fragment_note_detail) {
 
         // Color
         noteColorPicker.setOnClickListener {
-            uiController.displayColorDialog(resources.getIntArray(R.array.color_chooser_values),
-                object : UIController.Companion.ColorDialogCallback {
-
+            val noteColor = viewModel.getNoteColor()
+            uiController.displayColorDialog(
+                initColor = noteColor,
+                callback = object : UIController.Companion.ColorDialogCallback {
                     override fun onColorChoose(color: Int) {
                         setColorInViewModel("#" + Integer.toHexString(color))
                     }

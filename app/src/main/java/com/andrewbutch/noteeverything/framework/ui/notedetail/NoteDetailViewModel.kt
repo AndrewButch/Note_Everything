@@ -1,5 +1,6 @@
 package com.andrewbutch.noteeverything.framework.ui.notedetail
 
+import android.graphics.Color
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -140,6 +141,19 @@ constructor(
         return getCurrentViewStateOrNew().note
     }
 
+    fun getNoteColor(): Int? {
+        var intColor: Int? = null
+        val note = getNote()
+        note?.let {
+            try {
+                intColor = Color.parseColor(note.color)
+            }catch (e: IllegalArgumentException) {
+
+            }
+        }
+        return intColor
+    }
+
     private fun checkIsTitleEmpty(title: String): Boolean {
         return if (title.isEmpty()) {
             setStateEvent(
@@ -182,5 +196,6 @@ constructor(
     private companion object {
         const val EMPTY_TITLE_ERROR = "Название не может быть пустым"
         const val UPDATE_ERROR = "Ну удалось отредактировать заметку"
+        const val COLOR_PARSE_ERROR = "Ошибка цвета, выберите заново"
     }
 }
