@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
@@ -59,7 +60,6 @@ class NotesFragment :
         savedInstanceState: Bundle?
     ): View? {
         Log.d("!@#Notes Fragment", "onCreateView: ")
-
         viewModel =
             ViewModelProvider(viewModelStore, providerFactory).get(NotesViewModel::class.java)
         return inflater.inflate(R.layout.fragment_notes, container, false)
@@ -87,6 +87,8 @@ class NotesFragment :
         }
 
         subscribeObservers()
+        setupOnBackPressDispatcher()
+
     }
 
     private fun subscribeObservers() {
@@ -114,6 +116,15 @@ class NotesFragment :
     private fun setupViews() {
         // Toolbar
         (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar)
+    }
+
+    private fun setupOnBackPressDispatcher() {
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                requireActivity().finish()
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
     }
 
     private fun setupNavDrawer() {
