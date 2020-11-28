@@ -89,11 +89,11 @@ constructor(
     }
 
     private fun handleStateMessage(stateMessage: StateMessage) {
-
+        // todo delegate to job manager
     }
 
     private fun handleViewState(viewState: NoteDetailViewState) {
-
+        // todo delegate to job manager
     }
 
 
@@ -112,6 +112,23 @@ constructor(
             viewState.note = updatedNote
             viewState.isPendingUpdate = true
             setViewState(viewState)
+        }
+    }
+
+    private fun checkIsTitleEmpty(title: String): Boolean {
+        return if (title.isEmpty()) {
+            setStateEvent(
+                NoteDetailStateEvent.CreateMessageDialogEvent(
+                    stateMessage = StateMessage(
+                        message = EMPTY_TITLE_ERROR,
+                        uiComponentType = UIComponentType.Dialog,
+                        messageType = MessageType.Info
+                    )
+                )
+            )
+            true
+        } else {
+            false
         }
     }
 
@@ -154,22 +171,7 @@ constructor(
         return intColor
     }
 
-    private fun checkIsTitleEmpty(title: String): Boolean {
-        return if (title.isEmpty()) {
-            setStateEvent(
-                NoteDetailStateEvent.CreateMessageDialogEvent(
-                    stateMessage = StateMessage(
-                        message = EMPTY_TITLE_ERROR,
-                        uiComponentType = UIComponentType.Dialog,
-                        messageType = MessageType.Info
-                    )
-                )
-            )
-            true
-        } else {
-            false
-        }
-    }
+
 
     fun isPendingUpdate() = getCurrentViewStateOrNew().isPendingUpdate
 

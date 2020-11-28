@@ -176,7 +176,6 @@ class NotesFragment :
     override fun onItemSelected(position: Int, item: NoteList) {
         drawer.closeDrawer(GravityCompat.START)
         viewModel.setStateEvent(NoteListStateEvent.SelectNoteListEvent(item))
-        viewModel.setSelectedList(item)
     }
 
     // List long click
@@ -196,7 +195,7 @@ class NotesFragment :
             bundle
         )
         drawer.closeDrawer(GravityCompat.START)
-        viewModel.setNote(null)
+        viewModel.setNewNote(null)
     }
 
     private fun navToNoteListDetail(selectedNoteList: NoteList) {
@@ -207,11 +206,13 @@ class NotesFragment :
             bundle
         )
         drawer.closeDrawer(GravityCompat.START)
+        viewModel.setNewNoteList(null)
     }
 
 
     override fun onResume() {
         super.onResume()
+        viewModel.reloadNoteLists()
         viewModel.reloadListItems()
     }
 

@@ -1,6 +1,5 @@
 package com.andrewbutch.noteeverything.framework.ui.notedetail
 
-import android.content.Context
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
@@ -10,10 +9,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import android.widget.TextView
-import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -29,14 +25,7 @@ class NoteDetailFragment : BaseDetailFragment(R.layout.fragment_note_detail) {
     @Inject
     lateinit var providerFactory: ViewModelProvider.Factory
 
-    private lateinit var uiController: UIController
-
     private val viewModel: NoteDetailViewModel by viewModels { providerFactory }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        uiController = (context as UIController)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setupUI()
@@ -48,11 +37,76 @@ class NoteDetailFragment : BaseDetailFragment(R.layout.fragment_note_detail) {
         getNoteFromArguments()
     }
 
+    private fun setupUI() {
+        // Toolbar
+        (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar)
+        toolbar.setNavigationOnClickListener { onBackPressed() }
+    }
+
+    private fun addListeners() {
+        // complete switch
+        switchComplete.setOnClickListener { setCompletedInViewModel(switchComplete.isChecked) }
+
+        // color
+        noteColorPicker.setOnClickListener {
+            val noteColor = viewModel.getNoteColor()
+            uiController.displayColorDialog(
+                initColor = noteColor,
+                callback = object : UIController.Companion.ColorDialogCallback {
+                    override fun onColorChoose(color: Int) {
+                        setColorInViewModel("#" + Integer.toHexString(color))
+                    }
+                })
+        }
+        // save button
+        saveBtn.setOnClickListener { onBackPressed() }
+
+        // if title lost focus, set text in view model
+        noteTitle.setOnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) {
+                setTitleInViewModel(noteTitle.text.toString())
+            }
+        }
+        // title change listener
+        noteTitle.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(
+                s: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int
+            ) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+            override fun afterTextChanged(s: Editable?) {
+                val oldTitle = viewModel.viewState.value?.note?.title
+                val newTitle = s.toString()
+                if (newTitle.isNotBlank() && newTitle != oldTitle) {
+                    if (viewModel.getNote()?.title != newTitle) {
+                        viewModel.setIsPendingUpdate(true)
+                    }
+                }
+            }
+        })
+
+        // if user click outside input field, clear focus and hide keyboard
+        noteDetailContainer.setOnClickListener {
+            clearFocus()
+        }
+    }
+
+    private fun clearFocus() {
+        uiController.hideSoftKeyboard()
+        noteTitle.clearFocus()
+    }
+
     private fun subscribeObservers() {
         viewModel.viewState.observe(viewLifecycleOwner) { viewState ->
             if (viewState != null) {
                 viewState.note?.let { note ->
-                    setTitle(note.title)
+                    if (noteTitle.text.isNullOrEmpty()) {
+                        setTitle(note.title)
+                    }
                     setColor(note.color)
                     setCompleted(note.completed)
                 }
@@ -61,7 +115,8 @@ class NoteDetailFragment : BaseDetailFragment(R.layout.fragment_note_detail) {
     }
 
     private fun setTitle(title: String) {
-        noteTitle.setText(title, TextView.BufferType.EDITABLE)
+        noteTitle.text?.clear()
+        noteTitle.text?.append(title)
     }
 
     private fun setColor(color: String) {
@@ -75,61 +130,6 @@ class NoteDetailFragment : BaseDetailFragment(R.layout.fragment_note_detail) {
         switchComplete.isChecked = completed
     }
 
-    private fun setupUI() {
-        // Toolbar
-        (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar)
-        toolbar.setNavigationOnClickListener { onBackPressed() }
-    }
-
-    private fun addListeners() {
-        // Complete switch
-        switchComplete.setOnClickListener { setCompletedInViewModel(switchComplete.isChecked) }
-
-        // Color
-        noteColorPicker.setOnClickListener {
-            val noteColor = viewModel.getNoteColor()
-            uiController.displayColorDialog(
-                initColor = noteColor,
-                callback = object : UIController.Companion.ColorDialogCallback {
-                    override fun onColorChoose(color: Int) {
-                        setColorInViewModel("#" + Integer.toHexString(color))
-                    }
-                })
-        }
-        // Save button
-        saveBtn.setOnClickListener { onBackPressed() }
-
-        // Title focus
-        noteTitle.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) {
-                setTitleInViewModel(noteTitle.text.toString())
-            }
-        }
-        // Title change
-        noteTitle.addTextChangedListener { object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-
-            override fun afterTextChanged(s: Editable?) {
-                val oldTitle = viewModel.viewState.value?.note?.title
-                val newTitle = s.toString()
-                if (newTitle.isNotBlank()) {
-                    if (newTitle != oldTitle) {
-                        viewModel.setIsPendingUpdate(true)
-                    }
-                }
-            }
-        } }
-        noteDetailContainer.setOnClickListener {
-            clearFocus()
-        }
-    }
-
-    private fun clearFocus() {
-        uiController.hideSoftKeyboard()
-        noteTitle.clearFocus()
-    }
-
     private fun getNoteFromArguments() {
         arguments?.let { args ->
             val note = args.getParcelable("NOTE_DETAIL_SELECTED_NOTE_BUNDLE_KEY") as Note?
@@ -139,16 +139,7 @@ class NoteDetailFragment : BaseDetailFragment(R.layout.fragment_note_detail) {
         }
     }
 
-    private fun setupOnBackPressDispatcher() {
-        val callback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                onBackPressed()
-            }
-        }
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
-    }
-
-    private fun onBackPressed() {
+    override fun onBackPressed() {
         if (viewModel.isPendingUpdate()) {
             setTitleInViewModel(noteTitle.text.toString())
             viewModel.setStateEvent(

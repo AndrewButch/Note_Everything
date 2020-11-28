@@ -29,16 +29,17 @@ class SplashFragment : DaggerFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        startSyncAnimation()
-        viewModel =
-            ViewModelProvider(viewModelStore, providerFactory).get(SplashViewModel::class.java)
-        viewModel.syncHasBeenExecuted().observe(viewLifecycleOwner) { syncCompleted ->
-            if (syncCompleted) {
-                NavHostFragment
-                    .findNavController(this)
-                    .navigate(R.id.action_splashFragment_to_notesFragment)
-            }
-        }
+        navToNotes()
+
+
+//        startSyncAnimation()
+//        viewModel =
+//            ViewModelProvider(viewModelStore, providerFactory).get(SplashViewModel::class.java)
+//        viewModel.syncHasBeenExecuted().observe(viewLifecycleOwner) { syncCompleted ->
+//            if (syncCompleted) {
+//                navToNotes()
+//            }
+//        }
     }
 
     private fun startSyncAnimation() {
@@ -46,6 +47,12 @@ class SplashFragment : DaggerFragment() {
             context, R.anim.rotate
         )
         syncImage.startAnimation(animation)
+    }
+
+    private fun navToNotes() {
+        NavHostFragment
+            .findNavController(this)
+            .navigate(R.id.action_splashFragment_to_notesFragment)
     }
 
 }
