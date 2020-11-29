@@ -2,7 +2,6 @@ package com.andrewbutch.noteeverything.framework.ui.notes
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -45,13 +44,6 @@ class NotesFragment :
     override fun onAttach(context: Context) {
         super.onAttach(context)
         uiController = (context as UIController)
-        Log.d("!@#Notes Fragment", "onAttach: ")
-
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        Log.d("!@#Notes Fragment", "onCreate: ")
 
     }
 
@@ -59,14 +51,12 @@ class NotesFragment :
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        Log.d("!@#Notes Fragment", "onCreateView: ")
         viewModel =
             ViewModelProvider(viewModelStore, providerFactory).get(NotesViewModel::class.java)
         return inflater.inflate(R.layout.fragment_notes, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        Log.d("!@#Notes Fragment", "onViewCreated: ")
         setupViews()
         setupNavDrawer()
         // FAB
@@ -147,9 +137,7 @@ class NotesFragment :
             layoutManager = LinearLayoutManager(requireContext())
             adapter = navMenuAdapter
         }
-        navRecyclerMenu.addItemDecoration(VerticalItemDecoration(30))
-
-
+        navRecyclerMenu.addItemDecoration(VerticalItemDecoration(20))
     }
 
 
@@ -208,8 +196,7 @@ class NotesFragment :
         drawer.closeDrawer(GravityCompat.START)
         viewModel.setNewNoteList(null)
     }
-
-
+    
     override fun onResume() {
         super.onResume()
         viewModel.reloadNoteLists()
