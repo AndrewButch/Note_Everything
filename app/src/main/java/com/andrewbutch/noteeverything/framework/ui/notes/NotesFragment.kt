@@ -36,7 +36,6 @@ class NotesFragment :
     lateinit var viewModel: NotesViewModel
     private lateinit var navMenuAdapter: NavMenuAdapter
     private lateinit var notesAdapter: NotesRecyclerAdapter
-    private lateinit var listID: String
     private lateinit var uiController: UIController
 
     @Inject
@@ -75,18 +74,21 @@ class NotesFragment :
             title,
             object : InputDialogCallback {
                 override fun onInputComplete(text: String) {
-                    when(type) {
+                    when (type) {
                         InputDialogType.NOTE -> {
-                            viewModel.setStateEvent(
-                                NoteListStateEvent.InsertNewNoteEvent(
-                                    title = text,
-                                    listId = listID
+                            viewModel.getSelectedNoteList()?.let { selectedNoteList ->
+                                viewModel.setStateEvent(
+                                    NoteListStateEvent.InsertNewNoteEvent(
+                                        title = text,
+                                        listId = selectedNoteList.id
+
+                                    )
                                 )
-                            )
+                            }
                         }
                         InputDialogType.LIST -> {
                             viewModel.setStateEvent(
-                                NoteListStateEvent.InsertNewNoteListEvent(title)
+                                NoteListStateEvent.InsertNewNoteListEvent(text)
                             )
                         }
                     }
@@ -117,7 +119,7 @@ class NotesFragment :
                 }
 
                 viewState.selectedNoteList?.let {
-                    listID = it.id
+                    // do nothing
                 }
             }
         }
@@ -218,7 +220,7 @@ class NotesFragment :
         drawer.closeDrawer(GravityCompat.START)
         viewModel.setNewNoteList(null)
     }
-    
+
     override fun onResume() {
         super.onResume()
         viewModel.reloadNoteLists()

@@ -54,7 +54,6 @@ constructor(
                 )
             }
             is NoteListStateEvent.SelectNoteListEvent -> {
-                setSelectedList(stateEvent.noteList)
                 emitStateMessageEvent(
                     stateMessage = StateMessage(
                         message = "$NOTE_LIST_SELECTED_MESSAGE ${stateEvent.noteList.title}",
@@ -90,6 +89,7 @@ constructor(
     private fun handleViewState(viewState: NoteListViewState?) {
         viewState?.newNoteList?.let {
             setNewNoteList(it)
+            setSelectedList(it)
         }
         viewState?.newNote?.let {
             setNewNote(it)
@@ -101,9 +101,10 @@ constructor(
             setNotes(it)
         }
         viewState?.selectedNoteList?.let {
+            setSelectedList(it)
             setStateEvent(NoteListStateEvent.GetNotesByNoteListEvent(it))
         }
-        viewState?.page?.let {
+       viewState?.page?.let {
             // TODO(handle page in long list of notes)
         }
     }
@@ -120,11 +121,9 @@ constructor(
         setViewState(updated)
     }
 
-    //
     fun setNewNoteList(noteList: NoteList?) {
         val updated = getCurrentViewStateOrNew()
         updated.newNoteList = noteList
-        updated.selectedNoteList = noteList
         setViewState(updated)
     }
 
@@ -139,6 +138,8 @@ constructor(
         updated.notes = notes
         setViewState(updated)
     }
+
+    fun getSelectedNoteList() = viewState.value?.selectedNoteList
 
     fun reloadListItems() {
         val currentNoteList = getCurrentViewStateOrNew().selectedNoteList
