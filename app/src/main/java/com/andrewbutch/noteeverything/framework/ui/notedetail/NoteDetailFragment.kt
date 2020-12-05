@@ -69,22 +69,15 @@ class NoteDetailFragment : BaseDetailFragment(R.layout.fragment_note_detail) {
         }
         // title change listener
         noteTitle.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(
-                s: CharSequence?,
-                start: Int,
-                count: Int,
-                after: Int
-            ) {}
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
             override fun afterTextChanged(s: Editable?) {
-                val oldTitle = viewModel.viewState.value?.note?.title
+                val oldTitle = viewModel.getNote()?.title
                 val newTitle = s.toString()
-                if (newTitle.isNotBlank() && newTitle != oldTitle) {
-                    if (viewModel.getNote()?.title != newTitle) {
-                        viewModel.setIsPendingUpdate(true)
-                    }
+                if (newTitle.isNotBlank() && oldTitle != newTitle) {
+                    viewModel.setIsPendingUpdate(true)
                 }
             }
         })
