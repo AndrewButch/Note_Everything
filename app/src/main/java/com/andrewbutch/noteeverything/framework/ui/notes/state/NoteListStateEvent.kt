@@ -26,7 +26,6 @@ sealed class NoteListStateEvent : StateEvent {
 
     class InsertNewNoteListEvent(
         val title: String,
-        val color: String,
     ): NoteListStateEvent() {
 
         override fun errorInfo(): String {

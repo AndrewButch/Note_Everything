@@ -29,17 +29,17 @@ class SplashFragment : DaggerFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        navToNotes()
+//        navToNotes()
 
 
-//        startSyncAnimation()
-//        viewModel =
-//            ViewModelProvider(viewModelStore, providerFactory).get(SplashViewModel::class.java)
-//        viewModel.syncHasBeenExecuted().observe(viewLifecycleOwner) { syncCompleted ->
-//            if (syncCompleted) {
-//                navToNotes()
-//            }
-//        }
+        startSyncAnimation()
+        viewModel =
+            ViewModelProvider(viewModelStore, providerFactory).get(SplashViewModel::class.java)
+        viewModel.syncHasBeenExecuted().observe(viewLifecycleOwner) { syncCompleted ->
+            if (syncCompleted) {
+                navToNotes()
+            }
+        }
     }
 
     private fun startSyncAnimation() {

@@ -18,6 +18,7 @@ import com.andrewbutch.noteeverything.R
 import com.andrewbutch.noteeverything.business.domain.model.Note
 import com.andrewbutch.noteeverything.business.domain.model.NoteList
 import com.andrewbutch.noteeverything.framework.ui.main.UIController
+import com.andrewbutch.noteeverything.framework.ui.main.UIController.Companion.InputDialogCallback
 import com.andrewbutch.noteeverything.framework.ui.notes.drawer.NavMenuAdapter
 import com.andrewbutch.noteeverything.framework.ui.notes.state.NoteListStateEvent
 import com.andrewbutch.noteeverything.framework.ui.utils.VerticalItemDecoration
@@ -61,19 +62,7 @@ class NotesFragment :
         setupNavDrawer()
         // FAB
         notesFragmentFab.setOnClickListener {
-            uiController.displayInputDialog(
-                "Новая заметка",
-                object : UIController.Companion.InputDialogCallback {
-                    override fun onInputComplete(text: String) {
-                        viewModel.setStateEvent(
-                            NoteListStateEvent.InsertNewNoteEvent(
-                                title = text,
-                                listId = listID
-                            )
-                        )
-                    }
-
-                })
+            showInputDialog("Новая заметка", InputDialogType.NOTE)
         }
 
         subscribeObservers()
@@ -81,9 +70,40 @@ class NotesFragment :
 
     }
 
+    private fun showInputDialog(title: String, type: InputDialogType) {
+        uiController.displayInputDialog(
+            title,
+            object : InputDialogCallback {
+                override fun onInputComplete(text: String) {
+                    when(type) {
+                        InputDialogType.NOTE -> {
+                            viewModel.setStateEvent(
+                                NoteListStateEvent.InsertNewNoteEvent(
+                                    title = text,
+                                    listId = listID
+                                )
+                            )
+                        }
+                        InputDialogType.LIST -> {
+                            viewModel.setStateEvent(
+                                NoteListStateEvent.InsertNewNoteListEvent(title)
+                            )
+                        }
+                    }
+
+                }
+
+            })
+    }
+
     private fun subscribeObservers() {
+        // Observe view state
         viewModel.viewState.observe(viewLifecycleOwner) { viewState ->
             if (viewState != null) {
+                viewState.notes?.let {
+                    notesAdapter.submitList(it)
+                }
+
                 viewState.noteLists?.let {
                     navMenuAdapter.submitList(it)
                 }
@@ -92,8 +112,8 @@ class NotesFragment :
                     navToNoteDetail(it)
                 }
 
-                viewState.notes?.let {
-                    notesAdapter.submitList(it)
+                viewState.newNoteList?.let {
+                    navToNoteListDetail(it)
                 }
 
                 viewState.selectedNoteList?.let {
@@ -129,7 +149,9 @@ class NotesFragment :
         toggle.syncState()
 
         // button "add list"
-        addNoteListBtn.setOnClickListener { showToast("Click add list") }
+        addNoteListBtn.setOnClickListener {
+            showInputDialog("Новый список", InputDialogType.LIST)
+        }
 
         // recycler view
         navMenuAdapter = NavMenuAdapter(interaction = this)
@@ -203,4 +225,8 @@ class NotesFragment :
         viewModel.reloadListItems()
     }
 
+
+    enum class InputDialogType {
+        NOTE, LIST
+    }
 }

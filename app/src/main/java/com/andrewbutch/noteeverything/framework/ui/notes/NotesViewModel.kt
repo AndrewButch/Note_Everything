@@ -1,14 +1,11 @@
 package com.andrewbutch.noteeverything.framework.ui.notes
 
-import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.andrewbutch.noteeverything.business.domain.model.Note
 import com.andrewbutch.noteeverything.business.domain.model.NoteList
 import com.andrewbutch.noteeverything.business.domain.state.*
 import com.andrewbutch.noteeverything.business.interactors.notelist.NotesInteractors
 import com.andrewbutch.noteeverything.framework.datasource.NoteDataFactory
+import com.andrewbutch.noteeverything.framework.ui.BaseViewModel
 import com.andrewbutch.noteeverything.framework.ui.notes.state.NoteListStateEvent
 import com.andrewbutch.noteeverything.framework.ui.notes.state.NoteListViewState
 import kotlinx.coroutines.CoroutineScope
@@ -26,15 +23,7 @@ class NotesViewModel
 constructor(
     private val noteDataFactory: NoteDataFactory,
     private val notesInteractors: NotesInteractors
-) : ViewModel() {
-
-    private val _viewState = MutableLiveData<NoteListViewState>()
-    val viewState: LiveData<NoteListViewState>
-        get() = _viewState
-
-    init {
-        Log.d(TAG, "INIT")
-    }
+) : BaseViewModel<NoteListViewState>() {
 
     fun setStateEvent(stateEvent: NoteListStateEvent) {
         val job: Flow<DataState<NoteListViewState>?> = when (stateEvent) {
@@ -49,7 +38,6 @@ constructor(
             is NoteListStateEvent.InsertNewNoteListEvent -> {
                 notesInteractors.insertNewNoteList.insertNewNote(
                     title = stateEvent.title,
-                    color = stateEvent.color,
                     stateEvent = stateEvent
                 )
             }
@@ -66,12 +54,7 @@ constructor(
                 )
             }
             is NoteListStateEvent.SelectNoteListEvent -> {
-                // todo save selected list in
                 setSelectedList(stateEvent.noteList)
-//                notesInteractors.getNotesByNoteList.getNotesByNoteList(
-//                    stateEvent = stateEvent,
-//                    ownerListId = stateEvent.noteList.id
-//                )
                 emitStateMessageEvent(
                     stateMessage = StateMessage(
                         message = "$NOTE_LIST_SELECTED_MESSAGE ${stateEvent.noteList.title}",
@@ -83,18 +66,20 @@ constructor(
                 )
             }
         }
+        launchJob(job)
+    }
 
-        job
-            .onEach {
-                withContext(Main) {
-                    it?.data?.let { viewState ->
-                        handleViewState(viewState)
-                    }
-                    it?.stateMessage?.let { stateMessage ->
-                        handleStateMessage(stateMessage)
-                    }
+    override fun launchJob(job: Flow<DataState<NoteListViewState>?>) {
+        job.onEach {
+            withContext(Main) {
+                it?.data?.let { viewState ->
+                    handleViewState(viewState)
+                }
+                it?.stateMessage?.let { stateMessage ->
+                    handleStateMessage(stateMessage)
                 }
             }
+        }
             .launchIn(CoroutineScope(IO))
     }
 
@@ -104,7 +89,7 @@ constructor(
 
     private fun handleViewState(viewState: NoteListViewState?) {
         viewState?.newNoteList?.let {
-            // TODO(Handle note list inserting)
+            setNewNoteList(it)
         }
         viewState?.newNote?.let {
             setNewNote(it)
@@ -123,7 +108,7 @@ constructor(
         }
     }
 
-    fun setSelectedList(selectedList: NoteList) {
+    private fun setSelectedList(selectedList: NoteList) {
         val updated = getCurrentViewStateOrNew()
         updated.selectedNoteList = selectedList
         setViewState(updated)
@@ -135,26 +120,24 @@ constructor(
         setViewState(updated)
     }
 
+    //
     fun setNewNoteList(noteList: NoteList?) {
         val updated = getCurrentViewStateOrNew()
         updated.newNoteList = noteList
+        updated.selectedNoteList = noteList
         setViewState(updated)
     }
 
-    fun setNoteLists(noteLists: List<NoteList>?) {
+    private fun setNoteLists(noteLists: List<NoteList>?) {
         val updated = getCurrentViewStateOrNew()
         updated.noteLists = noteLists
         setViewState(updated)
     }
 
-    fun setNotes(notes: List<Note>?) {
+    private fun setNotes(notes: List<Note>?) {
         val updated = getCurrentViewStateOrNew()
         updated.notes = notes
         setViewState(updated)
-    }
-
-    private fun setViewState(viewState: NoteListViewState) {
-        _viewState.value = viewState
     }
 
     fun reloadListItems() {
@@ -168,11 +151,9 @@ constructor(
         setStateEvent(NoteListStateEvent.GetAllNoteListsEvent())
     }
 
-    private fun getCurrentViewStateOrNew() = _viewState.value ?: getNewViewState()
+    override fun getNewViewState() = NoteListViewState()
 
-    private fun getNewViewState() = NoteListViewState()
-
-    private fun emitStateMessageEvent(
+     override fun emitStateMessageEvent(
         stateMessage: StateMessage,
         data: NoteListViewState,
         stateEvent: StateEvent
@@ -224,5 +205,6 @@ constructor(
         const val TAG = "!@#NotesViewModel"
         const val NOTE_LIST_SELECTED_MESSAGE = "Note list selected: "
     }
+
 
 }
