@@ -17,7 +17,6 @@ import com.andrewbutch.noteeverything.R
 import com.andrewbutch.noteeverything.business.domain.model.NoteList
 import com.andrewbutch.noteeverything.framework.ui.BaseDetailFragment
 import com.andrewbutch.noteeverything.framework.ui.main.UIController
-import com.andrewbutch.noteeverything.framework.ui.notedetail.state.NoteDetailStateEvent
 import com.andrewbutch.noteeverything.framework.ui.notelistdetail.state.NoteListDetailStateEvent
 import kotlinx.android.synthetic.main.fragment_note_list_detail.*
 import javax.inject.Inject
@@ -116,7 +115,7 @@ class NoteListDetailFragment : BaseDetailFragment(R.layout.fragment_note_list_de
         if (viewModel.isPendingUpdate()) {
             setTitleInViewModel(noteListTitle.text.toString())
             viewModel.setStateEvent(
-                NoteDetailStateEvent.UpdateNoteEvent()
+                NoteListDetailStateEvent.UpdateNoteListEvent()
             )
         }
         uiController.hideSoftKeyboard()
@@ -144,7 +143,7 @@ class NoteListDetailFragment : BaseDetailFragment(R.layout.fragment_note_list_de
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_note_detail_fragment, menu)
+        inflater.inflate(R.menu.menu_note_list_detail_fragment, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 

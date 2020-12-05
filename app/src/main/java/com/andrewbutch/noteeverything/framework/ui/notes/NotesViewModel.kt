@@ -3,6 +3,7 @@ package com.andrewbutch.noteeverything.framework.ui.notes
 import com.andrewbutch.noteeverything.business.domain.model.Note
 import com.andrewbutch.noteeverything.business.domain.model.NoteList
 import com.andrewbutch.noteeverything.business.domain.state.*
+import com.andrewbutch.noteeverything.business.interactors.common.DeleteNoteList.Companion.DELETE_NOTE_LIST_SUCCESS
 import com.andrewbutch.noteeverything.business.interactors.notelist.NotesInteractors
 import com.andrewbutch.noteeverything.framework.datasource.NoteDataFactory
 import com.andrewbutch.noteeverything.framework.ui.BaseViewModel
@@ -41,9 +42,25 @@ constructor(
                     stateEvent = stateEvent
                 )
             }
-            is NoteListStateEvent.DeleteNoteEvent -> TODO()
-            is NoteListStateEvent.DeleteNoteListEvent -> TODO()
-            is NoteListStateEvent.DeleteMultipleNotesEvent -> TODO()
+            is NoteListStateEvent.DeleteNoteEvent ->
+                notesInteractors.deleteNote.deleteNote(
+                    note = stateEvent.note,
+                    stateEvent = stateEvent
+                )
+
+            is NoteListStateEvent.DeleteNoteListEvent -> {
+                notesInteractors.deleteNoteList.deleteNoteList(
+                    noteList = stateEvent.noteList,
+                    stateEvent = stateEvent
+                )
+            }
+            is NoteListStateEvent.DeleteMultipleNotesEvent -> {
+                notesInteractors.deleteMultipleNotes.deleteMultipleNotes(
+                    notes = stateEvent.notes,
+                    stateEvent = stateEvent
+                )
+            }
+
             is NoteListStateEvent.GetAllNoteListsEvent -> {
                 notesInteractors.getAllNoteLists.getAllNoteLists(stateEvent)
             }
@@ -83,7 +100,11 @@ constructor(
     }
 
     private fun handleStateMessage(stateMessage: StateMessage) {
-
+        stateMessage.message?.let { message ->
+            if (message == DELETE_NOTE_LIST_SUCCESS) {
+                setSelectedList(null)
+            }
+        }
     }
 
     private fun handleViewState(viewState: NoteListViewState?) {
@@ -104,12 +125,9 @@ constructor(
             setSelectedList(it)
             setStateEvent(NoteListStateEvent.GetNotesByNoteListEvent(it))
         }
-       viewState?.page?.let {
-            // TODO(handle page in long list of notes)
-        }
     }
 
-    private fun setSelectedList(selectedList: NoteList) {
+    private fun setSelectedList(selectedList: NoteList?) {
         val updated = getCurrentViewStateOrNew()
         updated.selectedNoteList = selectedList
         setViewState(updated)
@@ -154,7 +172,7 @@ constructor(
 
     override fun getNewViewState() = NoteListViewState()
 
-     override fun emitStateMessageEvent(
+    override fun emitStateMessageEvent(
         stateMessage: StateMessage,
         data: NoteListViewState,
         stateEvent: StateEvent

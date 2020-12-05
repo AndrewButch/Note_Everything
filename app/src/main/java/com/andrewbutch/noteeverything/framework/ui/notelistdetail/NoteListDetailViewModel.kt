@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import com.andrewbutch.noteeverything.business.domain.model.NoteList
 import com.andrewbutch.noteeverything.business.domain.state.*
 import com.andrewbutch.noteeverything.business.interactors.notelistdetail.NoteListDetailInteractors
-import com.andrewbutch.noteeverything.framework.ui.notedetail.state.NoteDetailStateEvent
+import com.andrewbutch.noteeverything.framework.ui.notelistdetail.state.NoteListDetailStateEvent
 import com.andrewbutch.noteeverything.framework.ui.notelistdetail.state.NoteListDetailViewState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -29,7 +29,7 @@ constructor(
 
     fun setStateEvent(event: StateEvent) {
         val job: Flow<DataState<NoteListDetailViewState>?> = when (event) {
-            is NoteDetailStateEvent.UpdateNoteEvent -> {
+            is NoteListDetailStateEvent.UpdateNoteListEvent -> {
                 val noteList = getNoteList()!!
 
                 if (noteList.id.isNotEmpty() && !checkIsTitleEmpty(noteList.title)) {
@@ -49,7 +49,7 @@ constructor(
                 }
 
             }
-            is NoteDetailStateEvent.DeleteNoteEvent -> {
+            is NoteListDetailStateEvent.DeleteNoteListEvent -> {
                 val noteList = getNoteList()!!
                 interactors.deleteNoteList.deleteNoteList(
                     noteList = noteList,
@@ -57,7 +57,7 @@ constructor(
                 )
             }
 
-            is NoteDetailStateEvent.CreateMessageDialogEvent -> {
+            is NoteListDetailStateEvent.CreateMessageDialogEvent -> {
                 emitStateMessageEvent(
                     stateMessage = event.stateMessage,
                     stateEvent = event
@@ -124,7 +124,7 @@ constructor(
     private fun checkIsTitleEmpty(title: String): Boolean {
         return if (title.isEmpty()) {
             setStateEvent(
-                NoteDetailStateEvent.CreateMessageDialogEvent(
+                NoteListDetailStateEvent.CreateMessageDialogEvent(
                     stateMessage = StateMessage(
                         message = EMPTY_TITLE_ERROR,
                         uiComponentType = UIComponentType.Dialog,

@@ -33,7 +33,7 @@ class DeleteNoteList<ViewState>(
                     // success delete
                     DataState.data(
                         stateMessage = StateMessage(
-                            message = "DELETE_NOTE_LIST_SUCCESS",
+                            message = DELETE_NOTE_LIST_SUCCESS,
                             uiComponentType = UIComponentType.Toast,
                             messageType = MessageType.Success
                         ),
@@ -44,7 +44,7 @@ class DeleteNoteList<ViewState>(
                     // failure delete
                     DataState.error(
                         stateMessage = StateMessage(
-                            message = "DELETE_NOTE_LIST_FAILED",
+                            message = DELETE_NOTE_LIST_FAILED,
                             uiComponentType = UIComponentType.Toast,
                             messageType = MessageType.Error
                         ),
