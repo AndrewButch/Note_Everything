@@ -100,6 +100,8 @@ dependencies {
 
     implementation "androidx.test.espresso:espresso-idling-resource:3.3.0"
 
+    // Timber
+    implementation 'com.jakewharton.timber:timber:4.7.1'
 
     // Test
     testImplementation 'junit:junit:4.13'
