@@ -9,14 +9,8 @@ import com.andrewbutch.noteeverything.framework.datasource.NoteDataFactory
 import com.andrewbutch.noteeverything.framework.ui.BaseViewModel
 import com.andrewbutch.noteeverything.framework.ui.notes.state.NoteListStateEvent
 import com.andrewbutch.noteeverything.framework.ui.notes.state.NoteListViewState
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class NotesViewModel
@@ -82,22 +76,22 @@ constructor(
                 )
             }
         }
-        launchJob(job)
+        launchJob(stateEvent, job)
     }
 
-    override fun launchJob(job: Flow<DataState<NoteListViewState>?>) {
-        job.onEach {
-            withContext(Main) {
-                it?.data?.let { viewState ->
-                    handleViewState(viewState)
-                }
-                it?.stateMessage?.let { stateMessage ->
-                    handleStateMessage(stateMessage)
-                }
-            }
-        }
-            .launchIn(CoroutineScope(IO))
-    }
+//    override fun launchJob(job: Flow<DataState<NoteListViewState>?>) {
+//        job.onEach {
+//            withContext(Main) {
+//                it?.data?.let { viewState ->
+//                    handleViewState(viewState)
+//                }
+//                it?.stateMessage?.let { stateMessage ->
+//                    handleStateMessage(stateMessage)
+//                }
+//            }
+//        }
+//            .launchIn(CoroutineScope(IO))
+//    }
 
     private fun handleStateMessage(stateMessage: StateMessage) {
         stateMessage.message?.let { message ->

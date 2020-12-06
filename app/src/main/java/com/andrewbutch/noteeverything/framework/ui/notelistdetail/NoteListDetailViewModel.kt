@@ -1,31 +1,21 @@
 package com.andrewbutch.noteeverything.framework.ui.notelistdetail
 
 import android.graphics.Color
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.andrewbutch.noteeverything.business.domain.model.NoteList
 import com.andrewbutch.noteeverything.business.domain.state.*
 import com.andrewbutch.noteeverything.business.interactors.notelistdetail.NoteListDetailInteractors
+import com.andrewbutch.noteeverything.framework.ui.BaseViewModel
 import com.andrewbutch.noteeverything.framework.ui.notelistdetail.state.NoteListDetailStateEvent
 import com.andrewbutch.noteeverything.framework.ui.notelistdetail.state.NoteListDetailViewState
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class NoteListDetailViewModel
 @Inject
 constructor(
     val interactors: NoteListDetailInteractors
-) : ViewModel() {
-    private var _viewState: MutableLiveData<NoteListDetailViewState> = MutableLiveData()
-    val viewState: LiveData<NoteListDetailViewState>
-        get() = _viewState
+) : BaseViewModel<NoteListDetailViewState>() {
 
     fun setStateEvent(event: StateEvent) {
         val job: Flow<DataState<NoteListDetailViewState>?> = when (event) {
@@ -74,18 +64,19 @@ constructor(
                 )
             }
         }
-        job
-            .onEach {
-                withContext(Dispatchers.Main) {
-                    it?.data?.let { viewState ->
-                        handleViewState(viewState)
-                    }
-                    it?.stateMessage?.let { stateMessage ->
-                        handleStateMessage(stateMessage)
-                    }
-                }
-            }
-            .launchIn(CoroutineScope(Dispatchers.IO))
+        launchJob(event, job)
+//        job
+//            .onEach {
+//                withContext(Dispatchers.Main) {
+//                    it?.data?.let { viewState ->
+//                        handleViewState(viewState)
+//                    }
+//                    it?.stateMessage?.let { stateMessage ->
+//                        handleStateMessage(stateMessage)
+//                    }
+//                }
+//            }
+//            .launchIn(CoroutineScope(Dispatchers.IO))
     }
 
     private fun handleStateMessage(stateMessage: StateMessage) {
@@ -97,9 +88,7 @@ constructor(
     }
 
 
-    private fun getCurrentViewStateOrNew() = _viewState.value ?: getNewViewState()
-
-    private fun getNewViewState() = NoteListDetailViewState()
+    override fun getNewViewState() = NoteListDetailViewState()
 
     fun setIsPendingUpdate(isPendingUpdate: Boolean) {
         val viewState = getCurrentViewStateOrNew()
@@ -167,10 +156,6 @@ constructor(
             }
         }
         return intColor
-    }
-
-    private fun setViewState(viewState: NoteListDetailViewState) {
-        _viewState.value = viewState
     }
 
     private fun emitStateMessageEvent(
