@@ -3,7 +3,6 @@ package com.andrewbutch.noteeverything.framework.ui.notes
 import com.andrewbutch.noteeverything.business.domain.model.Note
 import com.andrewbutch.noteeverything.business.domain.model.NoteList
 import com.andrewbutch.noteeverything.business.domain.state.*
-import com.andrewbutch.noteeverything.business.interactors.common.DeleteNoteList.Companion.DELETE_NOTE_LIST_SUCCESS
 import com.andrewbutch.noteeverything.business.interactors.notelist.NotesInteractors
 import com.andrewbutch.noteeverything.framework.datasource.NoteDataFactory
 import com.andrewbutch.noteeverything.framework.ui.BaseViewModel
@@ -17,8 +16,10 @@ class NotesViewModel
 @Inject
 constructor(
     private val noteDataFactory: NoteDataFactory,
-    private val notesInteractors: NotesInteractors
-) : BaseViewModel<NoteListViewState>() {
+    private val notesInteractors: NotesInteractors,
+    eventStore: StateEventStore,
+    messageStack: MessageStack
+) : BaseViewModel<NoteListViewState>(eventStore, messageStack) {
 
     fun setStateEvent(stateEvent: NoteListStateEvent) {
         val job: Flow<DataState<NoteListViewState>?> = when (stateEvent) {
@@ -93,35 +94,27 @@ constructor(
 //            .launchIn(CoroutineScope(IO))
 //    }
 
-    private fun handleStateMessage(stateMessage: StateMessage) {
-        stateMessage.message?.let { message ->
-            if (message == DELETE_NOTE_LIST_SUCCESS) {
-                setSelectedList(null)
-            }
-        }
-    }
-
-    private fun handleViewState(viewState: NoteListViewState?) {
-        viewState?.newNoteList?.let {
+    override fun handleViewState(viewState: NoteListViewState) {
+        viewState.newNoteList?.let {
             setNewNoteList(it)
             setSelectedList(it)
         }
-        viewState?.newNote?.let {
+        viewState.newNote?.let {
             setNewNote(it)
         }
-        viewState?.noteLists?.let {
+        viewState.noteLists?.let {
             setNoteLists(it)
         }
-        viewState?.notes?.let {
+        viewState.notes?.let {
             setNotes(it)
         }
-        viewState?.selectedNoteList?.let {
+        viewState.selectedNoteList?.let {
             setSelectedList(it)
             setStateEvent(NoteListStateEvent.GetNotesByNoteListEvent(it))
         }
     }
 
-    private fun setSelectedList(selectedList: NoteList?) {
+    fun setSelectedList(selectedList: NoteList?) {
         val updated = getCurrentViewStateOrNew()
         updated.selectedNoteList = selectedList
         setViewState(updated)
@@ -156,7 +149,7 @@ constructor(
     fun reloadListItems() {
         val currentNoteList = getCurrentViewStateOrNew().selectedNoteList
         currentNoteList?.let {
-            setStateEvent(NoteListStateEvent.SelectNoteListEvent(currentNoteList))
+            setStateEvent(NoteListStateEvent.GetNotesByNoteListEvent(currentNoteList))
         }
     }
 

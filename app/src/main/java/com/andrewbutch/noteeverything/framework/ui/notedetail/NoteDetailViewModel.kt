@@ -14,8 +14,10 @@ import javax.inject.Inject
 class NoteDetailViewModel
 @Inject
 constructor(
-    private val interactors: NoteDetailInteractors
-) : BaseViewModel<NoteDetailViewState>() {
+    private val interactors: NoteDetailInteractors,
+    eventStore: StateEventStore,
+    messageStack: MessageStack
+) : BaseViewModel<NoteDetailViewState>(eventStore, messageStack) {
 
     fun setStateEvent(event: StateEvent) {
         val job: Flow<DataState<NoteDetailViewState>?> = when (event) {
@@ -79,12 +81,8 @@ constructor(
 //            .launchIn(CoroutineScope(Dispatchers.IO))
     }
 
-    private fun handleStateMessage(stateMessage: StateMessage) {
-        // todo delegate to job manager
-    }
-
-    private fun handleViewState(viewState: NoteDetailViewState) {
-        // todo delegate to job manager
+    override fun handleViewState(viewState: NoteDetailViewState) {
+        // do nothing
     }
 
 

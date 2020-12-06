@@ -6,25 +6,15 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.withContext
-import timber.log.Timber
-import javax.inject.Inject
 
-abstract class JobLauncher<ViewState> {
+abstract class JobLauncher<ViewState>
+constructor(val eventStore: StateEventStore, val messageStack: MessageStack) {
 
-    @Inject
-    lateinit var eventStore: StateEventStore
-
-    @Inject
-    lateinit var messageStack: MessageStack
-
-    init {
-        Timber.d("Init job launcher")
-    }
     fun launchJob(
         stateEvent: StateEvent,
         job: Flow<DataState<ViewState>?>
     ) {
-        eventStore.addEvent(stateEvent)
+        addStateEvent(stateEvent)
         job
             .onEach {
                 withContext(Dispatchers.Main) {
@@ -44,7 +34,7 @@ abstract class JobLauncher<ViewState> {
 
     abstract fun handleViewState(viewState: ViewState)
 
-    fun handleStateMessage(stateMessage: StateMessage) {
+    private fun handleStateMessage(stateMessage: StateMessage) {
         messageStack.addMessage(stateMessage)
     }
 
@@ -52,7 +42,7 @@ abstract class JobLauncher<ViewState> {
         eventStore.removeEvent(stateEvent)
     }
 
-    fun addStateEvent(stateEvent: StateEvent) {
-        // Добавть событие в хранилище
+    private fun addStateEvent(stateEvent: StateEvent) {
+        eventStore.addEvent(stateEvent)
     }
 }

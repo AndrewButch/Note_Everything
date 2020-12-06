@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.andrewbutch.noteeverything.R
 import com.andrewbutch.noteeverything.business.domain.model.Note
 import com.andrewbutch.noteeverything.business.domain.model.NoteList
+import com.andrewbutch.noteeverything.business.interactors.common.DeleteNoteList
 import com.andrewbutch.noteeverything.framework.ui.main.UIController
 import com.andrewbutch.noteeverything.framework.ui.main.UIController.Companion.InputDialogCallback
 import com.andrewbutch.noteeverything.framework.ui.notes.drawer.NavMenuAdapter
@@ -26,6 +27,7 @@ import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_notes.*
 import kotlinx.android.synthetic.main.layout_fragment_notes_content.*
 import kotlinx.android.synthetic.main.nav_header.*
+import timber.log.Timber
 import javax.inject.Inject
 
 class NotesFragment :
@@ -119,15 +121,36 @@ class NotesFragment :
                 }
 
                 viewState.selectedNoteList?.let {
-                    // do nothing
+                    showNotesContainer()
+                }
+                Timber.i("Selected list: ${viewState.selectedNoteList}")
+            }
+        }
+        viewModel.getStateMessage().observe(viewLifecycleOwner) { stateMessage ->
+            if (stateMessage != null) {
+                stateMessage.message?.let { message ->
+                    if (message == DeleteNoteList.DELETE_NOTE_LIST_SUCCESS) {
+                        hideNotesContainer()
+                        viewModel.setSelectedList(null)
+                        notesAdapter.submitList(emptyList())
+
+                    }
+                    viewModel.removeStateMessage()
                 }
             }
         }
+
+        viewModel.shouldDisplayProgressBar()
+            .observe(viewLifecycleOwner) { shouldDisplayProgressBar ->
+                uiController.displayProgressBar(shouldDisplayProgressBar)
+            }
     }
 
     private fun setupViews() {
         // Toolbar
         (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar)
+
+        hideNotesContainer()
     }
 
     private fun setupOnBackPressDispatcher() {
@@ -219,6 +242,16 @@ class NotesFragment :
         )
         drawer.closeDrawer(GravityCompat.START)
         viewModel.setNewNoteList(null)
+    }
+
+    private fun hideNotesContainer() {
+        notes_container.visibility = View.GONE
+        notesFragmentFab.visibility = View.GONE
+    }
+
+    private fun showNotesContainer() {
+        notes_container.visibility = View.VISIBLE
+        notesFragmentFab.visibility = View.VISIBLE
     }
 
     override fun onResume() {

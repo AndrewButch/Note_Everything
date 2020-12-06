@@ -7,15 +7,14 @@ import javax.inject.Singleton
 
 @Singleton
 class MessageStack {
-    private val _stateMessage = MutableLiveData<StateMessage>()
-    val stateMessage: LiveData<StateMessage>
+    private val _stateMessage = MutableLiveData<StateMessage?>()
+    val stateMessage: LiveData<StateMessage?>
         get() = _stateMessage
 
     private val messages: ArrayList<StateMessage> = ArrayList()
 
     fun addMessage(message: StateMessage) {
-        Timber.d("Try add ${message.message}")
-        if (!messages.contains(message)) {
+        if (messages.contains(message)) {
             Timber.d("Adding fail ${message.message}")
             return
         }
