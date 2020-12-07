@@ -1,6 +1,7 @@
 package com.andrewbutch.noteeverything.framework.ui.notes
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -43,6 +44,10 @@ class NotesFragment :
     @Inject
     lateinit var providerFactory: ViewModelProvider.Factory
 
+    @Inject
+    lateinit var preferences: SharedPreferences
+
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         uiController = (context as UIController)
@@ -68,8 +73,8 @@ class NotesFragment :
 
         subscribeObservers()
         setupOnBackPressDispatcher()
-
     }
+
 
     private fun showInputDialog(title: String, type: InputDialogType) {
         uiController.displayInputDialog(
@@ -110,6 +115,9 @@ class NotesFragment :
 
                 viewState.noteLists?.let {
                     navMenuAdapter.submitList(it)
+                    if (viewState.selectedNoteList == null) {
+                        extractFromPreferences()
+                    }
                 }
 
                 viewState.newNote?.let {
@@ -200,6 +208,21 @@ class NotesFragment :
         viewModel.setStateEvent(NoteListStateEvent.GetAllNoteListsEvent())
 
         viewModel.insertTestData()
+
+        extractFromPreferences()
+    }
+
+    private fun extractFromPreferences() {
+        val selectedNoteList = preferences.getString(SELECTED_NOTE_LIST_PREFERENCE_KEY, null)
+        selectedNoteList?.let {
+            viewModel.setSelectedList(selectedNoteList)
+        }
+    }
+
+    private fun setPreferences() {
+        val editor = preferences.edit()
+        editor.putString(SELECTED_NOTE_LIST_PREFERENCE_KEY, viewModel.getSelectedNoteList()?.id)
+        editor.apply()
     }
 
     // Note clicked
@@ -223,7 +246,7 @@ class NotesFragment :
     }
 
     private fun navToNoteDetail(selectedNote: Note) {
-        val bundle = bundleOf("NOTE_DETAIL_SELECTED_NOTE_BUNDLE_KEY" to selectedNote)
+        val bundle = bundleOf(NOTE_DETAIL_BUNDLE_KEY to selectedNote)
 
         findNavController().navigate(
             R.id.action_notesFragment_to_noteDetailFragment,
@@ -234,7 +257,7 @@ class NotesFragment :
     }
 
     private fun navToNoteListDetail(selectedNoteList: NoteList) {
-        val bundle = bundleOf("NOTE_LIST_DETAIL_SELECTED_NOTE_BUNDLE_KEY" to selectedNoteList)
+        val bundle = bundleOf(NOTE_LIST_DETAIL_BUNDLE_KEY to selectedNoteList)
 
         findNavController().navigate(
             R.id.action_notesFragment_to_noteListDetailFragment,
@@ -260,8 +283,21 @@ class NotesFragment :
         viewModel.reloadListItems()
     }
 
+    override fun onPause() {
+        super.onPause()
+        setPreferences()
+    }
+
 
     enum class InputDialogType {
         NOTE, LIST
     }
+
+    companion object {
+        const val NOTE_LIST_DETAIL_BUNDLE_KEY = "NotesFragment.NOTE_LIST_DETAIL_BUNDLE_KEY"
+        const val NOTE_DETAIL_BUNDLE_KEY = "NotesFragment.NOTE_DETAIL_BUNDLE_KEY"
+
+        const val SELECTED_NOTE_LIST_PREFERENCE_KEY = "NotesFragment.SELECTED_NOTE_KEY"
+    }
+
 }

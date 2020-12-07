@@ -80,20 +80,6 @@ constructor(
         launchJob(stateEvent, job)
     }
 
-//    override fun launchJob(job: Flow<DataState<NoteListViewState>?>) {
-//        job.onEach {
-//            withContext(Main) {
-//                it?.data?.let { viewState ->
-//                    handleViewState(viewState)
-//                }
-//                it?.stateMessage?.let { stateMessage ->
-//                    handleStateMessage(stateMessage)
-//                }
-//            }
-//        }
-//            .launchIn(CoroutineScope(IO))
-//    }
-
     override fun handleViewState(viewState: NoteListViewState) {
         viewState.newNoteList?.let {
             setNewNoteList(it)
@@ -118,6 +104,20 @@ constructor(
         val updated = getCurrentViewStateOrNew()
         updated.selectedNoteList = selectedList
         setViewState(updated)
+    }
+
+    // Set selected list from list ID (From SharedPreference)
+    fun setSelectedList(selectedListId: String) {
+        val updated = getCurrentViewStateOrNew()
+        updated.noteLists?.let {
+            for (noteList in updated.noteLists!!) {
+                if (noteList.id == selectedListId) {
+                    updated.selectedNoteList = noteList
+                    handleViewState(updated)
+                    return
+                }
+            }
+        }
     }
 
     fun setNewNote(note: Note?) {
@@ -208,7 +208,6 @@ constructor(
 
 
     companion object {
-        const val TAG = "!@#NotesViewModel"
         const val NOTE_LIST_SELECTED_MESSAGE = "Note list selected: "
     }
 

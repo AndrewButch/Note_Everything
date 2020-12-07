@@ -18,6 +18,7 @@ import com.andrewbutch.noteeverything.business.domain.model.NoteList
 import com.andrewbutch.noteeverything.framework.ui.BaseDetailFragment
 import com.andrewbutch.noteeverything.framework.ui.main.UIController
 import com.andrewbutch.noteeverything.framework.ui.notelistdetail.state.NoteListDetailStateEvent
+import com.andrewbutch.noteeverything.framework.ui.notes.NotesFragment
 import kotlinx.android.synthetic.main.fragment_note_list_detail.*
 import javax.inject.Inject
 
@@ -164,7 +165,7 @@ class NoteListDetailFragment : BaseDetailFragment(R.layout.fragment_note_list_de
 
     private fun getNoteFromArguments() {
         arguments?.let { args ->
-            val note = args.getParcelable("NOTE_LIST_DETAIL_SELECTED_NOTE_BUNDLE_KEY") as NoteList?
+            val note = args.getParcelable(NotesFragment.NOTE_LIST_DETAIL_BUNDLE_KEY) as NoteList?
             note?.let {
                 viewModel.setNoteList(it)
             }

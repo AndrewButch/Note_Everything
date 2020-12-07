@@ -1,5 +1,7 @@
 package com.andrewbutch.noteeverything.di
 
+import android.content.Context
+import android.content.SharedPreferences
 import com.andrewbutch.noteeverything.business.data.cache.abstraction.NoteCacheDataSource
 import com.andrewbutch.noteeverything.business.data.cache.abstraction.NoteListCacheDataSource
 import com.andrewbutch.noteeverything.business.data.cache.implementation.NoteCacheDataSourceImpl
@@ -33,6 +35,7 @@ import com.andrewbutch.noteeverything.framework.datasource.network.implementatio
 import com.andrewbutch.noteeverything.framework.datasource.network.implementation.NoteListFirestoreServiceImpl
 import com.andrewbutch.noteeverything.framework.datasource.network.mapper.NoteListNetworkMapper
 import com.andrewbutch.noteeverything.framework.datasource.network.mapper.NoteNetworkMapper
+import com.andrewbutch.noteeverything.util.PreferenceKeys
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
 import dagger.Provides
@@ -192,6 +195,13 @@ object AppModule {
     @Singleton
     @Provides
     fun provideStateEventStore(): StateEventStore = StateEventStore()
+
+    @JvmStatic
+    @Singleton
+    @Provides
+    fun provideSharedPreferences(app: BaseApplication): SharedPreferences {
+        return app.getSharedPreferences(PreferenceKeys.APP_PREFERENCE, Context.MODE_PRIVATE)
+    }
 
 
 
