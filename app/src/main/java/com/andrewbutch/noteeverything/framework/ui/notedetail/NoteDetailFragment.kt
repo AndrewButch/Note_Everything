@@ -18,7 +18,7 @@ import com.andrewbutch.noteeverything.business.domain.model.Note
 import com.andrewbutch.noteeverything.framework.ui.BaseDetailFragment
 import com.andrewbutch.noteeverything.framework.ui.main.UIController
 import com.andrewbutch.noteeverything.framework.ui.notedetail.state.NoteDetailStateEvent
-import com.andrewbutch.noteeverything.framework.ui.notes.NotesFragment
+import com.andrewbutch.noteeverything.framework.ui.notedetail.state.NoteDetailViewState
 import kotlinx.android.synthetic.main.fragment_note_detail.*
 import javax.inject.Inject
 
@@ -36,6 +36,7 @@ class NoteDetailFragment : BaseDetailFragment(R.layout.fragment_note_detail) {
 
         // handle Bundle and init fields
         getNoteFromArguments()
+        restoreInstanceState(savedInstanceState)
     }
 
     private fun setupUI() {
@@ -124,14 +125,6 @@ class NoteDetailFragment : BaseDetailFragment(R.layout.fragment_note_detail) {
         switchComplete.isChecked = completed
     }
 
-    private fun getNoteFromArguments() {
-        arguments?.let { args ->
-            val note = args.getParcelable(NotesFragment.NOTE_DETAIL_BUNDLE_KEY) as Note?
-            note?.let {
-                viewModel.setNote(it)
-            }
-        }
-    }
 
     override fun onBackPressed() {
         if (viewModel.isPendingUpdate()) {
@@ -178,4 +171,33 @@ class NoteDetailFragment : BaseDetailFragment(R.layout.fragment_note_detail) {
         }
     }
 
+    private fun getNoteFromArguments() {
+        arguments?.let { args ->
+            val note = args.getParcelable(NOTE_DETAIL_BUNDLE_KEY) as Note?
+            note?.let {
+                viewModel.setNote(it)
+                args.clear()
+            }
+        }
+    }
+
+    private fun restoreInstanceState(savedInstanceState: Bundle?) {
+        savedInstanceState?.let { args ->
+            val viewState = args.getParcelable(VIEW_STATE) as NoteDetailViewState?
+            viewState?.let {
+                viewModel.setViewState(it)
+            }
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putParcelable(VIEW_STATE, viewModel.viewState.value)
+    }
+
+    companion object {
+        const val VIEW_STATE = "com.andrewbutch.noteeverything.framework.ui.notedetail.VIEW_STATE"
+        const val NOTE_DETAIL_BUNDLE_KEY = "NotesFragment.NOTE_DETAIL_BUNDLE_KEY"
+
+    }
 }

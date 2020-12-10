@@ -21,7 +21,7 @@ constructor(eventStore: StateEventStore, messageStack: MessageStack) : ViewModel
 
     }
 
-    protected fun setViewState(viewState: ViewState) {
+    fun setViewState(viewState: ViewState) {
         _viewState.value = viewState
     }
 

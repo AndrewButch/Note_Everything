@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.LayoutRes
 import com.andrewbutch.noteeverything.framework.ui.main.UIController
@@ -33,9 +32,6 @@ abstract class BaseDetailFragment(
         return inflater.inflate(layoutId, container, false)
     }
 
-    fun showToast(msg: String) {
-        Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
-    }
 
     fun setupOnBackPressDispatcher() {
         val callback = object : OnBackPressedCallback(true) {

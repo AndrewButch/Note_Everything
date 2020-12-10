@@ -18,7 +18,7 @@ import com.andrewbutch.noteeverything.business.domain.model.NoteList
 import com.andrewbutch.noteeverything.framework.ui.BaseDetailFragment
 import com.andrewbutch.noteeverything.framework.ui.main.UIController
 import com.andrewbutch.noteeverything.framework.ui.notelistdetail.state.NoteListDetailStateEvent
-import com.andrewbutch.noteeverything.framework.ui.notes.NotesFragment
+import com.andrewbutch.noteeverything.framework.ui.notelistdetail.state.NoteListDetailViewState
 import kotlinx.android.synthetic.main.fragment_note_list_detail.*
 import javax.inject.Inject
 
@@ -37,6 +37,7 @@ class NoteListDetailFragment : BaseDetailFragment(R.layout.fragment_note_list_de
 
         // handle Bundle and init fields
         getNoteFromArguments()
+        restoreInstanceState(savedInstanceState)
     }
 
     private fun setupUI() {
@@ -165,10 +166,32 @@ class NoteListDetailFragment : BaseDetailFragment(R.layout.fragment_note_list_de
 
     private fun getNoteFromArguments() {
         arguments?.let { args ->
-            val note = args.getParcelable(NotesFragment.NOTE_LIST_DETAIL_BUNDLE_KEY) as NoteList?
+            val note = args.getParcelable(NOTE_LIST_DETAIL_BUNDLE_KEY) as NoteList?
             note?.let {
                 viewModel.setNoteList(it)
+                args.clear()
             }
         }
+    }
+
+    private fun restoreInstanceState(savedInstanceState: Bundle?) {
+        savedInstanceState?.let { args ->
+            val viewState = args.getParcelable(VIEW_STATE) as NoteListDetailViewState?
+            viewState?.let {
+                viewModel.setViewState(it)
+            }
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putParcelable(VIEW_STATE, viewModel.viewState.value)
+    }
+
+    companion object {
+        const val VIEW_STATE =
+            "com.andrewbutch.noteeverything.framework.ui.notelistdetail.VIEW_STATE"
+        const val NOTE_LIST_DETAIL_BUNDLE_KEY = "NotesFragment.NOTE_LIST_DETAIL_BUNDLE_KEY"
+
     }
 }

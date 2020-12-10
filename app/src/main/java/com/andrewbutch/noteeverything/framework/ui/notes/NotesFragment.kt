@@ -21,6 +21,8 @@ import com.andrewbutch.noteeverything.business.domain.model.NoteList
 import com.andrewbutch.noteeverything.business.interactors.common.DeleteNoteList
 import com.andrewbutch.noteeverything.framework.ui.main.UIController
 import com.andrewbutch.noteeverything.framework.ui.main.UIController.Companion.InputDialogCallback
+import com.andrewbutch.noteeverything.framework.ui.notedetail.NoteDetailFragment.Companion.NOTE_DETAIL_BUNDLE_KEY
+import com.andrewbutch.noteeverything.framework.ui.notelistdetail.NoteListDetailFragment.Companion.NOTE_LIST_DETAIL_BUNDLE_KEY
 import com.andrewbutch.noteeverything.framework.ui.notes.drawer.NavMenuAdapter
 import com.andrewbutch.noteeverything.framework.ui.notes.state.NoteListStateEvent
 import com.andrewbutch.noteeverything.framework.ui.utils.VerticalItemDecoration
@@ -64,6 +66,7 @@ class NotesFragment :
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         setupViews()
         setupNavDrawer()
         // FAB
@@ -128,8 +131,9 @@ class NotesFragment :
                     navToNoteListDetail(it)
                 }
 
-                viewState.selectedNoteList?.let {
+                viewState.selectedNoteList?.let { noteList ->
                     showNotesContainer()
+                    setTitle(noteList.title)
                 }
                 Timber.i("Selected list: ${viewState.selectedNoteList}")
             }
@@ -152,6 +156,10 @@ class NotesFragment :
             .observe(viewLifecycleOwner) { shouldDisplayProgressBar ->
                 uiController.displayProgressBar(shouldDisplayProgressBar)
             }
+    }
+
+    private fun setTitle(title: String) {
+        toolbar.title = title
     }
 
     private fun setupViews() {
@@ -213,7 +221,7 @@ class NotesFragment :
     }
 
     private fun extractFromPreferences() {
-        val selectedNoteList = preferences.getString(SELECTED_NOTE_LIST_PREFERENCE_KEY, null)
+        val selectedNoteList = preferences.getString(SELECTED_NOTE, null)
         selectedNoteList?.let {
             viewModel.setSelectedList(selectedNoteList)
         }
@@ -221,7 +229,7 @@ class NotesFragment :
 
     private fun setPreferences() {
         val editor = preferences.edit()
-        editor.putString(SELECTED_NOTE_LIST_PREFERENCE_KEY, viewModel.getSelectedNoteList()?.id)
+        editor.putString(SELECTED_NOTE, viewModel.getSelectedNoteList()?.id)
         editor.apply()
     }
 
@@ -294,10 +302,7 @@ class NotesFragment :
     }
 
     companion object {
-        const val NOTE_LIST_DETAIL_BUNDLE_KEY = "NotesFragment.NOTE_LIST_DETAIL_BUNDLE_KEY"
-        const val NOTE_DETAIL_BUNDLE_KEY = "NotesFragment.NOTE_DETAIL_BUNDLE_KEY"
-
-        const val SELECTED_NOTE_LIST_PREFERENCE_KEY = "NotesFragment.SELECTED_NOTE_KEY"
+        const val SELECTED_NOTE = "com.andrewbutch.noteeverything.framework.ui.notes.SELECTED_NOTE"
     }
 
 }
