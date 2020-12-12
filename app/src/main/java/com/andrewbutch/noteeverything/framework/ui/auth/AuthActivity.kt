@@ -5,9 +5,6 @@ import android.widget.Toast
 import com.andrewbutch.noteeverything.R
 import com.andrewbutch.noteeverything.business.domain.model.User
 import com.andrewbutch.noteeverything.framework.datasource.network.abstraction.AuthFirestoreService
-import com.andrewbutch.noteeverything.framework.datasource.network.implementation.AuthFireStoreServiceImpl
-import com.andrewbutch.noteeverything.framework.datasource.network.mapper.UserNetworkMapper
-import com.google.firebase.auth.FirebaseAuth
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_auth.*
 import kotlinx.coroutines.CoroutineScope
@@ -15,9 +12,11 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 class AuthActivity : DaggerAppCompatActivity() {
 
+    @Inject
     lateinit var authService: AuthFirestoreService
     val email = "testuser2@mail.ru"
     val pass = "123456"
@@ -26,7 +25,7 @@ class AuthActivity : DaggerAppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_auth)
 
-        authService = AuthFireStoreServiceImpl(FirebaseAuth.getInstance(), UserNetworkMapper())
+//        authService = AuthFireStoreServiceImpl(FirebaseAuth.getInstance(), UserNetworkMapper())
 
         loginBtn.setOnClickListener {
             CoroutineScope(IO).launch {

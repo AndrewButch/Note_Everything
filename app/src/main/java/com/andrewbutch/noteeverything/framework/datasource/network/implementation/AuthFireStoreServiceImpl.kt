@@ -1,12 +1,14 @@
 package com.andrewbutch.noteeverything.framework.datasource.network.implementation
 
 import com.andrewbutch.noteeverything.business.domain.model.User
+import com.andrewbutch.noteeverything.di.scope.AuthScope
 import com.andrewbutch.noteeverything.framework.datasource.network.abstraction.AuthFirestoreService
 import com.andrewbutch.noteeverything.framework.datasource.network.mapper.UserNetworkMapper
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
+@AuthScope
 class AuthFireStoreServiceImpl
 @Inject
 constructor(
