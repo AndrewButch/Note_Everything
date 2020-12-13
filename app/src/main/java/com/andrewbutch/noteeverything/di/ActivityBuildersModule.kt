@@ -1,5 +1,6 @@
 package com.andrewbutch.noteeverything.di
 
+import com.andrewbutch.noteeverything.di.auth.AuthFragmentsBuilderModule
 import com.andrewbutch.noteeverything.di.auth.AuthModule
 import com.andrewbutch.noteeverything.di.main.MainFragmentsBuilderModule
 import com.andrewbutch.noteeverything.di.scope.AuthScope
@@ -22,7 +23,7 @@ abstract class ActivityBuildersModule {
 
     @AuthScope
     @ContributesAndroidInjector(
-        modules = [AuthModule::class, ]
+        modules = [AuthModule::class, AuthFragmentsBuilderModule::class ]
     )
     abstract fun contributeAuthActivity(): AuthActivity
 }
