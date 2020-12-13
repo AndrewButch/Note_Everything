@@ -8,7 +8,7 @@ interface AuthFirestoreService {
 
     suspend fun register(email: String, password: String): User?
 
-    fun getCurrentUser(): User?
+    suspend fun getCurrentUser(): User?
 
     suspend fun logout()
 }

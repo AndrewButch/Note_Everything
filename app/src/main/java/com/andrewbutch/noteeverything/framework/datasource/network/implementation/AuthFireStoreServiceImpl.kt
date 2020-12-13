@@ -40,7 +40,7 @@ constructor(
         return user
     }
 
-    override fun getCurrentUser(): User? {
+    override suspend fun getCurrentUser(): User? {
         var user: User? = null
         val firebaseUser = firebaseAuth.currentUser
         if (firebaseUser != null) {
