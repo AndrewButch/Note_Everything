@@ -1,10 +1,10 @@
 package com.andrewbutch.noteeverything.di
 
-import com.andrewbutch.noteeverything.di.auth.AuthFragmentsBuilderModule
-import com.andrewbutch.noteeverything.di.auth.AuthModule
-import com.andrewbutch.noteeverything.di.auth.AuthScope
-import com.andrewbutch.noteeverything.di.auth.AuthViewModelModule
+import com.andrewbutch.noteeverything.di.auth.*
 import com.andrewbutch.noteeverything.di.main.MainFragmentsBuilderModule
+import com.andrewbutch.noteeverything.di.main.MainScope
+import com.andrewbutch.noteeverything.di.main.MainViewModelBuilderModule
+import com.andrewbutch.noteeverything.di.main.MainViewModelModule
 import com.andrewbutch.noteeverything.framework.ui.auth.AuthActivity
 import com.andrewbutch.noteeverything.framework.ui.main.MainActivity
 import dagger.Module
@@ -17,10 +17,12 @@ import kotlinx.coroutines.FlowPreview
 @Module
 abstract class ActivityBuildersModule {
 
+    @MainScope
     @ContributesAndroidInjector(
         modules = [
             MainFragmentsBuilderModule::class,
-        ]
+            MainViewModelBuilderModule::class,
+            MainViewModelModule::class]
     )
     abstract fun contributeMainActivity(): MainActivity
 
@@ -29,7 +31,8 @@ abstract class ActivityBuildersModule {
         modules = [
             AuthModule::class,
             AuthFragmentsBuilderModule::class,
-            AuthViewModelModule::class, ]
+            AuthViewModelModule::class,
+            AuthViewModelBuilderModule::class, ]
     )
     abstract fun contributeAuthActivity(): AuthActivity
 }

@@ -5,7 +5,7 @@ import dagger.Module
 
 @Module
 abstract class NoteDetailViewModelsModule {
-
+//    @FragmentScope
 //    @Binds
 //    @IntoMap
 //    @ViewModelKey(NoteDetailViewModel::class)

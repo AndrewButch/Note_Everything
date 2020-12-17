@@ -5,6 +5,7 @@ import dagger.Module
 @Module
 abstract class SplashViewModelModule {
 
+//    @FragmentScope
 //    @Binds
 //    @IntoMap
 //    @ViewModelKey(SplashViewModel::class)

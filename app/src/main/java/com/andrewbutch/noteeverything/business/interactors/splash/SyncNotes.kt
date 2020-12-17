@@ -15,8 +15,11 @@ import com.andrewbutch.noteeverything.business.domain.state.StateMessage
 import com.andrewbutch.noteeverything.business.domain.state.UIComponentType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class SyncNotes(
+class SyncNotes
+@Inject
+constructor(
     private val noteCacheDataSource: NoteCacheDataSource,
     private val noteNetworkDataSource: NoteNetworkDataSource,
 ) {
@@ -33,7 +36,6 @@ class SyncNotes(
             networkNotes
         )
     }
-
 
 
     private suspend fun getCachedNotes(noteList: NoteList): List<Note> {

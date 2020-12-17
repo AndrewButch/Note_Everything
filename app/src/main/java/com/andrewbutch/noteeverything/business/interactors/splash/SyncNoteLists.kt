@@ -14,8 +14,11 @@ import com.andrewbutch.noteeverything.business.domain.state.StateMessage
 import com.andrewbutch.noteeverything.business.domain.state.UIComponentType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class SyncNoteLists(
+class SyncNoteLists
+@Inject
+constructor(
     val noteListCacheDataSource: NoteListCacheDataSource,
     private val noteListNetworkDataSource: NoteListNetworkDataSource
 ) {

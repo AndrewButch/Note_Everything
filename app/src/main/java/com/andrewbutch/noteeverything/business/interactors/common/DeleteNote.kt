@@ -10,8 +10,10 @@ import com.andrewbutch.noteeverything.business.domain.state.*
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import javax.inject.Inject
 
 class DeleteNote<ViewState>
+@Inject
 constructor(
     private val noteCacheDataSource: NoteCacheDataSource,
     private val noteNetworkDataSource: NoteNetworkDataSource,

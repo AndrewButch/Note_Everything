@@ -13,8 +13,10 @@ import com.andrewbutch.noteeverything.framework.ui.auth.state.AuthViewState
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import javax.inject.Inject
 
 class Login
+@Inject
 constructor(
     private val userNetworkDataSource: UserNetworkDataSource
 ) {

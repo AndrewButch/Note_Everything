@@ -11,8 +11,11 @@ import com.andrewbutch.noteeverything.framework.ui.notelistdetail.state.NoteList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import javax.inject.Inject
 
-class UpdateNoteList(
+class UpdateNoteList
+@Inject
+constructor(
     private val noteListCacheDataSource: NoteListCacheDataSource,
     private val noteListNetworkDataSource: NoteListNetworkDataSource
 ) {

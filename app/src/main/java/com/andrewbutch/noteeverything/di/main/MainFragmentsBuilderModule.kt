@@ -16,7 +16,16 @@ import dagger.android.ContributesAndroidInjector
 
 @Module
 abstract class MainFragmentsBuilderModule {
+    @FragmentScope
+    @ContributesAndroidInjector(
+        modules = [
+            SplashViewModelModule::class,
+            SplashFragmentModule::class
+        ]
+    )
+    abstract fun contributeSplashFragment(): SplashFragment
 
+    @FragmentScope
     @ContributesAndroidInjector(
         modules = [
             NotesViewModelsModule::class,
@@ -24,6 +33,7 @@ abstract class MainFragmentsBuilderModule {
     )
     abstract fun contributeNotesFragment(): NotesFragment
 
+    @FragmentScope
     @ContributesAndroidInjector(
         modules = [
             NoteDetailViewModelsModule::class,
@@ -32,6 +42,7 @@ abstract class MainFragmentsBuilderModule {
     )
     abstract fun contributeNoteDetailFragment(): NoteDetailFragment
 
+    @FragmentScope
     @ContributesAndroidInjector(
         modules = [
             NoteListDetailViewModelModule::class,
@@ -40,11 +51,5 @@ abstract class MainFragmentsBuilderModule {
     )
     abstract fun contributeNoteListDetailFragment(): NoteListDetailFragment
 
-    @ContributesAndroidInjector(
-        modules = [
-            SplashViewModelModule::class,
-            SplashFragmentModule::class
-        ]
-    )
-    abstract fun contributeSplashFragment(): SplashFragment
+
 }
