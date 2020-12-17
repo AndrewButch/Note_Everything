@@ -2,18 +2,16 @@ package com.andrewbutch.noteeverything.di
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import dagger.Binds
-import dagger.MapKey
-import dagger.Module
 import javax.inject.Inject
 import javax.inject.Provider
-import kotlin.reflect.KClass
+import javax.inject.Singleton
 
 /**
  *
  * Class from google arch samples
  * ViewModelFactory which uses Dagger to create the instances.
  */
+@Singleton
 class ViewModelFactory @Inject constructor(
     private val creators: @JvmSuppressWildcards Map<Class<out ViewModel>, Provider<ViewModel>>
 ) : ViewModelProvider.Factory {
@@ -39,18 +37,4 @@ class ViewModelFactory @Inject constructor(
     }
 }
 
-@Module
-abstract class ViewModelBuilderModule {
 
-    @Binds
-    abstract fun bindViewModelFactory(
-        factory: ViewModelFactory
-    ): ViewModelProvider.Factory
-}
-
-@Target(
-    AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY_GETTER, AnnotationTarget.PROPERTY_SETTER
-)
-@Retention(AnnotationRetention.RUNTIME)
-@MapKey
-annotation class ViewModelKey(val value: KClass<out ViewModel>)

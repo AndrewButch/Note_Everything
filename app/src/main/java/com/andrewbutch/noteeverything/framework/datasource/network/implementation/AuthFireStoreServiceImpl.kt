@@ -1,7 +1,7 @@
 package com.andrewbutch.noteeverything.framework.datasource.network.implementation
 
 import com.andrewbutch.noteeverything.business.domain.model.User
-import com.andrewbutch.noteeverything.di.scope.AuthScope
+import com.andrewbutch.noteeverything.di.auth.AuthScope
 import com.andrewbutch.noteeverything.framework.datasource.network.abstraction.AuthFirestoreService
 import com.andrewbutch.noteeverything.framework.datasource.network.mapper.UserNetworkMapper
 import com.google.firebase.auth.FirebaseAuth

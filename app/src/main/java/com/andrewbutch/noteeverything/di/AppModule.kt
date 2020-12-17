@@ -202,8 +202,4 @@ object AppModule {
     fun provideSharedPreferences(app: BaseApplication): SharedPreferences {
         return app.getSharedPreferences(PreferenceKeys.APP_PREFERENCE, Context.MODE_PRIVATE)
     }
-
-
-
-
 }

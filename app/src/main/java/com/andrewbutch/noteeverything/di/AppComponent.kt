@@ -18,10 +18,12 @@ import javax.inject.Singleton
         ActivityBuildersModule::class,
         AppModule::class,
         ProductionModule::class,
-        ViewModelBuilderModule::class
+        ViewModelBuilderModule::class,
+        ViewModelModule::class,
+        TestDependencies::class,
     ]
 )
-interface AppComponent : AndroidInjector<BaseApplication>{
+interface AppComponent : AndroidInjector<BaseApplication> {
 
     @Component.Builder
     interface Builder {

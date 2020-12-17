@@ -6,9 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
+import androidx.lifecycle.ViewModelProvider
 import com.andrewbutch.noteeverything.R
 import com.andrewbutch.noteeverything.business.domain.model.User
 import com.andrewbutch.noteeverything.framework.datasource.network.abstraction.AuthFirestoreService
+import com.andrewbutch.noteeverything.framework.ui.auth.state.AuthStateEvent
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_login.*
 import kotlinx.coroutines.CoroutineScope
@@ -18,6 +20,11 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class LoginFragment : DaggerFragment() {
+
+    @Inject
+    lateinit var providerFactory: ViewModelProvider.Factory
+
+    lateinit var viewModel: AuthViewModel
 
     @Inject
     lateinit var authService: AuthFirestoreService
@@ -35,6 +42,10 @@ class LoginFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        requireActivity().run {
+            viewModel = ViewModelProvider(this, providerFactory).get(AuthViewModel::class.java)
+        }
+
         emailTextView.addTextChangedListener { newEmail ->
             newEmail?.let {
                 checkAndSaveEmail(newEmail.toString())
@@ -51,13 +62,7 @@ class LoginFragment : DaggerFragment() {
             if (checkAndSaveEmail(emailTextView.text.toString()) &&
                 checkAndSavePassword(passwordTextView.text.toString()))
 
-                CoroutineScope(Dispatchers.IO).launch {
-                    val user = authService.login(email, password)
-                    user?.let {
-                        setUser(user)
-                        (requireActivity() as AuthActivity).navToMain()
-                    }
-                }
+                viewModel.setStateEvent(AuthStateEvent.LoginEvent(email, password))
         }
 
         registrationBtn.setOnClickListener { navToRegistration() }
@@ -67,6 +72,7 @@ class LoginFragment : DaggerFragment() {
         checkAuthBtn.setOnClickListener { checkPreviousAuthUser() }
 
         logoutBtn.setOnClickListener { logout() }
+
     }
 
     private fun navToForgotPassword() {
@@ -88,16 +94,7 @@ class LoginFragment : DaggerFragment() {
     }
 
     fun checkPreviousAuthUser() {
-        val authUser = authService.getCurrentUser()
-        if (authUser != null) {
-            showToast("Cached user")
-            CoroutineScope(Dispatchers.Main).launch {
-                setUser(authUser)
-            }
-        } else {
-            showToast("No auth user")
-
-        }
+        viewModel.setStateEvent(AuthStateEvent.CheckPreviousAuth)
     }
 
     fun logout() {
