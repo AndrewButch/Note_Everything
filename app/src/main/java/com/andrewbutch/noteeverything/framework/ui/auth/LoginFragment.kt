@@ -60,12 +60,20 @@ class LoginFragment : DaggerFragment() {
 
         loginBtn.setOnClickListener {
             if (checkAndSaveEmail(emailTextView.text.toString()) &&
-                checkAndSavePassword(passwordTextView.text.toString()))
+                checkAndSavePassword(passwordTextView.text.toString())
+            )
 
                 viewModel.setStateEvent(AuthStateEvent.LoginEvent(email, password))
         }
 
-        registrationBtn.setOnClickListener { navToRegistration() }
+        registrationBtn.setOnClickListener {
+            if (checkAndSaveEmail(emailTextView.text.toString()) &&
+                checkAndSavePassword(passwordTextView.text.toString())
+            )
+
+                viewModel.setStateEvent(AuthStateEvent.RegisterEvent(email, password, password))
+//            navToRegistration()
+        }
 
         forgotPassBtn.setOnClickListener { navToForgotPassword() }
 

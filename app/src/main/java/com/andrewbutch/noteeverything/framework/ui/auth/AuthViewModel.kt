@@ -1,9 +1,7 @@
 package com.andrewbutch.noteeverything.framework.ui.auth
 
 import com.andrewbutch.noteeverything.business.domain.model.User
-import com.andrewbutch.noteeverything.business.domain.state.DataState
-import com.andrewbutch.noteeverything.business.domain.state.MessageStack
-import com.andrewbutch.noteeverything.business.domain.state.StateEventStore
+import com.andrewbutch.noteeverything.business.domain.state.*
 import com.andrewbutch.noteeverything.business.interactors.auth.AuthInteractors
 import com.andrewbutch.noteeverything.framework.ui.BaseViewModel
 import com.andrewbutch.noteeverything.framework.ui.auth.state.AuthStateEvent
@@ -27,10 +25,23 @@ constructor(
                 interactors.login.login(stateEvent.email, stateEvent.password, stateEvent)
             }
             is AuthStateEvent.RegisterEvent -> {
-                TODO()
+                if (stateEvent.password != stateEvent.confirmPassword) {
+                    emitStateMessageEvent(
+                        stateMessage = StateMessage(
+                            message = CONFIRM_PASSWORD_DIFF,
+                            uiComponentType = UIComponentType.Dialog,
+                            messageType = MessageType.Error
+                        ),
+                        data = AuthViewState(),
+                        stateEvent = stateEvent
+                    )
+                } else {
+                    interactors.registration.register(stateEvent.email, stateEvent.password, stateEvent)
+                }
+
             }
             is AuthStateEvent.CheckPreviousAuth -> {
-                TODO()
+                interactors.previousSession.getPreviousSession(stateEvent)
             }
         }
         launchJob(stateEvent, job)
@@ -61,4 +72,8 @@ constructor(
     }
 
     override fun getNewViewState(): AuthViewState = AuthViewState()
+
+    companion object {
+        const val CONFIRM_PASSWORD_DIFF = "Confirm password does not match"
+    }
 }
