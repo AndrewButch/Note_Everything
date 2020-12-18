@@ -5,4 +5,6 @@ import com.andrewbutch.noteeverything.business.domain.model.User
 interface UserCacheDataSource {
 
     suspend fun getPreviousUser(): User?
+
+    suspend fun logout()
 }

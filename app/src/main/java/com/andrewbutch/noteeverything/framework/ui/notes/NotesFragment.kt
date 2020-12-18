@@ -19,6 +19,7 @@ import com.andrewbutch.noteeverything.R
 import com.andrewbutch.noteeverything.business.domain.model.Note
 import com.andrewbutch.noteeverything.business.domain.model.NoteList
 import com.andrewbutch.noteeverything.business.interactors.common.DeleteNoteList
+import com.andrewbutch.noteeverything.framework.session.SessionManager
 import com.andrewbutch.noteeverything.framework.ui.main.UIController
 import com.andrewbutch.noteeverything.framework.ui.main.UIController.Companion.InputDialogCallback
 import com.andrewbutch.noteeverything.framework.ui.notedetail.NoteDetailFragment.Companion.NOTE_DETAIL_BUNDLE_KEY
@@ -48,6 +49,9 @@ class NotesFragment :
 
     @Inject
     lateinit var preferences: SharedPreferences
+
+    @Inject
+    lateinit var sessionManager: SessionManager
 
 
     override fun onAttach(context: Context) {
@@ -165,6 +169,10 @@ class NotesFragment :
     private fun setupViews() {
         // Toolbar
         (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar)
+        toolbar.setOnClickListener {
+            showToast("Click toolbar")
+            sessionManager.logout()
+        }
 
         hideNotesContainer()
     }

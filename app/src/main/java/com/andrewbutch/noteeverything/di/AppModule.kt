@@ -4,8 +4,10 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.andrewbutch.noteeverything.business.data.cache.abstraction.NoteCacheDataSource
 import com.andrewbutch.noteeverything.business.data.cache.abstraction.NoteListCacheDataSource
+import com.andrewbutch.noteeverything.business.data.cache.abstraction.UserCacheDataSource
 import com.andrewbutch.noteeverything.business.data.cache.implementation.NoteCacheDataSourceImpl
 import com.andrewbutch.noteeverything.business.data.cache.implementation.NoteListCacheDataSourceImpl
+import com.andrewbutch.noteeverything.business.data.cache.implementation.UserCacheDataSourceImpl
 import com.andrewbutch.noteeverything.business.data.network.abstraction.NoteListNetworkDataSource
 import com.andrewbutch.noteeverything.business.data.network.abstraction.NoteNetworkDataSource
 import com.andrewbutch.noteeverything.business.data.network.implementation.NoteListNetworkDataSourceImpl
@@ -29,6 +31,7 @@ import com.andrewbutch.noteeverything.framework.datasource.cache.implementation.
 import com.andrewbutch.noteeverything.framework.datasource.cache.implementation.NoteListDaoServiceImpl
 import com.andrewbutch.noteeverything.framework.datasource.cache.mapper.NoteCacheMapper
 import com.andrewbutch.noteeverything.framework.datasource.cache.mapper.NoteListCacheMapper
+import com.andrewbutch.noteeverything.framework.datasource.network.abstraction.AuthFirestoreService
 import com.andrewbutch.noteeverything.framework.datasource.network.abstraction.NoteFirestoreService
 import com.andrewbutch.noteeverything.framework.datasource.network.abstraction.NoteListFirestoreService
 import com.andrewbutch.noteeverything.framework.datasource.network.implementation.NoteFirestoreServiceImpl
@@ -131,7 +134,7 @@ object AppModule {
             InsertNewNote(noteCacheDataSource, noteNetworkDataSource, noteFactory),
             InsertNewNoteList(noteListCacheDataSource, noteListNetworkDataSource, noteListFactory),
             DeleteNote(noteCacheDataSource, noteNetworkDataSource),
-            DeleteNoteList(noteListCacheDataSource, noteListNetworkDataSource)
+            DeleteNoteList(noteListCacheDataSource, noteListNetworkDataSource),
         )
 
     @JvmStatic
@@ -201,5 +204,12 @@ object AppModule {
     @Provides
     fun provideSharedPreferences(app: BaseApplication): SharedPreferences {
         return app.getSharedPreferences(PreferenceKeys.APP_PREFERENCE, Context.MODE_PRIVATE)
+    }
+
+    @Singleton
+    @JvmStatic
+    @Provides
+    fun provideUserCacheDataSource(authFirestoreService: AuthFirestoreService): UserCacheDataSource {
+        return UserCacheDataSourceImpl(authFirestoreService)
     }
 }

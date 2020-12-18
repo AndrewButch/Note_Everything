@@ -1,4 +1,4 @@
-package com.andrewbutch.noteeverything.business.interactors.auth
+package com.andrewbutch.noteeverything.business.interactors.session
 
 import com.andrewbutch.noteeverything.business.data.cache.CacheResultHandler
 import com.andrewbutch.noteeverything.business.data.cache.abstraction.UserCacheDataSource

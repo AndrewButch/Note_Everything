@@ -14,4 +14,8 @@ constructor(
     override suspend fun getPreviousUser(): User? {
         return authService.getCurrentUser()
     }
+
+    override suspend fun logout() {
+        authService.logout()
+    }
 }

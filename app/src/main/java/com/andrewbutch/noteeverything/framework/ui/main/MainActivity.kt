@@ -1,6 +1,7 @@
 package com.andrewbutch.noteeverything.framework.ui.main
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
 import android.view.View
@@ -11,10 +12,13 @@ import com.afollestad.materialdialogs.callbacks.onDismiss
 import com.afollestad.materialdialogs.color.colorChooser
 import com.afollestad.materialdialogs.input.input
 import com.andrewbutch.noteeverything.R
+import com.andrewbutch.noteeverything.framework.session.SessionManager
+import com.andrewbutch.noteeverything.framework.ui.auth.AuthActivity
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
 @FlowPreview
@@ -22,9 +26,13 @@ class MainActivity : DaggerAppCompatActivity(), UIController {
     private var dialogInView: MaterialDialog? = null
     private lateinit var colors: IntArray
 
+    @Inject
+    lateinit var sessionManager: SessionManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        subscribeObservers()
         colors = resources.getIntArray(R.array.color_chooser_values)
     }
 
@@ -102,5 +110,20 @@ class MainActivity : DaggerAppCompatActivity(), UIController {
             cancelable(true)
 
         }
+    }
+
+    private fun subscribeObservers() {
+        sessionManager.authUser.observe(this) { authUser ->
+            if (authUser == null) {
+                navToAuth()
+            }
+        }
+    }
+
+
+    private fun navToAuth() {
+        val intent = Intent(this, AuthActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 }

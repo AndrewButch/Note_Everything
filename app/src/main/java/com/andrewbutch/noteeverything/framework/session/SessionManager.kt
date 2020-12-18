@@ -3,7 +3,7 @@ package com.andrewbutch.noteeverything.framework.session
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.andrewbutch.noteeverything.business.domain.model.User
-import com.andrewbutch.noteeverything.framework.datasource.network.abstraction.AuthFirestoreService
+import com.andrewbutch.noteeverything.business.interactors.session.Logout
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -15,7 +15,7 @@ import javax.inject.Singleton
 class SessionManager
 @Inject
 constructor(
-    val authFirestoreService: AuthFirestoreService
+    private val logout: Logout,
 ) {
 
     private val _authUser: MutableLiveData<User> = MutableLiveData()
@@ -29,10 +29,8 @@ constructor(
 
     fun logout() {
         Timber.d("Logout")
-        GlobalScope.launch(Main) {
-            authFirestoreService.logout()
-            setValue(null)
-        }
+        logout.logout()
+        setValue(null)
     }
 
     private fun setValue(newValue: User?) {
