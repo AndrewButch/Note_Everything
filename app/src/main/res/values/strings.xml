@@ -37,7 +37,7 @@
     <string name="password_hint">Password</string>
     <string name="enter_button">Войти</string>
     <string name="registration_button">Регистрация</string>
-    <string name="forgot_password_button">Забыл пароль</string>
+    <string name="forgot_password_button">Забыли пароль</string>
 
     <!-- Registration fragment -->
     <string name="register_title">Создание пользователя</string>

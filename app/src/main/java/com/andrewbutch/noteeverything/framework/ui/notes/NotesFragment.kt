@@ -170,7 +170,6 @@ class NotesFragment :
         // Toolbar
         (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar)
         toolbar.setOnClickListener {
-            showToast("Click toolbar")
             sessionManager.logout()
         }
 

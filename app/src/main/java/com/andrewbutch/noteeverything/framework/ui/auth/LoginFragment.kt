@@ -12,8 +12,6 @@ import com.andrewbutch.noteeverything.R
 import com.andrewbutch.noteeverything.framework.ui.auth.state.AuthStateEvent
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_login.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class LoginFragment : DaggerFragment() {
@@ -72,7 +70,7 @@ class LoginFragment : DaggerFragment() {
 
         forgotPassBtn.setOnClickListener { navToForgotPassword() }
 
-        checkAuthBtn.setOnClickListener { checkPreviousAuthUser() }
+        checkPreviousAuthUser()
 
     }
 
@@ -83,10 +81,6 @@ class LoginFragment : DaggerFragment() {
     private fun navToRegistration() {
         showToast("Регистрация")
         findNavController().navigate(R.id.action_loginFragment_to_registrationFragment)
-    }
-
-    suspend fun cleanUser() = withContext(Dispatchers.Main) {
-        userInfo.text = "Session Info"
     }
 
     fun checkPreviousAuthUser() {
