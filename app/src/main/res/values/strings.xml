@@ -30,12 +30,20 @@
 
     <!-- Splash fragment -->
     <string name="sync">Синхронизация…</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+    <!-- Login fragment -->
     <string name="email_hint">Email</string>
     <string name="password_hint">Password</string>
     <string name="enter_button">Войти</string>
     <string name="registration_button">Регистрация</string>
     <string name="forgot_password_button">Забыл пароль</string>
+
+    <!-- Registration fragment -->
+    <string name="register_title">Создание пользователя</string>
+    <string name="register_email_hint">Email</string>
+    <string name="register_password_hint">Password</string>
+    <string name="register_confirm_password_hint">Confirm password</string>
+    <string name="register_create_user_btn">Создать пользователя</string>
 
 </resources>
