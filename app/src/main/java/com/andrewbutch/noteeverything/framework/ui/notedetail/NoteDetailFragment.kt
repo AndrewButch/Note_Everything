@@ -29,8 +29,8 @@ class NoteDetailFragment : BaseDetailFragment(R.layout.fragment_note_detail) {
     private val viewModel: NoteDetailViewModel by viewModels { providerFactory }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         setupUI()
-        setupOnBackPressDispatcher()
         addListeners()
         subscribeObservers()
 
