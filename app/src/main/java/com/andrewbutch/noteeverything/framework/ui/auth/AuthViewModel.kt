@@ -14,7 +14,7 @@ import javax.inject.Inject
 class AuthViewModel
 @Inject
 constructor(
-    val interactors: AuthInteractors,
+    private val interactors: AuthInteractors,
     eventStore: StateEventStore,
     messageStack: MessageStack
 ) : BaseViewModel<AuthViewState>(eventStore, messageStack) {
@@ -22,21 +22,41 @@ constructor(
     fun setStateEvent(stateEvent: AuthStateEvent) {
         val job: Flow<DataState<AuthViewState>?> = when (stateEvent) {
             is AuthStateEvent.LoginEvent -> {
-                interactors.login.login(stateEvent.email, stateEvent.password, stateEvent)
+                viewState.value?.loginFields?.isValidLogin().let { error ->
+                    if (error == "") {
+                        interactors.login.login(stateEvent.email, stateEvent.password, stateEvent)
+                    } else {
+                        emitStateMessageEvent(
+                            stateMessage = StateMessage(
+                                message = error,
+                                uiComponentType = UIComponentType.Toast,
+                                messageType = MessageType.Error
+                            ),
+                            data = AuthViewState(),
+                            stateEvent = stateEvent,
+                        )
+                    }
+                }
             }
             is AuthStateEvent.RegisterEvent -> {
-                if (stateEvent.password != stateEvent.confirmPassword) {
-                    emitStateMessageEvent(
-                        stateMessage = StateMessage(
-                            message = CONFIRM_PASSWORD_DIFF,
-                            uiComponentType = UIComponentType.Dialog,
-                            messageType = MessageType.Error
-                        ),
-                        data = AuthViewState(),
-                        stateEvent = stateEvent
-                    )
-                } else {
-                    interactors.registration.register(stateEvent.email, stateEvent.password, stateEvent)
+                viewState.value?.registrationFields?.isValidRegistration().let { error ->
+                    if (error == "") {
+                        interactors.registration.register(
+                            stateEvent.email,
+                            stateEvent.password,
+                            stateEvent
+                        )
+                    } else {
+                        emitStateMessageEvent(
+                            stateMessage = StateMessage(
+                                message = error,
+                                uiComponentType = UIComponentType.Dialog,
+                                messageType = MessageType.Error
+                            ),
+                            data = AuthViewState(),
+                            stateEvent = stateEvent
+                        )
+                    }
                 }
 
             }
@@ -72,8 +92,4 @@ constructor(
     }
 
     override fun getNewViewState(): AuthViewState = AuthViewState()
-
-    companion object {
-        const val CONFIRM_PASSWORD_DIFF = "Confirm password does not match"
-    }
 }

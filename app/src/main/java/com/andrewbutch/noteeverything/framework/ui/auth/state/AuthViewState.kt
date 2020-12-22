@@ -15,14 +15,19 @@ data class LoginFields(
 ) {
 
     fun isValidLogin(): String {
-        if (email.isNullOrEmpty() || password.isNullOrEmpty()) {
-            return EMPTY_FIELDS_ERROR
+        val builder = StringBuilder()
+        if (email.isNullOrEmpty()) {
+            builder.append(EMAIL_EMPTY_ERROR)
         }
-        return ""
+        if (password.isNullOrEmpty()) {
+            builder.append(PASSWORD_EMPTY_ERROR)
+        }
+        return builder.toString()
     }
 
     companion object {
-        const val EMPTY_FIELDS_ERROR = "Can`t login without email and password"
+        const val EMAIL_EMPTY_ERROR = "Fill email field"
+        const val PASSWORD_EMPTY_ERROR = "Fill password field"
     }
 }
 
@@ -33,20 +38,28 @@ data class RegistrationFields(
 ) {
 
     fun isValidRegistration(): String {
-        if (email.isNullOrEmpty() || password.isNullOrEmpty()) {
-            return EMPTY_FIELDS_ERROR
-        }
+        val builder = StringBuilder()
 
+        if (email.isNullOrEmpty()) {
+            builder.append(EMAIL_EMPTY_ERROR)
+        }
         if (password != confirmPassword) {
-            return PASSWORD_MATCH_ERROR
+            builder.append(PASSWORD_MATCH_ERROR)
         }
-
-        return ""
+        if (password.isNullOrEmpty()) {
+            builder.append(PASSWORD_EMPTY_ERROR)
+        }
+        if (confirmPassword.isNullOrEmpty()) {
+            builder.append(CONFIRM_PASSWORD_EMPTY_ERROR)
+        }
+        return builder.toString()
     }
 
     companion object {
-        const val EMPTY_FIELDS_ERROR = "Fill all fields"
+        const val EMAIL_EMPTY_ERROR = "Fill email field"
         const val PASSWORD_MATCH_ERROR = "Passwords must match"
+        const val PASSWORD_EMPTY_ERROR = "Fill password field"
+        const val CONFIRM_PASSWORD_EMPTY_ERROR = "Fill confirm password field"
     }
 }
 

@@ -57,7 +57,6 @@ class NotesFragment :
     override fun onAttach(context: Context) {
         super.onAttach(context)
         uiController = (context as UIController)
-
     }
 
     override fun onCreateView(

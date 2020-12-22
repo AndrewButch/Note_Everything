@@ -8,11 +8,11 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.andrewbutch.noteeverything.R
 import com.andrewbutch.noteeverything.framework.ui.auth.state.AuthStateEvent
+import com.andrewbutch.noteeverything.framework.ui.auth.state.RegistrationFields
 import com.andrewbutch.noteeverything.framework.ui.main.UIController
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_registration.*
@@ -59,82 +59,50 @@ class RegistrationFragment : DaggerFragment() {
             viewModel = ViewModelProvider(this, providerFactory).get(AuthViewModel::class.java)
         }
 
-        emailTextView.addTextChangedListener { newEmail ->
-            newEmail?.let {
-                checkAndSaveEmail(newEmail.toString())
-            }
-        }
-
-        passwordTextView.addTextChangedListener { newPassword ->
-            newPassword?.let {
-                checkAndSavePassword(newPassword.toString())
-            }
-        }
-
-        confirmPasswordTextView.addTextChangedListener { newPassword ->
-            newPassword?.let {
-                checkAndSavePassword(newPassword.toString())
-            }
-        }
-
         registerBtn.setOnClickListener {
-            if (checkAndSaveEmail(emailTextView.text.toString()) &&
-                checkAndSavePassword(passwordTextView.text.toString()) &&
-                checkAndSaveConfirmPassword(confirmPasswordTextView.text.toString())
-            )
+            uiController.hideSoftKeyboard()
+            viewModel.setRegistrationFields(RegistrationFields(
+                email = emailTextView.text.toString(),
+                password = passwordTextView.text.toString(),
+                confirmPassword = confirmPasswordTextView.text.toString()
+            ))
+
             viewModel.setStateEvent(AuthStateEvent.RegisterEvent(email, password, confirmPassword))
+        }
+
+        subscribeObservers()
+    }
+
+    private fun subscribeObservers() {
+        viewModel.getStateMessage().observe(viewLifecycleOwner) { stateMessage ->
+            if (stateMessage != null) {
+                stateMessage.message?.let { message ->
+                    if (message.contains(RegistrationFields.EMAIL_EMPTY_ERROR)) {
+                        emailTextView.error = RegistrationFields.EMAIL_EMPTY_ERROR
+                    }
+                    if (message.contains(RegistrationFields.PASSWORD_MATCH_ERROR)) {
+                        passwordTextView.error = RegistrationFields.PASSWORD_MATCH_ERROR
+                        confirmPasswordTextView.error = RegistrationFields.PASSWORD_MATCH_ERROR
+                    }
+                    if (message.contains(RegistrationFields.PASSWORD_EMPTY_ERROR)) {
+                        passwordTextView.error = RegistrationFields.PASSWORD_EMPTY_ERROR
+
+                    }
+                    if (message.contains(RegistrationFields.CONFIRM_PASSWORD_EMPTY_ERROR)) {
+                        confirmPasswordTextView.error = RegistrationFields.CONFIRM_PASSWORD_EMPTY_ERROR
+                    }
+                }
+                viewModel.removeStateMessage()
+            }
+        }
+
+        viewModel.shouldDisplayProgressBar().observe(viewLifecycleOwner) { displayProgressBar ->
+            uiController.displayProgressBar(displayProgressBar)
         }
     }
 
     private fun navToLogin() {
         findNavController().navigate(R.id.action_registrationFragment_to_loginFragment)
-    }
-
-    fun checkAndSaveEmail(newEmail: String): Boolean {
-        if (isEmailCorrect(newEmail)) {
-            if (newEmail != email) {
-                email = newEmail
-            }
-            return true
-        } else {
-            showToast("Incorrect email")
-        }
-        return false
-    }
-
-    fun checkAndSavePassword(newPassword: String): Boolean {
-        if (isPasswordCorrect(newPassword)) {
-            if (newPassword != password) {
-                password = newPassword
-            }
-            return true
-        } else {
-            showToast("Incorrect password")
-        }
-        return false
-    }
-
-    fun checkAndSaveConfirmPassword(newPassword: String): Boolean {
-        if (isPasswordCorrect(newPassword)) {
-            if (newPassword != confirmPassword) {
-                confirmPassword = newPassword
-            }
-            return true
-        } else {
-            showToast("Incorrect password")
-        }
-        return false
-    }
-
-    private fun isEmailCorrect(newEmail: String): Boolean {
-        return newEmail.isNotEmpty() &&
-                newEmail.isNotBlank()
-
-    }
-
-    private fun isPasswordCorrect(newPassword: String): Boolean {
-        return newPassword.isNotEmpty() &&
-                newPassword.isNotBlank()
     }
 
     fun showToast(msg: String) {
