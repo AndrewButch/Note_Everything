@@ -60,8 +60,7 @@ class InsertNewNoteListTest {
             title = newNoteList.title,
             color = newNoteList.color,
             stateEvent = NoteListStateEvent.InsertNewNoteListEvent(
-                newNoteList.title,
-                newNoteList.color
+                newNoteList.title
             )
         ).collect(object : FlowCollector<DataState<NoteListViewState>?> {
             override suspend fun emit(value: DataState<NoteListViewState>?) {
@@ -96,8 +95,7 @@ class InsertNewNoteListTest {
             title = newNoteList.title,
             color = newNoteList.color,
             stateEvent = NoteListStateEvent.InsertNewNoteListEvent(
-                newNoteList.title,
-                newNoteList.color
+                newNoteList.title
             )
         ).collect(object : FlowCollector<DataState<NoteListViewState>?> {
             override suspend fun emit(value: DataState<NoteListViewState>?) {
@@ -131,8 +129,7 @@ class InsertNewNoteListTest {
             title = newNoteList.title,
             color = newNoteList.color,
             stateEvent = NoteListStateEvent.InsertNewNoteListEvent(
-                newNoteList.title,
-                newNoteList.color
+                newNoteList.title
             )
         ).collect(object : FlowCollector<DataState<NoteListViewState>?> {
             override suspend fun emit(value: DataState<NoteListViewState>?) {

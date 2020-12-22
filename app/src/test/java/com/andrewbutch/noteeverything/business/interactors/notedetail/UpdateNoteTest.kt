@@ -75,7 +75,7 @@ class UpdateNoteTest {
         // update
         updateNote.updateNote(
             note = randomNote,
-            stateEvent = NoteDetailStateEvent.UpdateNoteEvent(randomNote)
+            stateEvent = NoteDetailStateEvent.UpdateNoteEvent()
         ).collect(
             object : FlowCollector<DataState<NoteDetailViewState>?> {
                 override suspend fun emit(value: DataState<NoteDetailViewState>?) {
@@ -118,7 +118,7 @@ class UpdateNoteTest {
         // try update
         updateNote.updateNote(
             note = newNote,
-            stateEvent = NoteDetailStateEvent.UpdateNoteEvent(newNote)
+            stateEvent = NoteDetailStateEvent.UpdateNoteEvent()
         ).collect(
             object : FlowCollector<DataState<NoteDetailViewState>?> {
                 override suspend fun emit(value: DataState<NoteDetailViewState>?) {
@@ -152,7 +152,7 @@ class UpdateNoteTest {
         // try update
         updateNote.updateNote(
             note = newNote,
-            stateEvent = NoteDetailStateEvent.UpdateNoteEvent(newNote)
+            stateEvent = NoteDetailStateEvent.UpdateNoteEvent()
         ).collect(
             object : FlowCollector<DataState<NoteDetailViewState>?> {
                 override suspend fun emit(value: DataState<NoteDetailViewState>?) {
