@@ -36,9 +36,7 @@ class MainActivity : DaggerAppCompatActivity(), UIController {
         colors = resources.getIntArray(R.array.color_chooser_values)
     }
 
-    fun showToast(text: String) {
-        Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
-    }
+
 
     override fun onPause() {
         super.onPause()
@@ -110,6 +108,10 @@ class MainActivity : DaggerAppCompatActivity(), UIController {
             cancelable(true)
 
         }
+    }
+
+    override fun showToast(msg: String) {
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
     }
 
     private fun subscribeObservers() {

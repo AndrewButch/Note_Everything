@@ -10,7 +10,6 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.andrewbutch.noteeverything.R
@@ -26,10 +25,14 @@ class NoteDetailFragment : BaseDetailFragment(R.layout.fragment_note_detail) {
     @Inject
     lateinit var providerFactory: ViewModelProvider.Factory
 
-    private val viewModel: NoteDetailViewModel by viewModels { providerFactory }
+    private lateinit var viewModel: NoteDetailViewModel
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        requireActivity().run {
+            viewModel = ViewModelProvider(this, providerFactory).get(NoteDetailViewModel::class.java)
+        }
         setupUI()
         addListeners()
         subscribeObservers()

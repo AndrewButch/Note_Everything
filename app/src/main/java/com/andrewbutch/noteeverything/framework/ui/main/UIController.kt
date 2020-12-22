@@ -10,6 +10,7 @@ interface UIController {
 
     fun displayColorDialog(initColor: Int?, callback: ColorDialogCallback)
 
+    fun showToast(msg: String)
 
     companion object {
         interface InputDialogCallback {

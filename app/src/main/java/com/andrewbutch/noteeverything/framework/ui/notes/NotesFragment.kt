@@ -1,13 +1,8 @@
 package com.andrewbutch.noteeverything.framework.ui.notes
 
-import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.Toast
-import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
@@ -20,14 +15,13 @@ import com.andrewbutch.noteeverything.business.domain.model.Note
 import com.andrewbutch.noteeverything.business.domain.model.NoteList
 import com.andrewbutch.noteeverything.business.interactors.common.DeleteNoteList
 import com.andrewbutch.noteeverything.framework.session.SessionManager
-import com.andrewbutch.noteeverything.framework.ui.main.UIController
+import com.andrewbutch.noteeverything.framework.ui.BaseFragment
 import com.andrewbutch.noteeverything.framework.ui.main.UIController.Companion.InputDialogCallback
 import com.andrewbutch.noteeverything.framework.ui.notedetail.NoteDetailFragment.Companion.NOTE_DETAIL_BUNDLE_KEY
 import com.andrewbutch.noteeverything.framework.ui.notelistdetail.NoteListDetailFragment.Companion.NOTE_LIST_DETAIL_BUNDLE_KEY
 import com.andrewbutch.noteeverything.framework.ui.notes.drawer.NavMenuAdapter
 import com.andrewbutch.noteeverything.framework.ui.notes.state.NoteListStateEvent
 import com.andrewbutch.noteeverything.framework.ui.utils.VerticalItemDecoration
-import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_notes.*
 import kotlinx.android.synthetic.main.layout_fragment_notes_content.*
 import kotlinx.android.synthetic.main.nav_header.*
@@ -35,14 +29,13 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class NotesFragment :
-    DaggerFragment(),
+    BaseFragment(R.layout.fragment_notes),
     NotesRecyclerAdapter.Interaction,
     NavMenuAdapter.Interaction {
 
     lateinit var viewModel: NotesViewModel
     private lateinit var navMenuAdapter: NavMenuAdapter
     private lateinit var notesAdapter: NotesRecyclerAdapter
-    private lateinit var uiController: UIController
 
     @Inject
     lateinit var providerFactory: ViewModelProvider.Factory
@@ -54,22 +47,12 @@ class NotesFragment :
     lateinit var sessionManager: SessionManager
 
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        uiController = (context as UIController)
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        viewModel =
-            ViewModelProvider(viewModelStore, providerFactory).get(NotesViewModel::class.java)
-        return inflater.inflate(R.layout.fragment_notes, container, false)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        requireActivity().run {
+            viewModel = ViewModelProvider(this, providerFactory).get(NotesViewModel::class.java)
+        }
         setupViews()
         setupNavDrawer()
         // FAB
@@ -78,7 +61,11 @@ class NotesFragment :
         }
 
         subscribeObservers()
-        setupOnBackPressDispatcher()
+
+        viewModel.setStateEvent(NoteListStateEvent.GetAllNoteListsEvent())
+        viewModel.insertTestData()
+
+        extractFromPreferences()
     }
 
 
@@ -105,7 +92,6 @@ class NotesFragment :
                             )
                         }
                     }
-
                 }
 
             })
@@ -148,7 +134,7 @@ class NotesFragment :
                         hideNotesContainer()
                         viewModel.setSelectedList(null)
                         notesAdapter.submitList(emptyList())
-
+                        setTitle("")
                     }
                     viewModel.removeStateMessage()
                 }
@@ -173,15 +159,17 @@ class NotesFragment :
         }
 
         hideNotesContainer()
-    }
 
-    private fun setupOnBackPressDispatcher() {
-        val callback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                requireActivity().finish()
-            }
+        // Recycler
+        notesAdapter = NotesRecyclerAdapter(interaction = this)
+        recycler.apply {
+            adapter = notesAdapter
+            layoutManager = LinearLayoutManager(requireContext())
         }
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
+        recycler.addItemDecoration(VerticalItemDecoration(30))
+    }
+    override fun onBackPressed() {
+        requireActivity().finish()
     }
 
     private fun setupNavDrawer() {
@@ -207,23 +195,6 @@ class NotesFragment :
             adapter = navMenuAdapter
         }
         navRecyclerMenu.addItemDecoration(VerticalItemDecoration(20))
-    }
-
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-        notesAdapter = NotesRecyclerAdapter(interaction = this)
-        recycler.apply {
-            adapter = notesAdapter
-            layoutManager = LinearLayoutManager(requireContext())
-        }
-        recycler.addItemDecoration(VerticalItemDecoration(30))
-        viewModel.setStateEvent(NoteListStateEvent.GetAllNoteListsEvent())
-
-        viewModel.insertTestData()
-
-        extractFromPreferences()
     }
 
     private fun extractFromPreferences() {
@@ -253,10 +224,6 @@ class NotesFragment :
     // List long click
     override fun onLongClick(position: Int, item: NoteList) {
         navToNoteListDetail(item)
-    }
-
-    private fun showToast(msg: String) {
-        Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
     }
 
     private fun navToNoteDetail(selectedNote: Note) {
