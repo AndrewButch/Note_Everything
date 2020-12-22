@@ -7,8 +7,7 @@ import javax.inject.Singleton
 
 @Singleton
 class StateEventStore {
-    private val events = HashMap<String, StateEvent>()
-
+    private val events = HashMap<String, StateEvent>() // key - event name
     private val _shouldDisplayProgressBar = MutableLiveData<Boolean>()
     val shouldDisplayProgressBar: LiveData<Boolean>
         get() = _shouldDisplayProgressBar
@@ -33,5 +32,9 @@ class StateEventStore {
             }
         }
         _shouldDisplayProgressBar.value = displayProgressBar
+    }
+
+    fun isStateEventActive(stateEvent: StateEvent): Boolean {
+        return events.containsKey(stateEvent.eventName())
     }
 }

@@ -58,5 +58,7 @@ constructor(eventStore: StateEventStore, messageStack: MessageStack) : ViewModel
     fun shouldDisplayProgressBar(): LiveData<Boolean> =
         jobLauncher.eventStore.shouldDisplayProgressBar
 
-
+    fun cancelJob() {
+        jobLauncher.cancelActiveJob()
+    }
 }

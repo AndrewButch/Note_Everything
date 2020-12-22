@@ -31,8 +31,15 @@ class MessageStack {
         setStateMessage(newFirst)
     }
 
+    fun removeAllMessages() {
+        Timber.d("Removed all messages")
+        messages.clear()
+    }
+
     private fun setStateMessage(stateMessage: StateMessage?) {
         _stateMessage.value = stateMessage
         Timber.d("Set state message: ${stateMessage?.message}")
     }
+
+    fun isMessageStackEmpty(): Boolean = messages.size == 0
 }
