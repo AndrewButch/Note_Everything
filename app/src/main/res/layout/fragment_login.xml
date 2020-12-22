@@ -57,12 +57,12 @@
         android:layout_marginTop="16dp"
         android:text="@string/registration_button" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/forgotPassBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="@string/forgot_password_button" />
+<!--    <com.google.android.material.button.MaterialButton-->
+<!--        android:id="@+id/forgotPassBtn"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        android:text="@string/forgot_password_button" />-->
 
 
 </LinearLayout>

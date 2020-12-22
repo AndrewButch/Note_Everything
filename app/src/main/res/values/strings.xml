@@ -23,6 +23,7 @@
 
     <!-- Menu detail -->
     <string name="menu_delete">Удалить</string>
+    <string name="menu_logout">Сменить пользователя</string>
 
     <!-- Dialogs -->
     <string name="dialog_done">Готово</string>

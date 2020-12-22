@@ -49,10 +49,10 @@ class LoginFragment : BaseFragment(R.layout.fragment_login) {
             navToRegistration()
         }
 
-        // Forgot password button
-        forgotPassBtn.setOnClickListener {
-            navToForgotPassword()
-        }
+//        // Forgot password button
+//        forgotPassBtn.setOnClickListener {
+//            navToForgotPassword()
+//        }
 
         checkPreviousAuthUser()
 
@@ -82,9 +82,9 @@ class LoginFragment : BaseFragment(R.layout.fragment_login) {
         }
     }
 
-    private fun navToForgotPassword() {
-        uiController.showToast("Восстановление пароля")
-    }
+//    private fun navToForgotPassword() {
+//        uiController.showToast("Восстановление пароля")
+//    }
 
     private fun navToRegistration() {
         uiController.showToast("Регистрация")

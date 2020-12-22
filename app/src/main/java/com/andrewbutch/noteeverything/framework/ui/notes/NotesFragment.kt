@@ -2,6 +2,9 @@ package com.andrewbutch.noteeverything.framework.ui.notes
 
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -23,7 +26,7 @@ import com.andrewbutch.noteeverything.framework.ui.notes.drawer.NavMenuAdapter
 import com.andrewbutch.noteeverything.framework.ui.notes.state.NoteListStateEvent
 import com.andrewbutch.noteeverything.framework.ui.utils.VerticalItemDecoration
 import kotlinx.android.synthetic.main.fragment_notes.*
-import kotlinx.android.synthetic.main.layout_fragment_notes_content.*
+import kotlinx.android.synthetic.main.fragment_notes_content.*
 import kotlinx.android.synthetic.main.nav_header.*
 import timber.log.Timber
 import javax.inject.Inject
@@ -154,9 +157,6 @@ class NotesFragment :
     private fun setupViews() {
         // Toolbar
         (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar)
-        toolbar.setOnClickListener {
-            sessionManager.logout()
-        }
 
         hideNotesContainer()
 
@@ -168,6 +168,7 @@ class NotesFragment :
         }
         recycler.addItemDecoration(VerticalItemDecoration(30))
     }
+
     override fun onBackPressed() {
         requireActivity().finish()
     }
@@ -267,6 +268,24 @@ class NotesFragment :
     override fun onPause() {
         super.onPause()
         setPreferences()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        menu.clear()
+        inflater.inflate(R.menu.menu_notes, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.logout -> {
+                sessionManager.logout()
+                true
+            }
+            else -> {
+                super.onOptionsItemSelected(item)
+            }
+        }
     }
 
 
