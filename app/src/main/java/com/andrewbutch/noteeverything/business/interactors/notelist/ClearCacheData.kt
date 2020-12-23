@@ -1,44 +1,33 @@
-package com.andrewbutch.noteeverything.business.interactors.common
+package com.andrewbutch.noteeverything.business.interactors.notelist
 
 import com.andrewbutch.noteeverything.business.data.cache.CacheResultHandler
 import com.andrewbutch.noteeverything.business.data.cache.abstraction.NoteListCacheDataSource
-import com.andrewbutch.noteeverything.business.data.network.abstraction.NoteListNetworkDataSource
 import com.andrewbutch.noteeverything.business.data.util.safeCacheCall
-import com.andrewbutch.noteeverything.business.data.util.safeNetworkCall
-import com.andrewbutch.noteeverything.business.domain.model.NoteList
-import com.andrewbutch.noteeverything.business.domain.model.User
 import com.andrewbutch.noteeverything.business.domain.state.*
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import javax.inject.Inject
 
-class DeleteNoteList<ViewState>
-@Inject
+class ClearCacheData<ViewState>
 constructor(
     private val noteListCacheDataSource: NoteListCacheDataSource,
-    private val noteListNetworkDataSource: NoteListNetworkDataSource,
 ) {
-
-    fun deleteNoteList(
-        noteList: NoteList,
-        user: User,
+    fun clear(
         stateEvent: StateEvent
     ): Flow<DataState<ViewState>?> = flow {
         val cacheResult = safeCacheCall(IO) {
-            noteListCacheDataSource.deleteNoteList(noteList.id)
+            noteListCacheDataSource.deleteAllNoteLists()
         }
 
-        val handledResult = object : CacheResultHandler<ViewState, Int>(
+        val handleResult = object : CacheResultHandler<ViewState, Int>(
             result = cacheResult,
             stateEvent = stateEvent
         ) {
             override suspend fun handleSuccess(resultValue: Int): DataState<ViewState>? {
                 return if (resultValue > 0) {
-                    // success delete
                     DataState.data(
                         stateMessage = StateMessage(
-                            message = DELETE_NOTE_LIST_SUCCESS,
+                            message = DELETE_ALL_LISTS_SUCCESS,
                             uiComponentType = UIComponentType.Toast,
                             messageType = MessageType.Success
                         ),
@@ -49,7 +38,7 @@ constructor(
                     // failure delete
                     DataState.error(
                         stateMessage = StateMessage(
-                            message = DELETE_NOTE_LIST_FAILED,
+                            message = DELETE_ALL_LISTS_FAILED,
                             uiComponentType = UIComponentType.Toast,
                             messageType = MessageType.Error
                         ),
@@ -57,24 +46,12 @@ constructor(
                     )
                 }
             }
-
         }.getResult()
-
-        emit(handledResult)
-        updateNetwork(handledResult?.stateMessage?.message, noteList, user)
-    }
-
-    private suspend fun updateNetwork(message: String?, noteList: NoteList, user: User) {
-        if (DELETE_NOTE_LIST_SUCCESS == message) {
-            safeNetworkCall(IO) {
-                noteListNetworkDataSource.deleteNoteList(noteList.id, user)
-            }
-            // TODO(insert to deleted node)
-        }
+        emit(handleResult)
     }
 
     companion object {
-        const val DELETE_NOTE_LIST_SUCCESS = "Successfully deleted note list."
-        const val DELETE_NOTE_LIST_FAILED = "Failed to delete note list."
+        const val DELETE_ALL_LISTS_SUCCESS = "Successfully deleted all note lists."
+        const val DELETE_ALL_LISTS_FAILED = "Failed to delete all note lists."
     }
 }

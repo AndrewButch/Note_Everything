@@ -5,6 +5,7 @@ import com.andrewbutch.noteeverything.business.data.cache.FakeNoteCacheDataSourc
 import com.andrewbutch.noteeverything.business.data.cache.abstraction.NoteCacheDataSource
 import com.andrewbutch.noteeverything.business.data.network.abstraction.NoteNetworkDataSource
 import com.andrewbutch.noteeverything.business.domain.model.NoteFactory
+import com.andrewbutch.noteeverything.business.domain.model.User
 import com.andrewbutch.noteeverything.business.domain.state.DataState
 import com.andrewbutch.noteeverything.di.DependencyContainer
 import com.andrewbutch.noteeverything.framework.ui.notes.state.NoteListStateEvent
@@ -26,8 +27,9 @@ class DeleteNoteTest {
     private val noteCacheDataSource: NoteCacheDataSource
     private val noteNetworkDataSource: NoteNetworkDataSource
     private val noteFactory: NoteFactory
-    
+
     private val ownerListId = "cfc3414d-5778-4abc-8a2d-d38dbc2c18ae"
+    private val user = User("jLfWxedaCBdpxvcdfVpdzQIfzDw2", "", "")
 
     init {
         dependencyContainer.build()
@@ -49,7 +51,8 @@ class DeleteNoteTest {
 
         deleteNote.deleteNote(
             note = randomNote,
-            stateEvent = NoteListStateEvent.DeleteNoteEvent(randomNote)
+            stateEvent = NoteListStateEvent.DeleteNoteEvent(randomNote, user),
+            user = user
         ).collect {
             object : FlowCollector<DataState<NoteListViewState>?> {
                 override suspend fun emit(value: DataState<NoteListViewState>?) {
@@ -66,7 +69,7 @@ class DeleteNoteTest {
         assertNull("Assert delete from cache", deletedCache)
 
         // confirm network delete note
-        val deletedNetwork = noteNetworkDataSource.searchNote(randomNote)
+        val deletedNetwork = noteNetworkDataSource.searchNote(randomNote, user)
         assertNull("Assert delete from network", deletedNetwork)
     }
 
@@ -74,12 +77,13 @@ class DeleteNoteTest {
     fun `Delete failure (return -1), confirm NOT delete from cache and network`() = runBlocking {
         val noteToDelete = noteFactory.createNote(title = "", listId = "")
         val cacheSizeBefore = noteCacheDataSource.getNotesByOwnerListId(ownerListId).size
-        val networkSizeBefore = noteNetworkDataSource.getNotesByOwnerListId(ownerListId).size
+        val networkSizeBefore = noteNetworkDataSource.getNotesByOwnerListId(ownerListId, user).size
 
 
         deleteNote.deleteNote(
             note = noteToDelete,
-            stateEvent = NoteListStateEvent.DeleteNoteEvent(noteToDelete)
+            stateEvent = NoteListStateEvent.DeleteNoteEvent(noteToDelete, user),
+            user = user
         ).collect {
             object : FlowCollector<DataState<NoteListViewState>?> {
                 override suspend fun emit(value: DataState<NoteListViewState>?) {
@@ -96,7 +100,7 @@ class DeleteNoteTest {
         assertTrue("Assert not delete from cache", cacheSizeBefore == cacheSizeAfter)
 
         // confirm network unchanged
-        val networkSizeAfter = noteNetworkDataSource.getNotesByOwnerListId(ownerListId).size
+        val networkSizeAfter = noteNetworkDataSource.getNotesByOwnerListId(ownerListId, user).size
         assertTrue("Assert not delete from network", networkSizeBefore == networkSizeAfter)
     }
 
@@ -108,12 +112,13 @@ class DeleteNoteTest {
             listId = ""
         )
         val cacheSizeBefore = noteCacheDataSource.getNotesByOwnerListId(ownerListId).size
-        val networkSizeBefore = noteNetworkDataSource.getNotesByOwnerListId("").size
+        val networkSizeBefore = noteNetworkDataSource.getNotesByOwnerListId("", user).size
 
 
         deleteNote.deleteNote(
             note = noteToDelete,
-            stateEvent = NoteListStateEvent.DeleteNoteEvent(noteToDelete)
+            stateEvent = NoteListStateEvent.DeleteNoteEvent(noteToDelete, user),
+            user = user
         ).collect {
             object : FlowCollector<DataState<NoteListViewState>?> {
                 override suspend fun emit(value: DataState<NoteListViewState>?) {
@@ -131,7 +136,7 @@ class DeleteNoteTest {
         assertTrue("Assert not delete from cache", cacheSizeBefore == cacheSizeAfter)
 
         // confirm network unchanged
-        val networkSizeAfter = noteNetworkDataSource.getNotesByOwnerListId("").size
+        val networkSizeAfter = noteNetworkDataSource.getNotesByOwnerListId("", user).size
         assertTrue("Assert not delete from network", networkSizeBefore == networkSizeAfter)
     }
 }

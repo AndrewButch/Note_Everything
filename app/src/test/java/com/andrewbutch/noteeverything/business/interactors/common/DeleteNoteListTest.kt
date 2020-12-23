@@ -5,6 +5,7 @@ import com.andrewbutch.noteeverything.business.data.cache.FakeNoteListCacheDataS
 import com.andrewbutch.noteeverything.business.data.cache.abstraction.NoteListCacheDataSource
 import com.andrewbutch.noteeverything.business.data.network.abstraction.NoteListNetworkDataSource
 import com.andrewbutch.noteeverything.business.domain.model.NoteListFactory
+import com.andrewbutch.noteeverything.business.domain.model.User
 import com.andrewbutch.noteeverything.business.domain.state.DataState
 import com.andrewbutch.noteeverything.di.DependencyContainer
 import com.andrewbutch.noteeverything.framework.ui.notes.state.NoteListStateEvent
@@ -49,6 +50,9 @@ class DeleteNoteListTest {
     private val noteListNetworkDataSource: NoteListNetworkDataSource
     private val noteListFactory: NoteListFactory
 
+    private val user = User("jLfWxedaCBdpxvcdfVpdzQIfzDw2", "", "")
+
+
     init {
         dependencyContainer.build()
         noteListCacheDataSource = dependencyContainer.noteListCacheDataSource
@@ -64,7 +68,8 @@ class DeleteNoteListTest {
         // Delete
         deleteNoteList.deleteNoteList(
             noteList = randomNoteList,
-            stateEvent = NoteListStateEvent.DeleteNoteListEvent(randomNoteList)
+            stateEvent = NoteListStateEvent.DeleteNoteListEvent(randomNoteList, user),
+            user = user
         )
             .collect {
                 object : FlowCollector<DataState<NoteListStateEvent>?> {
@@ -81,20 +86,21 @@ class DeleteNoteListTest {
         // Confirm deleted from cache
         assertFalse(noteListCacheDataSource.getAllNoteLists().contains(randomNoteList))
         // Confirm deleted from network
-        assertFalse(noteListNetworkDataSource.getAllNoteLists().contains(randomNoteList))
+        assertFalse(noteListNetworkDataSource.getAllNoteLists(user).contains(randomNoteList))
     }
 
     @Test
     fun `Delete failure (return -1), confirm NOT deleted from cache and network`() = runBlocking {
         // Save cache and network size
         val prevCacheSize = noteListCacheDataSource.getAllNoteLists().size
-        val prevNetworkSize = noteListNetworkDataSource.getAllNoteLists().size
+        val prevNetworkSize = noteListNetworkDataSource.getAllNoteLists(user).size
         // Create note with not existing i
         val noteListToDelete = noteListFactory.createNoteList(title = "")
         // Delete
         deleteNoteList.deleteNoteList(
             noteList = noteListToDelete,
-            stateEvent = NoteListStateEvent.DeleteNoteListEvent(noteListToDelete)
+            stateEvent = NoteListStateEvent.DeleteNoteListEvent(noteListToDelete, user),
+            user = user
         ).collect {
             object : FlowCollector<DataState<NoteListViewState>?> {
                 override suspend fun emit(value: DataState<NoteListViewState>?) {
@@ -114,7 +120,7 @@ class DeleteNoteListTest {
         // Confirm network size unchanged
         assertTrue(
             "Assert network size unchanged",
-            prevNetworkSize == noteListNetworkDataSource.getAllNoteLists().size
+            prevNetworkSize == noteListNetworkDataSource.getAllNoteLists(user).size
         )
     }
 
@@ -122,7 +128,7 @@ class DeleteNoteListTest {
     fun `Delete exception, confirm NOT deleted from cache and network`() = runBlocking {
         // Save cache and network size
         val prevCacheSize = noteListCacheDataSource.getAllNoteLists().size
-        val prevNetworkSize = noteListNetworkDataSource.getAllNoteLists().size
+        val prevNetworkSize = noteListNetworkDataSource.getAllNoteLists(user).size
         // Create note with not existing i
         val noteListToDelete = noteListFactory.createNoteList(
             title = "",
@@ -131,7 +137,8 @@ class DeleteNoteListTest {
         // Delete
         deleteNoteList.deleteNoteList(
             noteList = noteListToDelete,
-            stateEvent = NoteListStateEvent.DeleteNoteListEvent(noteListToDelete)
+            stateEvent = NoteListStateEvent.DeleteNoteListEvent(noteListToDelete, user),
+            user = user
         ).collect {
             object : FlowCollector<DataState<NoteListViewState>?> {
                 override suspend fun emit(value: DataState<NoteListViewState>?) {
@@ -151,7 +158,7 @@ class DeleteNoteListTest {
         // Confirm network size unchanged
         assertTrue(
             "Assert network size unchanged",
-            prevNetworkSize == noteListNetworkDataSource.getAllNoteLists().size
+            prevNetworkSize == noteListNetworkDataSource.getAllNoteLists(user).size
         )
     }
 }

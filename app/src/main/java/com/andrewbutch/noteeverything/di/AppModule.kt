@@ -131,6 +131,7 @@ object AppModule {
             GetAllNoteLists(noteListCacheDataSource),
             GetNotesByNoteList(noteCacheDataSource),
             DeleteMultipleNotes(noteCacheDataSource, noteNetworkDataSource),
+            ClearCacheData(noteListCacheDataSource),
             InsertNewNote(noteCacheDataSource, noteNetworkDataSource, noteFactory),
             InsertNewNoteList(noteListCacheDataSource, noteListNetworkDataSource, noteListFactory),
             DeleteNote(noteCacheDataSource, noteNetworkDataSource),

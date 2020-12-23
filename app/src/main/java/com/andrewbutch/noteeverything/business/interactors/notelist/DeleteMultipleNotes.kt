@@ -5,6 +5,7 @@ import com.andrewbutch.noteeverything.business.data.cache.abstraction.NoteCacheD
 import com.andrewbutch.noteeverything.business.data.network.abstraction.NoteNetworkDataSource
 import com.andrewbutch.noteeverything.business.data.util.safeCacheCall
 import com.andrewbutch.noteeverything.business.domain.model.Note
+import com.andrewbutch.noteeverything.business.domain.model.User
 import com.andrewbutch.noteeverything.business.domain.state.*
 import com.andrewbutch.noteeverything.framework.ui.notes.state.NoteListViewState
 import kotlinx.coroutines.Dispatchers
@@ -19,6 +20,7 @@ constructor(
 
     fun deleteMultipleNotes(
         notes: List<Note>,
+        user: User,
         stateEvent: StateEvent,
     ): Flow<DataState<NoteListViewState>?> = flow {
         var deletingError = false // set true if error while delete
@@ -75,13 +77,13 @@ constructor(
                 )
             )
         }
-        updateNetwork(successfullyDeleted)
+        updateNetwork(successfullyDeleted, user)
     }
 
-    private suspend fun updateNetwork(notes: List<Note>) {
+    private suspend fun updateNetwork(notes: List<Note>, user: User) {
         for (note in notes) {
             safeCacheCall(Dispatchers.IO) {
-                noteNetworkDataSource.deleteNote(note)
+                noteNetworkDataSource.deleteNote(note, user)
             }
         }
     }

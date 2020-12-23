@@ -5,6 +5,7 @@ import com.andrewbutch.noteeverything.business.data.cache.abstraction.NoteCacheD
 import com.andrewbutch.noteeverything.business.data.network.abstraction.NoteNetworkDataSource
 import com.andrewbutch.noteeverything.business.domain.model.Note
 import com.andrewbutch.noteeverything.business.domain.model.NoteFactory
+import com.andrewbutch.noteeverything.business.domain.model.User
 import com.andrewbutch.noteeverything.business.domain.state.DataState
 import com.andrewbutch.noteeverything.business.interactors.notelist.DeleteMultipleNotes.Companion.DELETE_MULTIPLE_NOTES_FAILURE
 import com.andrewbutch.noteeverything.business.interactors.notelist.DeleteMultipleNotes.Companion.DELETE_MULTIPLE_NOTES_SUCCESS
@@ -59,7 +60,7 @@ class DeleteMultipleNotesTest {
     private lateinit var noteFactory: NoteFactory
 
     private val ownerListId = "cfc3414d-5778-4abc-8a2d-d38dbc2c18ae"
-
+    private val user = User("jLfWxedaCBdpxvcdfVpdzQIfzDw2", "", "")
 
     @Before
     fun before() {
@@ -84,7 +85,8 @@ class DeleteMultipleNotesTest {
         // delete
         deleteMultipleNotes.deleteMultipleNotes(
             notes = notesToDelete,
-            stateEvent = NoteListStateEvent.DeleteMultipleNotesEvent(notesToDelete)
+            stateEvent = NoteListStateEvent.DeleteMultipleNotesEvent(notesToDelete, user),
+            user = user
         ).collect {
             object : FlowCollector<DataState<NoteListViewState>?> {
                 override suspend fun emit(value: DataState<NoteListViewState>?) {
@@ -102,7 +104,7 @@ class DeleteMultipleNotesTest {
         }
         // confirm notes are deleted from network
         for (note in notesToDelete) {
-            assertNull(noteNetworkDataSource.searchNote(note))
+            assertNull(noteNetworkDataSource.searchNote(note, user))
         }
     }
 
@@ -110,7 +112,7 @@ class DeleteMultipleNotesTest {
     @Test
     fun `Delete notes errors, confirm correct deleting`() = runBlocking {
         val cacheSizeBefore = noteCacheDataSource.getNotesByOwnerListId(ownerListId).size
-        val networkSizeBefore = noteNetworkDataSource.getNotesByOwnerListId(ownerListId).size
+        val networkSizeBefore = noteNetworkDataSource.getNotesByOwnerListId(ownerListId, user).size
 
         // get 2 random notes for deleting
         val allNotesByOwnerIdShuffled =
@@ -127,7 +129,8 @@ class DeleteMultipleNotesTest {
         val notesToDelete = ArrayList(validNotesToDelete + invalidNotesToDelete)
         deleteMultipleNotes.deleteMultipleNotes(
             notes = notesToDelete,
-            stateEvent = NoteListStateEvent.DeleteMultipleNotesEvent(notesToDelete)
+            stateEvent = NoteListStateEvent.DeleteMultipleNotesEvent(notesToDelete, user),
+            user = user
         ).collect {
             object : FlowCollector<DataState<NoteListViewState>?> {
                 override suspend fun emit(value: DataState<NoteListViewState>?) {
@@ -153,7 +156,7 @@ class DeleteMultipleNotesTest {
         )
 
         // confirm only the valid notes are deleted from network
-        val networkNotes = noteNetworkDataSource.getNotesByOwnerListId(ownerListId)
+        val networkNotes = noteNetworkDataSource.getNotesByOwnerListId(ownerListId, user)
         assertFalse(
             "Assert valid notes deleted from network",
             networkNotes.containsAll(validNotesToDelete)
@@ -170,7 +173,7 @@ class DeleteMultipleNotesTest {
     @Test
     fun `Delete exception, confirm cache and network unchanged`() = runBlocking {
         val cacheSizeBefore = noteCacheDataSource.getNotesByOwnerListId(ownerListId).size
-        val networkSizeBefore = noteNetworkDataSource.getNotesByOwnerListId(ownerListId).size
+        val networkSizeBefore = noteNetworkDataSource.getNotesByOwnerListId(ownerListId, user).size
 
         // get 2 random notes for deleting
         val allNotesByOwnerIdShuffled =
@@ -199,7 +202,8 @@ class DeleteMultipleNotesTest {
         val notesToDelete = ArrayList(validNotesToDelete + invalidNotesToDelete)
         deleteMultipleNotes.deleteMultipleNotes(
             notes = notesToDelete,
-            stateEvent = NoteListStateEvent.DeleteMultipleNotesEvent(notesToDelete)
+            stateEvent = NoteListStateEvent.DeleteMultipleNotesEvent(notesToDelete, user),
+            user = user
         ).collect {
             object : FlowCollector<DataState<NoteListViewState>?> {
                 override suspend fun emit(value: DataState<NoteListViewState>?) {
@@ -225,7 +229,7 @@ class DeleteMultipleNotesTest {
         )
 
         // confirm only the valid notes are deleted from network
-        val networkNotes = noteNetworkDataSource.getNotesByOwnerListId(ownerListId)
+        val networkNotes = noteNetworkDataSource.getNotesByOwnerListId(ownerListId, user)
         assertFalse(
             "Assert valid notes deleted from network",
             networkNotes.containsAll(validNotesToDelete)

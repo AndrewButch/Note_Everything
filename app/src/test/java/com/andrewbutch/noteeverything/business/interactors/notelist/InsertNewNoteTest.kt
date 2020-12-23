@@ -5,6 +5,7 @@ import com.andrewbutch.noteeverything.business.data.cache.FakeNoteCacheDataSourc
 import com.andrewbutch.noteeverything.business.data.cache.abstraction.NoteCacheDataSource
 import com.andrewbutch.noteeverything.business.data.network.abstraction.NoteNetworkDataSource
 import com.andrewbutch.noteeverything.business.domain.model.NoteFactory
+import com.andrewbutch.noteeverything.business.domain.model.User
 import com.andrewbutch.noteeverything.business.domain.state.DataState
 import com.andrewbutch.noteeverything.business.interactors.notelist.InsertNewNote.Companion.INSERT_NOTE_FAILED
 import com.andrewbutch.noteeverything.business.interactors.notelist.InsertNewNote.Companion.INSERT_NOTE_SUCCESS
@@ -29,6 +30,8 @@ class InsertNewNoteTest {
     private val noteCacheDataSource: NoteCacheDataSource
     private val noteNetworkDataSource: NoteNetworkDataSource
     private val noteFactory: NoteFactory
+
+    private val user = User("jLfWxedaCBdpxvcdfVpdzQIfzDw2", "", "")
 
     init {
         dependencyContainer.build()
@@ -64,8 +67,10 @@ class InsertNewNoteTest {
                 newNote.title,
                 newNote.completed,
                 newNote.color,
-                newNote.listId
-            )
+                newNote.listId,
+                user
+            ),
+            user = user
         ).collect(object : FlowCollector<DataState<NoteListViewState>?> {
             override suspend fun emit(value: DataState<NoteListViewState>?) {
                 assertEquals(INSERT_NOTE_SUCCESS, value?.stateMessage?.message)
@@ -77,7 +82,7 @@ class InsertNewNoteTest {
         assertTrue(insertedCacheNote == newNote)
 
         // confirm cache was updated
-        val insertedNetworkNote = noteNetworkDataSource.searchNote(newNote)
+        val insertedNetworkNote = noteNetworkDataSource.searchNote(newNote, user)
         assertTrue(insertedNetworkNote == newNote)
     }
 
@@ -100,8 +105,10 @@ class InsertNewNoteTest {
                 newNote.title,
                 newNote.completed,
                 newNote.color,
-                newNote.listId
-            )
+                newNote.listId,
+                user
+            ),
+            user = user
         ).collect(object : FlowCollector<DataState<NoteListViewState>?> {
             override suspend fun emit(value: DataState<NoteListViewState>?) {
                 assertEquals(INSERT_NOTE_FAILED, value?.stateMessage?.message)
@@ -113,7 +120,7 @@ class InsertNewNoteTest {
         assertNull(insertedCacheNote)
 
         // confirm cache was not updated
-        val insertedNetworkNote = noteNetworkDataSource.searchNote(newNote)
+        val insertedNetworkNote = noteNetworkDataSource.searchNote(newNote, user)
         assertNull(insertedNetworkNote)
     }
 
@@ -136,8 +143,10 @@ class InsertNewNoteTest {
                 newNote.title,
                 newNote.completed,
                 newNote.color,
-                newNote.listId
-            )
+                newNote.listId,
+                user
+            ),
+            user = user
         ).collect(object : FlowCollector<DataState<NoteListViewState>?> {
             override suspend fun emit(value: DataState<NoteListViewState>?) {
                 assert(
@@ -153,7 +162,7 @@ class InsertNewNoteTest {
         assertNull(insertedCacheNote)
 
         // confirm cache was not updated
-        val insertedNetworkNote = noteNetworkDataSource.searchNote(newNote)
+        val insertedNetworkNote = noteNetworkDataSource.searchNote(newNote, user)
         assertNull(insertedNetworkNote)
     }
 

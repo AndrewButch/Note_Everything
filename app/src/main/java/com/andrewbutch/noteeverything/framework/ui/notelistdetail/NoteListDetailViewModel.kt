@@ -22,12 +22,13 @@ constructor(
     fun setStateEvent(event: StateEvent) {
         val job: Flow<DataState<NoteListDetailViewState>?> = when (event) {
             is NoteListDetailStateEvent.UpdateNoteListEvent -> {
-                val noteList = getNoteList()!!
+                val noteList = event.noteList
 
                 if (noteList.id.isNotEmpty() && !checkIsTitleEmpty(noteList.title)) {
                     interactors.updateNoteList.updateNoteList(
                         noteList = noteList,
-                        stateEvent = event
+                        stateEvent = event,
+                        user = event.user
                     )
                 } else {
                     emitStateMessageEvent(
@@ -42,10 +43,11 @@ constructor(
 
             }
             is NoteListDetailStateEvent.DeleteNoteListEvent -> {
-                val noteList = getNoteList()!!
+                val noteList = event.noteList
                 interactors.deleteNoteList.deleteNoteList(
                     noteList = noteList,
-                    stateEvent = event
+                    stateEvent = event,
+                    user = event.user
                 )
             }
 
@@ -67,18 +69,6 @@ constructor(
             }
         }
         launchJob(event, job)
-//        job
-//            .onEach {
-//                withContext(Dispatchers.Main) {
-//                    it?.data?.let { viewState ->
-//                        handleViewState(viewState)
-//                    }
-//                    it?.stateMessage?.let { stateMessage ->
-//                        handleStateMessage(stateMessage)
-//                    }
-//                }
-//            }
-//            .launchIn(CoroutineScope(Dispatchers.IO))
     }
 
     override fun handleViewState(viewState: NoteListDetailViewState) {

@@ -7,4 +7,10 @@
         android:orderInCategory="100"
         app:showAsAction="never" />
 
+    <item
+        android:id="@+id/info"
+        android:title="О пользователе"
+        android:orderInCategory="200"
+        app:showAsAction="never" />
+
 </menu>

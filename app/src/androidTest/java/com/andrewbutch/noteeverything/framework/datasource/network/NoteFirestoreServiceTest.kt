@@ -185,11 +185,11 @@ class NoteFirestoreServiceTest {
         )
 
         // insert note
-        noteFirestoreService.insertOrUpdateNote(newNote)
+        noteFirestoreService.insertOrUpdateNote(newNote,)
 
         printNotesByOwnerListId(newNote.listId)
         // confirm by search
-        val searchResult = noteFirestoreService.searchNote(newNote)
+        val searchResult = noteFirestoreService.searchNote(newNote,)
         assertTrue(newNote == searchResult)
     }
 
@@ -206,7 +206,7 @@ class NoteFirestoreServiceTest {
     fun updateNote_confirmBySearch() = runBlocking {
         // get random note from test data
         val randomNote = noteMapper.mapFromEntity(testNoteEntities.shuffled().first())
-        var searchResult = noteFirestoreService.searchNote(randomNote)
+        var searchResult = noteFirestoreService.searchNote(randomNote,)
 
         // assert note exists in network
         assertTrue(randomNote == searchResult)
@@ -217,10 +217,10 @@ class NoteFirestoreServiceTest {
         randomNote.color = "#AAA"
 
         // update network note
-        noteFirestoreService.insertOrUpdateNote(randomNote)
+        noteFirestoreService.insertOrUpdateNote(randomNote,)
 
         // get updated note from network
-        searchResult = noteFirestoreService.searchNote(randomNote)
+        searchResult = noteFirestoreService.searchNote(randomNote,)
 
         // confirm equals
         assertTrue(randomNote == searchResult)
@@ -238,16 +238,16 @@ class NoteFirestoreServiceTest {
     fun deleteNote_confirmResultEmpty() = runBlocking {
         // get random note from test data
         val randomNote = noteMapper.mapFromEntity(testNoteEntities.shuffled().first())
-        var searchResult = noteFirestoreService.searchNote(randomNote)
+        var searchResult = noteFirestoreService.searchNote(randomNote,)
 
         // assert note exists in network
         assertTrue(randomNote == searchResult)
 
         // delete from network
-        noteFirestoreService.deleteNote(randomNote)
+        noteFirestoreService.deleteNote(randomNote,)
 
         // get deleted note from network
-        searchResult = noteFirestoreService.searchNote(randomNote)
+        searchResult = noteFirestoreService.searchNote(randomNote,)
 
         // confirm result null
         assertNull(searchResult)
@@ -267,14 +267,14 @@ class NoteFirestoreServiceTest {
         val randomNoteListId = testNoteListEntities.shuffled().first().id
 
         // confirm note list collection non empty
-        var networkResult = noteFirestoreService.getNotesByOwnerListId(randomNoteListId)
+        var networkResult = noteFirestoreService.getNotesByOwnerListId(randomNoteListId,)
         assertTrue("Collection is non empty", networkResult.isNotEmpty())
 
         // delete all notes with owner id
-        noteFirestoreService.deleteNotesByOwnerListId(randomNoteListId)
+        noteFirestoreService.deleteNotesByOwnerListId(randomNoteListId,)
 
         // search notes with list id
-        networkResult = noteFirestoreService.getNotesByOwnerListId(randomNoteListId)
+        networkResult = noteFirestoreService.getNotesByOwnerListId(randomNoteListId,)
 
         // confirm network result is empty
         assertTrue("Result empty?", networkResult.isEmpty())
@@ -293,7 +293,7 @@ class NoteFirestoreServiceTest {
         val randomNote = noteMapper.mapFromEntity(testNoteEntities.shuffled().first())
 
         // search
-        val searchResult = noteFirestoreService.searchNote(randomNote)
+        val searchResult = noteFirestoreService.searchNote(randomNote,)
 
         // confirm equals
         assertTrue(randomNote == searchResult)
@@ -315,7 +315,7 @@ class NoteFirestoreServiceTest {
         // get actual result
         val actualResult = noteMapper.mapFromEntityList(getNotesByListId(randomNoteListId))
         // get network result
-        val networkResult = noteFirestoreService.getNotesByOwnerListId(randomNoteListId)
+        val networkResult = noteFirestoreService.getNotesByOwnerListId(randomNoteListId,)
 
         // confirm result non empty
         assertTrue("Result empty?", networkResult.isNotEmpty())

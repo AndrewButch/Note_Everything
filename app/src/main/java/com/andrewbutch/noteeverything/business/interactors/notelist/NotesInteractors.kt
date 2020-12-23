@@ -9,6 +9,7 @@ constructor(
     val getAllNoteLists: GetAllNoteLists,
     val getNotesByNoteList: GetNotesByNoteList,
     val deleteMultipleNotes: DeleteMultipleNotes,
+    val clearCacheData: ClearCacheData<NoteListViewState>,
     val insertNewNote: InsertNewNote,
     val insertNewNoteList: InsertNewNoteList,
     val deleteNote: DeleteNote<NoteListViewState>,

@@ -2,6 +2,7 @@ package com.andrewbutch.noteeverything.framework.ui.notes
 
 import com.andrewbutch.noteeverything.business.domain.model.Note
 import com.andrewbutch.noteeverything.business.domain.model.NoteList
+import com.andrewbutch.noteeverything.business.domain.model.User
 import com.andrewbutch.noteeverything.business.domain.state.*
 import com.andrewbutch.noteeverything.business.interactors.notelist.NotesInteractors
 import com.andrewbutch.noteeverything.framework.datasource.NoteDataFactory
@@ -28,30 +29,40 @@ constructor(
                     title = stateEvent.title,
                     color = stateEvent.color,
                     ownerListId = stateEvent.listId,
+                    user = stateEvent.user,
                     stateEvent = stateEvent
                 )
             }
             is NoteListStateEvent.InsertNewNoteListEvent -> {
                 notesInteractors.insertNewNoteList.insertNewNote(
                     title = stateEvent.title,
+                    user = stateEvent.user,
                     stateEvent = stateEvent
                 )
             }
             is NoteListStateEvent.DeleteNoteEvent ->
                 notesInteractors.deleteNote.deleteNote(
                     note = stateEvent.note,
+                    user = stateEvent.user,
                     stateEvent = stateEvent
                 )
 
             is NoteListStateEvent.DeleteNoteListEvent -> {
                 notesInteractors.deleteNoteList.deleteNoteList(
                     noteList = stateEvent.noteList,
+                    user = stateEvent.user,
                     stateEvent = stateEvent
                 )
             }
             is NoteListStateEvent.DeleteMultipleNotesEvent -> {
                 notesInteractors.deleteMultipleNotes.deleteMultipleNotes(
                     notes = stateEvent.notes,
+                    user = stateEvent.user,
+                    stateEvent = stateEvent
+                )
+            }
+            is NoteListStateEvent.DeleteAllNoteListsEvent -> {
+                notesInteractors.clearCacheData.clear(
                     stateEvent = stateEvent
                 )
             }
@@ -96,7 +107,7 @@ constructor(
         }
         viewState.selectedNoteList?.let {
             setSelectedList(it)
-            setStateEvent(NoteListStateEvent.GetNotesByNoteListEvent(it))
+
         }
     }
 
@@ -146,15 +157,15 @@ constructor(
 
     fun getSelectedNoteList() = viewState.value?.selectedNoteList
 
-    fun reloadListItems() {
+    fun reloadListItems(user: User) {
         val currentNoteList = getCurrentViewStateOrNew().selectedNoteList
         currentNoteList?.let {
-            setStateEvent(NoteListStateEvent.GetNotesByNoteListEvent(currentNoteList))
+            setStateEvent(NoteListStateEvent.GetNotesByNoteListEvent(currentNoteList, user))
         }
     }
 
-    fun reloadNoteLists() {
-        setStateEvent(NoteListStateEvent.GetAllNoteListsEvent())
+    fun reloadNoteLists(user: User) {
+        setStateEvent(NoteListStateEvent.GetAllNoteListsEvent(user))
     }
 
     override fun getNewViewState() = NoteListViewState()

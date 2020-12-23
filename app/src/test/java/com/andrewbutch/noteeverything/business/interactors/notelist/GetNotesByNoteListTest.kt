@@ -3,6 +3,7 @@ package com.andrewbutch.noteeverything.business.interactors.notelist
 import com.andrewbutch.noteeverything.business.data.cache.abstraction.NoteCacheDataSource
 import com.andrewbutch.noteeverything.business.domain.model.Note
 import com.andrewbutch.noteeverything.business.domain.model.NoteListFactory
+import com.andrewbutch.noteeverything.business.domain.model.User
 import com.andrewbutch.noteeverything.business.domain.state.DataState
 import com.andrewbutch.noteeverything.business.interactors.notelist.GetNotesByNoteList.Companion.GET_NOTES_EMPTY
 import com.andrewbutch.noteeverything.business.interactors.notelist.GetNotesByNoteList.Companion.GET_NOTES_SUCCESS
@@ -41,6 +42,7 @@ class GetNotesByNoteListTest {
 
 
     private val actualListId = "cfc3414d-5778-4abc-8a2d-d38dbc2c18ae"
+    private val user = User("jLfWxedaCBdpxvcdfVpdzQIfzDw2", "", "")
 
 
     init {
@@ -56,7 +58,8 @@ class GetNotesByNoteListTest {
         // get notes
         getNotesByNoteList.getNotesByNoteList(
             stateEvent = GetNotesByNoteListEvent(
-                noteListFactory.createNoteList(id = actualListId, title = "")
+                noteListFactory.createNoteList(id = actualListId, title = ""),
+                user = user
             ),
             actualListId
         )
@@ -90,7 +93,8 @@ class GetNotesByNoteListTest {
         // get notes
         getNotesByNoteList.getNotesByNoteList(
             stateEvent = GetNotesByNoteListEvent(
-                noteListFactory.createNoteList(id = "not exists", title = "")
+                noteListFactory.createNoteList(id = "not exists", title = ""),
+                user = user
             ),
             "not exists"
         )

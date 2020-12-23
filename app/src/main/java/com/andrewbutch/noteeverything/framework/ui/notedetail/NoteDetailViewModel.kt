@@ -27,7 +27,8 @@ constructor(
                 if (note.id.isNotEmpty() && !checkIsTitleEmpty(note.title)) {
                     interactors.updateNote.updateNote(
                         note = note,
-                        stateEvent = event
+                        stateEvent = event,
+                        user = event.user
                     )
                 } else {
                     emitStateMessageEvent(
@@ -45,7 +46,8 @@ constructor(
                 val note = getNote()!!
                 interactors.deleteNote.deleteNote(
                     note = note,
-                    stateEvent = event
+                    stateEvent = event,
+                    user = event.user
                 )
             }
 

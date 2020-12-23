@@ -6,6 +6,7 @@ import com.andrewbutch.noteeverything.business.data.network.abstraction.NoteNetw
 import com.andrewbutch.noteeverything.business.data.util.safeCacheCall
 import com.andrewbutch.noteeverything.business.data.util.safeNetworkCall
 import com.andrewbutch.noteeverything.business.domain.model.Note
+import com.andrewbutch.noteeverything.business.domain.model.User
 import com.andrewbutch.noteeverything.business.domain.state.*
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.Flow
@@ -21,6 +22,7 @@ constructor(
 
     fun deleteNote(
         note: Note,
+        user: User,
         stateEvent: StateEvent
     ): Flow<DataState<ViewState>?> = flow {
         val cacheResult = safeCacheCall(IO) {
@@ -60,13 +62,13 @@ constructor(
 
         emit(handledResult)
 
-        updateNetwork(handledResult?.stateMessage?.message, note)
+        updateNetwork(handledResult?.stateMessage?.message, note, user)
     }
 
-    private suspend fun updateNetwork(message: String?, note: Note) {
+    private suspend fun updateNetwork(message: String?, note: Note, user: User) {
         if (message == DELETE_NOTE_SUCCESS) {
             safeNetworkCall(IO) {
-                noteNetworkDataSource.deleteNote(note)
+                noteNetworkDataSource.deleteNote(note, user)
             }
             // TODO(insert to deleted node)
         }

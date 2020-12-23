@@ -2,6 +2,7 @@ package com.andrewbutch.noteeverything.framework.ui.splash
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.andrewbutch.noteeverything.business.domain.model.User
 import com.andrewbutch.noteeverything.business.interactors.splash.SyncNoteLists
 import com.andrewbutch.noteeverything.business.interactors.splash.SyncNotes
 import kotlinx.coroutines.CoroutineScope
@@ -20,21 +21,21 @@ constructor(
     val syncCompleted: LiveData<Boolean>
         get() = _syncCompleted
 
-    fun sync(coroutineScope: CoroutineScope) {
+    fun sync(user: User, coroutineScope: CoroutineScope) {
         if (_syncCompleted.value!!) {
             return
         }
 
         val syncJob = coroutineScope.launch {
             val noteListsJob = launch {
-                syncNoteLists.syncNoteLists()
+                syncNoteLists.syncNoteLists(user)
             }
 
             noteListsJob.join()
             val allNoteLists = syncNoteLists.noteListCacheDataSource.getAllNoteLists()
 
             launch {
-                syncNotes.syncNotes(allNoteLists)
+                syncNotes.syncNotes(allNoteLists, user)
             }
         }
 

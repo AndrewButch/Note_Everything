@@ -6,6 +6,7 @@ import com.andrewbutch.noteeverything.business.data.network.abstraction.NoteList
 import com.andrewbutch.noteeverything.business.data.util.safeCacheCall
 import com.andrewbutch.noteeverything.business.data.util.safeNetworkCall
 import com.andrewbutch.noteeverything.business.domain.model.NoteList
+import com.andrewbutch.noteeverything.business.domain.model.User
 import com.andrewbutch.noteeverything.business.domain.state.*
 import com.andrewbutch.noteeverything.framework.ui.notelistdetail.state.NoteListDetailViewState
 import kotlinx.coroutines.Dispatchers
@@ -21,6 +22,7 @@ constructor(
 ) {
     fun updateNoteList(
         noteList: NoteList,
+        user: User,
         stateEvent: StateEvent
     ): Flow<DataState<NoteListDetailViewState>?> = flow {
         val cacheResult = safeCacheCall(Dispatchers.IO) {
@@ -64,13 +66,13 @@ constructor(
 
         emit(cacheResponse)
 
-        updateNetwork(cacheResponse?.stateMessage?.message, noteList)
+        updateNetwork(cacheResponse?.stateMessage?.message, noteList, user)
     }
 
-    private suspend fun updateNetwork(responseMsg: String?, noteList: NoteList) {
+    private suspend fun updateNetwork(responseMsg: String?, noteList: NoteList, user: User) {
         if (responseMsg == UPDATE_NOTE_LIST_SUCCESS) {
             safeNetworkCall(Dispatchers.IO) {
-                noteListNetworkDataSource.insertOrUpdateNoteList(noteList)
+                noteListNetworkDataSource.insertOrUpdateNoteList(noteList, user)
             }
         }
     }

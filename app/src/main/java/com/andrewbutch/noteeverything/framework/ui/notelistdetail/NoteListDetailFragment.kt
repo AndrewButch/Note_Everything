@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.andrewbutch.noteeverything.R
 import com.andrewbutch.noteeverything.business.domain.model.NoteList
+import com.andrewbutch.noteeverything.framework.session.SessionManager
 import com.andrewbutch.noteeverything.framework.ui.BaseDetailFragment
 import com.andrewbutch.noteeverything.framework.ui.main.UIController
 import com.andrewbutch.noteeverything.framework.ui.notelistdetail.state.NoteListDetailStateEvent
@@ -28,10 +29,14 @@ class NoteListDetailFragment : BaseDetailFragment(R.layout.fragment_note_list_de
 
     private lateinit var viewModel: NoteListDetailViewModel
 
+    @Inject
+    lateinit var sessionManager: SessionManager
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         requireActivity().run {
-            viewModel = ViewModelProvider(this, providerFactory).get(NoteListDetailViewModel::class.java)
+            viewModel =
+                ViewModelProvider(this, providerFactory).get(NoteListDetailViewModel::class.java)
         }
         setupUI()
         addListeners()
@@ -118,9 +123,14 @@ class NoteListDetailFragment : BaseDetailFragment(R.layout.fragment_note_list_de
     override fun onBackPressed() {
         if (viewModel.isPendingUpdate()) {
             setTitleInViewModel(noteListTitle.text.toString())
-            viewModel.setStateEvent(
-                NoteListDetailStateEvent.UpdateNoteListEvent()
-            )
+            viewModel.getNoteList()?.let { noteList ->
+                viewModel.setStateEvent(
+                    NoteListDetailStateEvent.UpdateNoteListEvent(
+                        noteList = noteList,
+                        user = sessionManager.authUser.value!!
+                    )
+                )
+            }
         }
         uiController.hideSoftKeyboard()
         findNavController().popBackStack()
@@ -154,9 +164,12 @@ class NoteListDetailFragment : BaseDetailFragment(R.layout.fragment_note_list_de
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.delete_notelist -> {
-                viewModel.getNoteList()?.let {
+                viewModel.getNoteList()?.let { noteList ->
                     viewModel.setStateEvent(
-                        NoteListDetailStateEvent.DeleteNoteListEvent(it)
+                        NoteListDetailStateEvent.DeleteNoteListEvent(
+                            noteList = noteList,
+                            user = sessionManager.authUser.value!!
+                        )
                     )
                     findNavController().popBackStack()
                 }

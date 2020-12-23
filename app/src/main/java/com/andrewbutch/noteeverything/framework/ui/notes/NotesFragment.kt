@@ -65,7 +65,8 @@ class NotesFragment :
 
         subscribeObservers()
 
-        viewModel.setStateEvent(NoteListStateEvent.GetAllNoteListsEvent())
+
+        viewModel.setStateEvent(NoteListStateEvent.GetAllNoteListsEvent(sessionManager.authUser.value!!))
         viewModel.insertTestData()
 
         extractFromPreferences()
@@ -83,15 +84,19 @@ class NotesFragment :
                                 viewModel.setStateEvent(
                                     NoteListStateEvent.InsertNewNoteEvent(
                                         title = text,
-                                        listId = selectedNoteList.id
-
+                                        listId = selectedNoteList.id,
+                                        user = sessionManager.authUser.value!!
                                     )
                                 )
+
                             }
                         }
                         InputDialogType.LIST -> {
                             viewModel.setStateEvent(
-                                NoteListStateEvent.InsertNewNoteListEvent(text)
+                                NoteListStateEvent.InsertNewNoteListEvent(
+                                    title = text,
+                                    user = sessionManager.authUser.value!!
+                                )
                             )
                         }
                     }
@@ -125,6 +130,14 @@ class NotesFragment :
 
                 viewState.selectedNoteList?.let { noteList ->
                     showNotesContainer()
+
+                    viewModel.setStateEvent(
+                        NoteListStateEvent.GetNotesByNoteListEvent(
+                            noteList = noteList,
+                            user = sessionManager.authUser.value!!
+                        )
+                    )
+
                     setTitle(noteList.title)
                 }
                 Timber.i("Selected list: ${viewState.selectedNoteList}")
@@ -219,7 +232,12 @@ class NotesFragment :
     // List clicked
     override fun onItemSelected(position: Int, item: NoteList) {
         drawer.closeDrawer(GravityCompat.START)
-        viewModel.setStateEvent(NoteListStateEvent.SelectNoteListEvent(item))
+        viewModel.setStateEvent(
+            NoteListStateEvent.SelectNoteListEvent(
+                noteList = item,
+                user = sessionManager.authUser.value!!
+            )
+        )
     }
 
     // List long click
@@ -261,8 +279,8 @@ class NotesFragment :
 
     override fun onResume() {
         super.onResume()
-        viewModel.reloadNoteLists()
-        viewModel.reloadListItems()
+        viewModel.reloadNoteLists(sessionManager.authUser.value!!)
+        viewModel.reloadListItems(sessionManager.authUser.value!!)
     }
 
     override fun onPause() {
@@ -279,7 +297,14 @@ class NotesFragment :
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.logout -> {
+                viewModel.setStateEvent(
+                    NoteListStateEvent.DeleteAllNoteListsEvent(sessionManager.authUser.value!!)
+                )
                 sessionManager.logout()
+                true
+            }
+            R.id.info -> {
+                uiController.showToast(sessionManager.authUser.value!!.id)
                 true
             }
             else -> {

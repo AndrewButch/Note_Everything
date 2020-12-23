@@ -5,6 +5,7 @@ import com.andrewbutch.noteeverything.business.data.cache.FakeNoteCacheDataSourc
 import com.andrewbutch.noteeverything.business.data.cache.abstraction.NoteCacheDataSource
 import com.andrewbutch.noteeverything.business.data.network.abstraction.NoteNetworkDataSource
 import com.andrewbutch.noteeverything.business.domain.model.NoteFactory
+import com.andrewbutch.noteeverything.business.domain.model.User
 import com.andrewbutch.noteeverything.business.domain.state.DataState
 import com.andrewbutch.noteeverything.business.interactors.notedetail.UpdateNote.Companion.UPDATE_NOTE_FAILURE
 import com.andrewbutch.noteeverything.business.interactors.notedetail.UpdateNote.Companion.UPDATE_NOTE_SUCCESS
@@ -54,6 +55,8 @@ class UpdateNoteTest {
     private val noteFactory: NoteFactory
 
     private val ownerListId = "cfc3414d-5778-4abc-8a2d-d38dbc2c18ae"
+    private val user = User("jLfWxedaCBdpxvcdfVpdzQIfzDw2", "", "")
+
 
     init {
         dependencyContainer.build()
@@ -75,7 +78,8 @@ class UpdateNoteTest {
         // update
         updateNote.updateNote(
             note = randomNote,
-            stateEvent = NoteDetailStateEvent.UpdateNoteEvent()
+            stateEvent = NoteDetailStateEvent.UpdateNoteEvent(randomNote, user),
+            user = user
         ).collect(
             object : FlowCollector<DataState<NoteDetailViewState>?> {
                 override suspend fun emit(value: DataState<NoteDetailViewState>?) {
@@ -96,7 +100,7 @@ class UpdateNoteTest {
                     } ?: fail("Updated note list from cache is null")
 
                     // confirm network update
-                    val updatedNetwork = noteNetworkDataSource.searchNote(randomNote)
+                    val updatedNetwork = noteNetworkDataSource.searchNote(randomNote, user)
                     updatedNetwork?.let {
                         assertTrue("Assert network title", randomNote.title == updatedNetwork.title)
                         assertTrue("Assert network color", randomNote.color == updatedNetwork.color)
@@ -118,7 +122,8 @@ class UpdateNoteTest {
         // try update
         updateNote.updateNote(
             note = newNote,
-            stateEvent = NoteDetailStateEvent.UpdateNoteEvent()
+            stateEvent = NoteDetailStateEvent.UpdateNoteEvent(newNote, user),
+            user = user
         ).collect(
             object : FlowCollector<DataState<NoteDetailViewState>?> {
                 override suspend fun emit(value: DataState<NoteDetailViewState>?) {
@@ -132,7 +137,7 @@ class UpdateNoteTest {
                     assertNull(updatedCache)
 
                     // confirm note doesn`t exist in network
-                    val updatedNetwork = noteNetworkDataSource.searchNote(newNote)
+                    val updatedNetwork = noteNetworkDataSource.searchNote(newNote, user)
                     assertNull(updatedNetwork)
                 }
             }
@@ -152,7 +157,8 @@ class UpdateNoteTest {
         // try update
         updateNote.updateNote(
             note = newNote,
-            stateEvent = NoteDetailStateEvent.UpdateNoteEvent()
+            stateEvent = NoteDetailStateEvent.UpdateNoteEvent(newNote, user),
+            user = user
         ).collect(
             object : FlowCollector<DataState<NoteDetailViewState>?> {
                 override suspend fun emit(value: DataState<NoteDetailViewState>?) {
@@ -168,7 +174,7 @@ class UpdateNoteTest {
                     assertNull(updatedCache)
 
                     // confirm note doesn`t exist in network
-                    val updatedNetwork = noteNetworkDataSource.searchNote(newNote)
+                    val updatedNetwork = noteNetworkDataSource.searchNote(newNote, user)
                     assertNull(updatedNetwork)
                 }
             }

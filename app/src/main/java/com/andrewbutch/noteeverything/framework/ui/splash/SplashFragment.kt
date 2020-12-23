@@ -1,5 +1,6 @@
 package com.andrewbutch.noteeverything.framework.ui.splash
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,7 @@ import android.view.animation.AnimationUtils
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import com.andrewbutch.noteeverything.R
+import com.andrewbutch.noteeverything.framework.session.SessionManager
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.splash_fragment.*
 import javax.inject.Inject
@@ -19,6 +21,16 @@ class SplashFragment : DaggerFragment() {
     lateinit var providerFactory: ViewModelProvider.Factory
 
     private lateinit var viewModel: SplashViewModel
+
+    @Inject
+    lateinit var sessionManager: SessionManager
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        viewModel =
+            ViewModelProvider(viewModelStore, providerFactory).get(SplashViewModel::class.java)
+        viewModel.syncCacheWithNetwork(sessionManager.authUser.value!!)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,10 +43,8 @@ class SplashFragment : DaggerFragment() {
         super.onViewCreated(view, savedInstanceState)
 //        navToNotes()
 
-
         startSyncAnimation()
-        viewModel =
-            ViewModelProvider(viewModelStore, providerFactory).get(SplashViewModel::class.java)
+
         viewModel.syncHasBeenExecuted().observe(viewLifecycleOwner) { syncCompleted ->
             if (syncCompleted) {
                 navToNotes()

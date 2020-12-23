@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.andrewbutch.noteeverything.R
 import com.andrewbutch.noteeverything.business.domain.model.Note
+import com.andrewbutch.noteeverything.framework.session.SessionManager
 import com.andrewbutch.noteeverything.framework.ui.BaseDetailFragment
 import com.andrewbutch.noteeverything.framework.ui.main.UIController
 import com.andrewbutch.noteeverything.framework.ui.notedetail.state.NoteDetailStateEvent
@@ -27,11 +28,15 @@ class NoteDetailFragment : BaseDetailFragment(R.layout.fragment_note_detail) {
 
     private lateinit var viewModel: NoteDetailViewModel
 
+    @Inject
+    lateinit var sessionManager: SessionManager
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         requireActivity().run {
-            viewModel = ViewModelProvider(this, providerFactory).get(NoteDetailViewModel::class.java)
+            viewModel =
+                ViewModelProvider(this, providerFactory).get(NoteDetailViewModel::class.java)
         }
         setupUI()
         addListeners()
@@ -132,9 +137,15 @@ class NoteDetailFragment : BaseDetailFragment(R.layout.fragment_note_detail) {
     override fun onBackPressed() {
         if (viewModel.isPendingUpdate()) {
             setTitleInViewModel(noteTitle.text.toString())
-            viewModel.setStateEvent(
-                NoteDetailStateEvent.UpdateNoteEvent()
-            )
+            viewModel.getNote()?.let {
+                viewModel.setStateEvent(
+                    NoteDetailStateEvent.UpdateNoteEvent(
+                        note = it,
+                        user = sessionManager.authUser.value!!
+                    )
+                )
+            }
+
         }
         uiController.hideSoftKeyboard()
         findNavController().popBackStack()
@@ -164,7 +175,10 @@ class NoteDetailFragment : BaseDetailFragment(R.layout.fragment_note_detail) {
             R.id.delete_note -> {
                 viewModel.getNote()?.let {
                     viewModel.setStateEvent(
-                        NoteDetailStateEvent.DeleteNoteEvent(it)
+                        NoteDetailStateEvent.DeleteNoteEvent(
+                            note = it,
+                            user = sessionManager.authUser.value!!
+                        )
                     )
                     findNavController().popBackStack()
                 }

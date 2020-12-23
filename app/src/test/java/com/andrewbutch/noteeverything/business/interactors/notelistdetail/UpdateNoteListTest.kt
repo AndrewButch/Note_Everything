@@ -5,6 +5,7 @@ import com.andrewbutch.noteeverything.business.data.cache.FakeNoteListCacheDataS
 import com.andrewbutch.noteeverything.business.data.cache.abstraction.NoteListCacheDataSource
 import com.andrewbutch.noteeverything.business.data.network.abstraction.NoteListNetworkDataSource
 import com.andrewbutch.noteeverything.business.domain.model.NoteListFactory
+import com.andrewbutch.noteeverything.business.domain.model.User
 import com.andrewbutch.noteeverything.business.domain.state.DataState
 import com.andrewbutch.noteeverything.business.interactors.notelistdetail.UpdateNoteList.Companion.UPDATE_NOTE_LIST_FAILURE
 import com.andrewbutch.noteeverything.business.interactors.notelistdetail.UpdateNoteList.Companion.UPDATE_NOTE_LIST_SUCCESS
@@ -52,6 +53,8 @@ class UpdateNoteListTest {
     private val noteListNetworkDataSource: NoteListNetworkDataSource
     private val noteListFactory: NoteListFactory
 
+    private val user = User("jLfWxedaCBdpxvcdfVpdzQIfzDw2", "", "")
+
     init {
         dependencyContainer.build()
         noteListCacheDataSource = dependencyContainer.noteListCacheDataSource
@@ -71,7 +74,11 @@ class UpdateNoteListTest {
         // update
         updateNoteList.updateNoteList(
             noteList = randomNote,
-            stateEvent = NoteListDetailStateEvent.UpdateNoteListEvent()
+            stateEvent = NoteListDetailStateEvent.UpdateNoteListEvent(
+                noteList = randomNote,
+                user = user
+            ),
+            user = user
         ).collect(
             object : FlowCollector<DataState<NoteListDetailViewState>?> {
                 override suspend fun emit(value: DataState<NoteListDetailViewState>?) {
@@ -92,7 +99,7 @@ class UpdateNoteListTest {
                     } ?: fail("Updated note list from cache is null")
 
                     // confirm network update
-                    val updatedNetwork = noteListNetworkDataSource.searchNoteList(randomNote)
+                    val updatedNetwork = noteListNetworkDataSource.searchNoteList(randomNote, user)
                     updatedNetwork?.let {
                         assertTrue("Assert network title", randomNote.title == updatedNetwork.title)
                         assertTrue("Assert network color", randomNote.color == updatedNetwork.color)
@@ -114,7 +121,11 @@ class UpdateNoteListTest {
         // try update
         updateNoteList.updateNoteList(
             noteList = newNote,
-            stateEvent = NoteListDetailStateEvent.UpdateNoteListEvent()
+            stateEvent = NoteListDetailStateEvent.UpdateNoteListEvent(
+                noteList = newNote,
+                user = user
+            ),
+            user = user
         ).collect(
             object : FlowCollector<DataState<NoteListDetailViewState>?> {
                 override suspend fun emit(value: DataState<NoteListDetailViewState>?) {
@@ -128,7 +139,7 @@ class UpdateNoteListTest {
                     assertNull(updatedCache)
 
                     // confirm note doesn`t exist in network
-                    val updatedNetwork = noteListNetworkDataSource.searchNoteList(newNote)
+                    val updatedNetwork = noteListNetworkDataSource.searchNoteList(newNote, user)
                     assertNull(updatedNetwork)
                 }
             }
@@ -144,7 +155,11 @@ class UpdateNoteListTest {
         // try update
         updateNoteList.updateNoteList(
             noteList = newNote,
-            stateEvent = NoteListDetailStateEvent.UpdateNoteListEvent()
+            stateEvent = NoteListDetailStateEvent.UpdateNoteListEvent(
+                noteList = newNote,
+                user = user
+            ),
+            user = user
         ).collect(
             object : FlowCollector<DataState<NoteListDetailViewState>?> {
                 override suspend fun emit(value: DataState<NoteListDetailViewState>?) {
@@ -160,7 +175,7 @@ class UpdateNoteListTest {
                     assertNull(updatedCache)
 
                     // confirm note doesn`t exist in network
-                    val updatedNetwork = noteListNetworkDataSource.searchNoteList(newNote)
+                    val updatedNetwork = noteListNetworkDataSource.searchNoteList(newNote, user)
                     assertNull(updatedNetwork)
                 }
             }

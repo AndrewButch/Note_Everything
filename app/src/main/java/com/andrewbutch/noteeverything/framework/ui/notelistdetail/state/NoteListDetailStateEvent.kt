@@ -1,12 +1,16 @@
 package com.andrewbutch.noteeverything.framework.ui.notelistdetail.state
 
 import com.andrewbutch.noteeverything.business.domain.model.NoteList
+import com.andrewbutch.noteeverything.business.domain.model.User
 import com.andrewbutch.noteeverything.business.domain.state.StateEvent
 import com.andrewbutch.noteeverything.business.domain.state.StateMessage
 
 sealed class NoteListDetailStateEvent : StateEvent {
 
-    class UpdateNoteListEvent() : NoteListDetailStateEvent() {
+    class UpdateNoteListEvent(
+        val noteList: NoteList,
+        val user: User
+    ) : NoteListDetailStateEvent() {
         override fun errorInfo(): String {
             return "Error updating noteList"
         }
@@ -20,7 +24,8 @@ sealed class NoteListDetailStateEvent : StateEvent {
     }
 
     class DeleteNoteListEvent(
-        val noteList: NoteList
+        val noteList: NoteList,
+        val user: User
     ) : NoteListDetailStateEvent() {
         override fun errorInfo(): String {
             return "Error deleting note list"

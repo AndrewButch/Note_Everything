@@ -2,6 +2,7 @@ package com.andrewbutch.noteeverything.business.interactors.notelist
 
 import com.andrewbutch.noteeverything.business.data.cache.FakeNoteListCacheDataSourceImpl
 import com.andrewbutch.noteeverything.business.data.cache.abstraction.NoteListCacheDataSource
+import com.andrewbutch.noteeverything.business.domain.model.User
 import com.andrewbutch.noteeverything.business.domain.state.DataState
 import com.andrewbutch.noteeverything.business.interactors.notelist.GetAllNoteLists.Companion.GET_ALL_NOTE_LIST_EMPTY
 import com.andrewbutch.noteeverything.business.interactors.notelist.GetAllNoteLists.Companion.GET_ALL_NOTE_LIST_SUCCESS
@@ -37,6 +38,7 @@ class GetAllNoteListsTest {
     private var dependencyContainer = DependencyContainer()
     private lateinit var noteListCacheDataSource: NoteListCacheDataSource
 
+    private val user = User("jLfWxedaCBdpxvcdfVpdzQIfzDw2", "", "")
 
     @Before
     fun before() {
@@ -49,7 +51,7 @@ class GetAllNoteListsTest {
     fun `get all note lists, check size`() = runBlocking {
         val actualSize = 5
         // get note lists
-        getAllNoteLists.getAllNoteLists(NoteListStateEvent.GetAllNoteListsEvent())
+        getAllNoteLists.getAllNoteLists(NoteListStateEvent.GetAllNoteListsEvent(user))
             .collect {
                 object : FlowCollector<DataState<NoteListViewState>?> {
                     override suspend fun emit(value: DataState<NoteListViewState>?) {
@@ -79,7 +81,7 @@ class GetAllNoteListsTest {
             FakeNoteListCacheDataSourceImpl(HashMap(), dependencyContainer.dateUtil)
 
         // get note lists
-        getAllNoteLists.getAllNoteLists(NoteListStateEvent.GetAllNoteListsEvent())
+        getAllNoteLists.getAllNoteLists(NoteListStateEvent.GetAllNoteListsEvent(user))
             .collect {
                 object : FlowCollector<DataState<NoteListViewState>?> {
                     override suspend fun emit(value: DataState<NoteListViewState>?) {

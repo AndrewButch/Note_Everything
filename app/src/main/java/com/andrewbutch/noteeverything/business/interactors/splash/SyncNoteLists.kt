@@ -1,6 +1,5 @@
 package com.andrewbutch.noteeverything.business.interactors.splash
 
-import android.util.Log
 import com.andrewbutch.noteeverything.business.data.cache.CacheResultHandler
 import com.andrewbutch.noteeverything.business.data.cache.abstraction.NoteListCacheDataSource
 import com.andrewbutch.noteeverything.business.data.network.NetworkResultHandler
@@ -8,12 +7,14 @@ import com.andrewbutch.noteeverything.business.data.network.abstraction.NoteList
 import com.andrewbutch.noteeverything.business.data.util.safeCacheCall
 import com.andrewbutch.noteeverything.business.data.util.safeNetworkCall
 import com.andrewbutch.noteeverything.business.domain.model.NoteList
+import com.andrewbutch.noteeverything.business.domain.model.User
 import com.andrewbutch.noteeverything.business.domain.state.DataState
 import com.andrewbutch.noteeverything.business.domain.state.MessageType
 import com.andrewbutch.noteeverything.business.domain.state.StateMessage
 import com.andrewbutch.noteeverything.business.domain.state.UIComponentType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 import javax.inject.Inject
 
 class SyncNoteLists
@@ -22,14 +23,15 @@ constructor(
     val noteListCacheDataSource: NoteListCacheDataSource,
     private val noteListNetworkDataSource: NoteListNetworkDataSource
 ) {
-    suspend fun syncNoteLists() {
+    suspend fun syncNoteLists(user: User) {
         val cachedNoteLists = getCachedNoteLists()
 
-        val networkNoteLists = getNetworkNoteLists()
+        val networkNoteLists = getNetworkNoteLists(user)
 
         syncNetworkNoteListsWithCached(
             ArrayList(cachedNoteLists),
-            networkNoteLists
+            networkNoteLists,
+            user
         )
     }
 
@@ -60,9 +62,9 @@ constructor(
         return response?.data ?: emptyList()
     }
 
-    private suspend fun getNetworkNoteLists(): List<NoteList> {
+    private suspend fun getNetworkNoteLists(user: User): List<NoteList> {
         val networkResult = safeNetworkCall(Dispatchers.IO) {
-            noteListNetworkDataSource.getAllNoteLists()
+            noteListNetworkDataSource.getAllNoteLists(user)
         }
 
         val response = object : NetworkResultHandler<List<NoteList>, List<NoteList>>(
@@ -88,32 +90,33 @@ constructor(
 
     private suspend fun syncNetworkNoteListsWithCached(
         cachedNoteLists: ArrayList<NoteList>,
-        networkNoteLists: List<NoteList>
+        networkNoteLists: List<NoteList>,
+        user: User
     ) = withContext(Dispatchers.IO) {
         for (networkNoteList in networkNoteLists) {
             noteListCacheDataSource.searchNoteListById(networkNoteList.id)?.let { cachedNoteList ->
                 cachedNoteLists.remove(cachedNoteList)
-                updateCacheOrNetwork(cachedNoteList, networkNoteList)
+                updateCacheOrNetwork(cachedNoteList, networkNoteList, user)
             } ?: noteListCacheDataSource.insertNoteList(networkNoteList)
         }
 
         // insert remaining into network
         for (cachedNoteList in cachedNoteLists) {
-            noteListNetworkDataSource.insertOrUpdateNoteList(cachedNoteList)
+            noteListNetworkDataSource.insertOrUpdateNoteList(cachedNoteList, user)
         }
     }
 
     private suspend fun updateCacheOrNetwork(
         cachedNoteList: NoteList,
-        networkNoteList: NoteList
+        networkNoteList: NoteList,
+        user: User
     ) {
         val cachedUpdatedAt = cachedNoteList.updatedAt
         val networkUpdatedAt = networkNoteList.updatedAt
 
         // update cache (network has newest data)
         if (networkUpdatedAt > cachedUpdatedAt) {
-            log(
-                "SyncNoteLists",
+            Timber.d(
                 "cachedUpdatedAt: $cachedUpdatedAt, " +
                         "networkUpdatedAt: $networkUpdatedAt, " +
                         "noteList: ${cachedNoteList.title}"
@@ -129,19 +132,14 @@ constructor(
         }
         // update network (cache has newest data)
         else if (networkUpdatedAt < cachedUpdatedAt) {
-            log(
-                "SyncNoteLists",
+            Timber.d(
                 "networkUpdatedAt: $networkUpdatedAt, " +
                         "cachedUpdatedAt: $cachedUpdatedAt, " +
                         "noteList: ${cachedNoteList.title}"
             )
             safeNetworkCall(Dispatchers.IO) {
-                noteListNetworkDataSource.insertOrUpdateNoteList(cachedNoteList)
+                noteListNetworkDataSource.insertOrUpdateNoteList(cachedNoteList, user)
             }
         }
-    }
-
-    private fun log(tag: String, msg: String) {
-        Log.d(tag, msg)
     }
 }

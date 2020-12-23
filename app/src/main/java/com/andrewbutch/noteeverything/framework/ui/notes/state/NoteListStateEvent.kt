@@ -2,6 +2,7 @@ package com.andrewbutch.noteeverything.framework.ui.notes.state
 
 import com.andrewbutch.noteeverything.business.domain.model.Note
 import com.andrewbutch.noteeverything.business.domain.model.NoteList
+import com.andrewbutch.noteeverything.business.domain.model.User
 import com.andrewbutch.noteeverything.business.domain.state.StateEvent
 
 sealed class NoteListStateEvent : StateEvent {
@@ -10,8 +11,9 @@ sealed class NoteListStateEvent : StateEvent {
         val title: String,
         val completed: Boolean = false,
         val color: String? = null,
-        val listId: String
-    ): NoteListStateEvent() {
+        val listId: String,
+        val user: User
+    ) : NoteListStateEvent() {
 
         override fun errorInfo(): String {
             return "Error inserting new note."
@@ -26,7 +28,8 @@ sealed class NoteListStateEvent : StateEvent {
 
     class InsertNewNoteListEvent(
         val title: String,
-    ): NoteListStateEvent() {
+        val user: User
+    ) : NoteListStateEvent() {
 
         override fun errorInfo(): String {
             return "Error inserting new note list."
@@ -40,8 +43,9 @@ sealed class NoteListStateEvent : StateEvent {
     }
 
     class DeleteNoteEvent(
-        val note: Note
-    ): NoteListStateEvent() {
+        val note: Note,
+        val user: User
+    ) : NoteListStateEvent() {
         override fun errorInfo(): String {
             return "Error deleting note"
         }
@@ -54,8 +58,9 @@ sealed class NoteListStateEvent : StateEvent {
     }
 
     class DeleteNoteListEvent(
-        val noteList: NoteList
-    ): NoteListStateEvent() {
+        val noteList: NoteList,
+        val user: User
+    ) : NoteListStateEvent() {
         override fun errorInfo(): String {
             return "Error deleting note list"
         }
@@ -68,8 +73,9 @@ sealed class NoteListStateEvent : StateEvent {
     }
 
     class DeleteMultipleNotesEvent(
-        val notes: List<Note>
-    ): NoteListStateEvent() {
+        val notes: List<Note>,
+        val user: User
+    ) : NoteListStateEvent() {
         override fun errorInfo(): String {
             return "Error deleting selected notes"
         }
@@ -81,7 +87,23 @@ sealed class NoteListStateEvent : StateEvent {
         override fun shouldDisplayProgressBar() = true
     }
 
-    class GetAllNoteListsEvent : NoteListStateEvent() {
+    class DeleteAllNoteListsEvent(
+        val user: User
+    ) : NoteListStateEvent() {
+        override fun errorInfo(): String {
+            return "Error deleting all note lists"
+        }
+
+        override fun eventName(): String {
+            return "DeleteAllNoteListsEvent"
+        }
+
+        override fun shouldDisplayProgressBar() = true
+    }
+
+    class GetAllNoteListsEvent(
+        val user: User
+    ) : NoteListStateEvent() {
         override fun errorInfo(): String {
             return "Error getting all note lists"
         }
@@ -95,8 +117,9 @@ sealed class NoteListStateEvent : StateEvent {
     }
 
     class GetNotesByNoteListEvent(
-        val noteList: NoteList
-    ): NoteListStateEvent() {
+        val noteList: NoteList,
+        val user: User
+    ) : NoteListStateEvent() {
         override fun errorInfo(): String {
             return "Error getting notes by owner list"
         }
@@ -109,8 +132,9 @@ sealed class NoteListStateEvent : StateEvent {
     }
 
     class SelectNoteListEvent(
-        val noteList: NoteList
-    ): NoteListStateEvent() {
+        val noteList: NoteList,
+        val user: User
+    ) : NoteListStateEvent() {
         override fun errorInfo(): String {
             return "Error selection note list"
         }
