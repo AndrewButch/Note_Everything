@@ -16,4 +16,8 @@
 
     <color name="menu_item_color">#000000</color>
 
+
+    <color name="uncomplete">#C8C8C8</color>
+    <color name="complete">#19DC1E</color>
+
 </resources>

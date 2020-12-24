@@ -1,6 +1,7 @@
 package com.andrewbutch.noteeverything.framework.ui.notes
 
 import android.content.SharedPreferences
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
@@ -8,10 +9,12 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.andrewbutch.noteeverything.R
 import com.andrewbutch.noteeverything.business.domain.model.Note
@@ -24,6 +27,7 @@ import com.andrewbutch.noteeverything.framework.ui.notedetail.NoteDetailFragment
 import com.andrewbutch.noteeverything.framework.ui.notelistdetail.NoteListDetailFragment.Companion.NOTE_LIST_DETAIL_BUNDLE_KEY
 import com.andrewbutch.noteeverything.framework.ui.notes.drawer.NavMenuAdapter
 import com.andrewbutch.noteeverything.framework.ui.notes.state.NoteListStateEvent
+import com.andrewbutch.noteeverything.framework.ui.utils.ItemTouchHelperCallback
 import com.andrewbutch.noteeverything.framework.ui.utils.VerticalItemDecoration
 import kotlinx.android.synthetic.main.fragment_notes.*
 import kotlinx.android.synthetic.main.fragment_notes_content.*
@@ -40,6 +44,9 @@ class NotesFragment :
     private lateinit var navMenuAdapter: NavMenuAdapter
     private lateinit var notesAdapter: NotesRecyclerAdapter
 
+    private var imgComplete: Drawable? = null
+    private var imgUncomplete: Drawable? = null
+
     @Inject
     lateinit var providerFactory: ViewModelProvider.Factory
 
@@ -53,9 +60,14 @@ class NotesFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        imgComplete = ResourcesCompat.getDrawable(resources, R.drawable.ic_completed, null)
+        imgUncomplete = ResourcesCompat.getDrawable(resources, R.drawable.ic_uncompleted, null)
+
         requireActivity().run {
             viewModel = ViewModelProvider(this, providerFactory).get(NotesViewModel::class.java)
         }
+        viewModel.setUser(sessionManager.authUser.value!!)
+
         setupViews()
         setupNavDrawer()
         // FAB
@@ -67,9 +79,8 @@ class NotesFragment :
 
 
         viewModel.setStateEvent(NoteListStateEvent.GetAllNoteListsEvent(sessionManager.authUser.value!!))
-        viewModel.insertTestData()
 
-        extractFromPreferences()
+
     }
 
 
@@ -131,13 +142,12 @@ class NotesFragment :
                 viewState.selectedNoteList?.let { noteList ->
                     showNotesContainer()
 
-                    viewModel.setStateEvent(
-                        NoteListStateEvent.GetNotesByNoteListEvent(
-                            noteList = noteList,
-                            user = sessionManager.authUser.value!!
-                        )
-                    )
-
+//                    viewModel.setStateEvent(
+//                        NoteListStateEvent.GetNotesByNoteListEvent(
+//                            noteList = noteList,
+//                            user = sessionManager.authUser.value!!
+//                        )
+//                    )
                     setTitle(noteList.title)
                 }
                 Timber.i("Selected list: ${viewState.selectedNoteList}")
@@ -174,12 +184,17 @@ class NotesFragment :
         hideNotesContainer()
 
         // Recycler
-        notesAdapter = NotesRecyclerAdapter(interaction = this)
+        notesAdapter = NotesRecyclerAdapter(interaction = this, imgChecked = imgComplete, imgUnchecked = imgUncomplete)
         recycler.apply {
             adapter = notesAdapter
             layoutManager = LinearLayoutManager(requireContext())
         }
         recycler.addItemDecoration(VerticalItemDecoration(30))
+
+        // Item touch helper
+        val touchHelperCallback = ItemTouchHelperCallback(notesAdapter)
+        val itemTouchHelper = ItemTouchHelper(touchHelperCallback)
+        itemTouchHelper.attachToRecyclerView(recycler)
     }
 
     override fun onBackPressed() {
@@ -227,6 +242,10 @@ class NotesFragment :
     // Note clicked
     override fun onItemSelected(position: Int, item: Note) {
         navToNoteDetail(item)
+    }
+
+    override fun onItemDismiss(item: Note) {
+        viewModel.beginPendingDelete(item, sessionManager.authUser.value!!)
     }
 
     // List clicked
@@ -305,6 +324,10 @@ class NotesFragment :
             }
             R.id.info -> {
                 uiController.showToast(sessionManager.authUser.value!!.id)
+                true
+            }
+            R.id.insert -> {
+                viewModel.insertTestData()
                 true
             }
             else -> {

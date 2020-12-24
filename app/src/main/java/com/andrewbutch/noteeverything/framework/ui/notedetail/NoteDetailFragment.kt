@@ -115,6 +115,10 @@ class NoteDetailFragment : BaseDetailFragment(R.layout.fragment_note_detail) {
                 }
             }
         }
+        viewModel.shouldDisplayProgressBar()
+            .observe(viewLifecycleOwner) { shouldDisplayProgressBar ->
+                uiController.displayProgressBar(shouldDisplayProgressBar)
+            }
     }
 
     private fun setTitle(title: String) {

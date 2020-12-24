@@ -19,18 +19,17 @@
 
         <FrameLayout
             android:id="@+id/color_indicator"
-            android:layout_width="8dp"
+            android:layout_width="6dp"
             android:layout_height="match_parent"
             tools:background="@color/error"/>
 
         <ImageView
             android:id="@+id/img_checkbox"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
             android:layout_gravity="center_vertical"
-            android:layout_margin="16dp"
-            app:srcCompat="@drawable/ic_completed"
-            app:tint="#D32F2F" />
+            app:srcCompat="@drawable/ic_uncompleted"
+            android:scaleType="center" />
 
         <TextView
             android:id="@+id/item_name"
@@ -42,14 +41,14 @@
             android:textSize="16sp"
             tools:text="textview" />
 
-        <ImageView
-            android:id="@+id/img_reorder"
-            android:layout_width="56dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
-            android:padding="16dp"
-            app:srcCompat="@drawable/ic_reorder"
-            app:tint="#FFA000" />
+<!--        <ImageView-->
+<!--            android:id="@+id/img_reorder"-->
+<!--            android:layout_width="56dp"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_gravity="center_vertical"-->
+<!--            android:padding="16dp"-->
+<!--            app:srcCompat="@drawable/ic_reorder"-->
+<!--            app:tint="#FFA000" />-->
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

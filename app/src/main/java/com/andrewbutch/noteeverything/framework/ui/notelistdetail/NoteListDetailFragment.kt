@@ -114,6 +114,10 @@ class NoteListDetailFragment : BaseDetailFragment(R.layout.fragment_note_list_de
                 }
             }
         }
+        viewModel.shouldDisplayProgressBar()
+            .observe(viewLifecycleOwner) { shouldDisplayProgressBar ->
+                uiController.displayProgressBar(shouldDisplayProgressBar)
+            }
     }
 
     private fun navToNotesList() {

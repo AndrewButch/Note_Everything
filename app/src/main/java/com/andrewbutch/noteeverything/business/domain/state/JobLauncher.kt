@@ -40,9 +40,9 @@ constructor(val eventStore: StateEventStore, val messageStack: MessageStack) {
             return false
         }
         // if has messages, means message not handled (maybe dialog window)
-        if (!isMessageStackEmpty()) {
-            return false
-        }
+//        if (!isMessageStackEmpty()) {
+//            return false
+//        }
         return true
     }
 

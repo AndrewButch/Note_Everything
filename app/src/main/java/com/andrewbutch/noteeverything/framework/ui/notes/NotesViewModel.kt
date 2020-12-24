@@ -9,8 +9,13 @@ import com.andrewbutch.noteeverything.framework.datasource.NoteDataFactory
 import com.andrewbutch.noteeverything.framework.ui.BaseViewModel
 import com.andrewbutch.noteeverything.framework.ui.notes.state.NoteListStateEvent
 import com.andrewbutch.noteeverything.framework.ui.notes.state.NoteListViewState
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 class NotesViewModel
@@ -105,9 +110,14 @@ constructor(
         viewState.notes?.let {
             setNotes(it)
         }
-        viewState.selectedNoteList?.let {
-            setSelectedList(it)
-
+        viewState.selectedNoteList?.let { noteList ->
+            setSelectedList(noteList)
+            getCurrentViewStateOrNew().user?.let {user ->
+                setStateEvent(NoteListStateEvent.GetNotesByNoteListEvent(
+                    noteList = noteList,
+                    user = user
+                ))
+            }
         }
     }
 
@@ -143,15 +153,21 @@ constructor(
         setViewState(updated)
     }
 
-    private fun setNoteLists(noteLists: List<NoteList>?) {
+    private fun setNoteLists(noteLists: ArrayList<NoteList>?) {
         val updated = getCurrentViewStateOrNew()
         updated.noteLists = noteLists
         setViewState(updated)
     }
 
-    private fun setNotes(notes: List<Note>?) {
+    private fun setNotes(notes: ArrayList<Note>?) {
         val updated = getCurrentViewStateOrNew()
         updated.notes = notes
+        setViewState(updated)
+    }
+
+    fun setUser(user: User?) {
+        val updated = getCurrentViewStateOrNew()
+        updated.user = user
         setViewState(updated)
     }
 
@@ -198,23 +214,46 @@ constructor(
 //                .launchIn(CoroutineScope(IO))
 //        }
 
-//        // Inserting notes
-//        val notes = noteDataFactory.produceListOfNotes()
-//        for (note in notes) {
-//            notesInteractors.insertNewNote.insertNote(
-//                id = note.id,
-//                title = note.title,
-//                color = note.color,
-//                ownerListId = note.listId,
-//                stateEvent = NoteListStateEvent.InsertNewNoteEvent(
-//                    note.title,
-//                    note.completed,
-//                    note.color,
-//                    note.listId
-//                )
-//            )
-//                .launchIn(CoroutineScope(IO))
-//        }
+        // Inserting notes
+        val notes = noteDataFactory.produceListOfNotes()
+        val ownerListId = viewState.value?.selectedNoteList?.id!!
+        for (note in notes) {
+            notesInteractors.insertNewNote.insertNote(
+                id = null,
+                title = note.title,
+                color = note.color,
+                ownerListId = ownerListId,
+                stateEvent = NoteListStateEvent.InsertNewNoteEvent(
+                    note.title,
+                    note.completed,
+                    note.color,
+                    ownerListId,
+                    user = viewState.value?.user!!
+                ),
+                user = viewState.value?.user!!
+            )
+                .onEach {
+                    delay(100)
+                }
+                .launchIn(CoroutineScope(Dispatchers.Unconfined))
+
+        }
+    }
+
+    fun beginPendingDelete(item: Note, user: User) {
+        deleteNoteFromList(item)
+        setStateEvent(NoteListStateEvent.DeleteNoteEvent(item, user))
+    }
+
+    private fun deleteNoteFromList(note: Note) {
+        val updated = getCurrentViewStateOrNew()
+        val list = updated.notes
+        if (list?.contains(note) == true) {
+            val updatedList = ArrayList(list)
+            updatedList.remove(note)
+            updated.notes = updatedList
+            setViewState(updated)
+        }
     }
 
 

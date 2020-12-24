@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.andrewbutch.noteeverything.R
 import com.andrewbutch.noteeverything.business.domain.model.Note
+import com.andrewbutch.noteeverything.framework.ui.utils.ItemTouchHelperAdapter
 import kotlinx.android.synthetic.main.note_item.view.*
 
 class NotesRecyclerAdapter(
@@ -18,7 +19,8 @@ class NotesRecyclerAdapter(
     private val imgChecked: Drawable? = null,
     private val imgUnchecked: Drawable? = null
 ) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    RecyclerView.Adapter<RecyclerView.ViewHolder>(),
+ItemTouchHelperAdapter{
 
     val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Note>() {
 
@@ -92,15 +94,15 @@ class NotesRecyclerAdapter(
             } else {
                 color_indicator.setBackgroundColor(Color.parseColor("#FFFFFF"))
             }
-            img_reorder.setOnClickListener {
-                TODO()
-            }
-
-
         }
     }
 
     interface Interaction {
         fun onItemSelected(position: Int, item: Note)
+        fun onItemDismiss(item: Note)
+    }
+
+    override fun onItemDismiss(position: Int) {
+        interaction?.onItemDismiss(differ.currentList[position])
     }
 }

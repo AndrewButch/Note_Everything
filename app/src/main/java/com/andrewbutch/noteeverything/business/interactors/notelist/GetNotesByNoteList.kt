@@ -42,7 +42,7 @@ constructor(
                         uiComponentType = uiComponentType,
                         messageType = messageType
                     ),
-                    data = NoteListViewState(notes = resultValue),
+                    data = NoteListViewState(notes = ArrayList(resultValue)),
                     stateEvent = stateEvent
                 )
             }
