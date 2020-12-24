@@ -27,6 +27,7 @@
 
     <!-- Dialogs -->
     <string name="dialog_done">Готово</string>
+    <string name="dialog_close">Закрыть</string>
     <string name="color_chooser_title">Выбор цвета</string>
 
     <!-- Splash fragment -->

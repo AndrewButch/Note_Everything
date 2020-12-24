@@ -111,6 +111,18 @@ class MainActivity : DaggerAppCompatActivity(), UIController {
         }
     }
 
+    override fun displayInfoDialog(title: String, message: String) {
+        dialogInView = MaterialDialog(this).show {
+            title(text = title)
+            message(text = message)
+            positiveButton(res = R.string.dialog_close)
+            cancelable(false)
+            onDismiss {
+                dialogInView = null
+            }
+        }
+    }
+
     override fun showToast(msg: String) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
     }
