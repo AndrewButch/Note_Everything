@@ -31,11 +31,7 @@ class ItemTouchHelperCallback(
     }
 
     override fun isLongPressDragEnabled(): Boolean {
-        return super.isLongPressDragEnabled()
-    }
-
-    override fun isItemViewSwipeEnabled(): Boolean {
-        return super.isItemViewSwipeEnabled()
+        return false
     }
 
 }
