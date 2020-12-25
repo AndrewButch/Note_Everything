@@ -146,5 +146,18 @@ sealed class NoteListStateEvent : StateEvent {
         override fun shouldDisplayProgressBar() = true
     }
 
+    class ToggleNoteEvent(
+        val note: Note,
+        val user: User
+    ) : NoteListStateEvent() {
+        override fun errorInfo(): String {
+            return "Error toggle note"
+        }
 
+        override fun eventName(): String {
+            return "ToggleNoteEvent"
+        }
+
+        override fun shouldDisplayProgressBar(): Boolean = true
+    }
 }

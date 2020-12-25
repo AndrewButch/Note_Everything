@@ -76,7 +76,11 @@ ItemTouchHelperAdapter{
 
         fun bind(item: Note) = with(itemView) {
             itemView.setOnClickListener {
-                interaction?.onItemSelected(adapterPosition, item)
+                interaction?.onItemSelected(item)
+            }
+            img_checkbox.setOnClickListener {
+//                item.completed = !item.completed
+                interaction?.onItemCheck(item)
             }
 
             item_name.text = item.title
@@ -98,7 +102,8 @@ ItemTouchHelperAdapter{
     }
 
     interface Interaction {
-        fun onItemSelected(position: Int, item: Note)
+        fun onItemSelected(item: Note)
+        fun onItemCheck(item: Note)
         fun onItemDismiss(item: Note)
     }
 

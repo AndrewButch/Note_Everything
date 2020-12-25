@@ -127,7 +127,7 @@ class NotesFragment :
                 viewState.noteLists?.let {
                     navMenuAdapter.submitList(it)
                     if (viewState.selectedNoteList == null) {
-                        extractFromPreferences()
+                        getFromPreferences()
                     }
                 }
 
@@ -226,12 +226,14 @@ class NotesFragment :
         navRecyclerMenu.addItemDecoration(VerticalItemDecoration(20))
     }
 
-    private fun extractFromPreferences() {
+    private fun getFromPreferences() {
         val selectedNoteList = preferences.getString(SELECTED_NOTE, null)
         selectedNoteList?.let {
             viewModel.setSelectedList(selectedNoteList)
         }
     }
+
+    private fun getSyncPreference(): Boolean = preferences.getBoolean(SYNC, true)
 
     private fun setPreferences() {
         val editor = preferences.edit()
@@ -239,13 +241,25 @@ class NotesFragment :
         editor.apply()
     }
 
+    private fun setSyncPreferences(enableSync: Boolean) {
+        val editor = preferences.edit()
+        editor.putBoolean(SYNC, enableSync)
+        editor.apply()
+    }
+
     // Note clicked
-    override fun onItemSelected(position: Int, item: Note) {
+    override fun onItemSelected(item: Note) {
         navToNoteDetail(item)
     }
 
+    override fun onItemCheck(item: Note) {
+        uiController.showToast("Toggle item ${item.title}")
+        viewModel.beginPendingNoteUpdate(item)
+
+    }
+
     override fun onItemDismiss(item: Note) {
-        viewModel.beginPendingDelete(item, sessionManager.authUser.value!!)
+        viewModel.beginPendingNoteDelete(item, sessionManager.authUser.value!!)
     }
 
     // List clicked
@@ -310,6 +324,8 @@ class NotesFragment :
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         menu.clear()
         inflater.inflate(R.menu.menu_notes, menu)
+        val syncEnable = getSyncPreference()
+        menu.findItem(R.id.synch).isChecked = syncEnable
         super.onCreateOptionsMenu(menu, inflater)
     }
 
@@ -319,6 +335,7 @@ class NotesFragment :
                 viewModel.setStateEvent(
                     NoteListStateEvent.DeleteAllNoteListsEvent(sessionManager.authUser.value!!)
                 )
+                setSyncPreferences(true)
                 sessionManager.logout()
                 true
             }
@@ -328,6 +345,12 @@ class NotesFragment :
             }
             R.id.insert -> {
                 viewModel.insertTestData()
+                true
+            }
+            R.id.synch -> {
+                val enableSync = !item.isChecked
+                item.isChecked = enableSync
+                setSyncPreferences(enableSync)
                 true
             }
             else -> {
@@ -343,6 +366,7 @@ class NotesFragment :
 
     companion object {
         const val SELECTED_NOTE = "com.andrewbutch.noteeverything.framework.ui.notes.SELECTED_NOTE"
+        const val SYNC = "com.andrewbutch.noteeverything.framework.ui.notes.SYNC"
     }
 
 }

@@ -92,6 +92,13 @@ constructor(
                     stateEvent = stateEvent
                 )
             }
+            is NoteListStateEvent.ToggleNoteEvent -> {
+                notesInteractors.updateNote.updateNote(
+                    note = stateEvent.note,
+                    user = stateEvent.user,
+                    stateEvent = stateEvent
+                )
+            }
         }
         launchJob(stateEvent, job)
     }
@@ -240,7 +247,7 @@ constructor(
         }
     }
 
-    fun beginPendingDelete(item: Note, user: User) {
+    fun beginPendingNoteDelete(item: Note, user: User) {
         deleteNoteFromList(item)
         setStateEvent(NoteListStateEvent.DeleteNoteEvent(item, user))
     }
@@ -251,6 +258,27 @@ constructor(
         if (list?.contains(note) == true) {
             val updatedList = ArrayList(list)
             updatedList.remove(note)
+            updated.notes = updatedList
+            setViewState(updated)
+        }
+    }
+
+    // Update "completed" field when user toggle checkmark
+    fun beginPendingNoteUpdate(note: Note) {
+        val noteCopy = note.copy(completed = !note.completed)
+        updateNoteInStateEvent(noteCopy)
+        setStateEvent(NoteListStateEvent.ToggleNoteEvent(noteCopy, getCurrentViewStateOrNew().user!!))
+    }
+
+    private fun updateNoteInStateEvent(note: Note) {
+        val updated = getCurrentViewStateOrNew()
+        val list = updated.notes
+        if (list?.contains(note) == true) {
+            val updatedList = ArrayList(list)
+            val index = updatedList.indexOf(note)
+            val noteCopy = note.copy(completed = !note.completed)
+            updatedList.removeAt(index)
+            updatedList.add(index, noteCopy)
             updated.notes = updatedList
             setViewState(updated)
         }

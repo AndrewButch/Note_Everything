@@ -8,13 +8,12 @@ import com.andrewbutch.noteeverything.business.data.util.safeNetworkCall
 import com.andrewbutch.noteeverything.business.domain.model.Note
 import com.andrewbutch.noteeverything.business.domain.model.User
 import com.andrewbutch.noteeverything.business.domain.state.*
-import com.andrewbutch.noteeverything.framework.ui.notedetail.state.NoteDetailViewState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class UpdateNote
+class UpdateNote<ViewState>
 @Inject
 constructor(
     private val noteCacheDataSource: NoteCacheDataSource,
@@ -25,7 +24,7 @@ constructor(
         note: Note,
         user: User,
         stateEvent: StateEvent
-    ): Flow<DataState<NoteDetailViewState>?> = flow {
+    ): Flow<DataState<ViewState>?> = flow {
         val cacheResult = safeCacheCall(Dispatchers.IO) {
             noteCacheDataSource.updateNote(
                 id = note.id,
@@ -36,11 +35,11 @@ constructor(
             )
         }
 
-        val cacheResponse = object : CacheResultHandler<NoteDetailViewState, Int>(
+        val cacheResponse = object : CacheResultHandler<ViewState, Int>(
             result = cacheResult,
             stateEvent = stateEvent
         ) {
-            override suspend fun handleSuccess(resultValue: Int): DataState<NoteDetailViewState>? {
+            override suspend fun handleSuccess(resultValue: Int): DataState<ViewState>? {
                 return if (resultValue > 0) {
                     DataState(
                         stateMessage = StateMessage(

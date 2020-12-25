@@ -6,6 +6,7 @@ import com.andrewbutch.noteeverything.business.interactors.common.DeleteNote
 import com.andrewbutch.noteeverything.business.interactors.notedetail.NoteDetailInteractors
 import com.andrewbutch.noteeverything.business.interactors.notedetail.UpdateNote
 import com.andrewbutch.noteeverything.di.main.FragmentScope
+import com.andrewbutch.noteeverything.framework.ui.notedetail.state.NoteDetailViewState
 import dagger.Module
 import dagger.Provides
 
@@ -19,7 +20,7 @@ object NoteDetailModule {
         noteNetworkDataSource: NoteNetworkDataSource,
     ): NoteDetailInteractors {
         return NoteDetailInteractors(
-            updateNote = UpdateNote(noteCacheDataSource, noteNetworkDataSource),
+            updateNote = UpdateNote<NoteDetailViewState>(noteCacheDataSource, noteNetworkDataSource),
             deleteNote = DeleteNote(noteCacheDataSource, noteNetworkDataSource)
         )
     }

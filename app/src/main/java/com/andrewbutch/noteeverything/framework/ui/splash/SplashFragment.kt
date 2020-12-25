@@ -1,6 +1,7 @@
 package com.andrewbutch.noteeverything.framework.ui.splash
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import com.andrewbutch.noteeverything.R
 import com.andrewbutch.noteeverything.framework.session.SessionManager
+import com.andrewbutch.noteeverything.framework.ui.notes.NotesFragment.Companion.SYNC
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.splash_fragment.*
 import javax.inject.Inject
@@ -25,11 +27,13 @@ class SplashFragment : DaggerFragment() {
     @Inject
     lateinit var sessionManager: SessionManager
 
+    @Inject
+    lateinit var preferences: SharedPreferences
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         viewModel =
             ViewModelProvider(viewModelStore, providerFactory).get(SplashViewModel::class.java)
-        viewModel.syncCacheWithNetwork(sessionManager.authUser.value!!)
     }
 
     override fun onCreateView(
@@ -41,14 +45,23 @@ class SplashFragment : DaggerFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        navToNotes()
 
-        startSyncAnimation()
+        // Get flag from SharedPreferences
+        val shouldSync = getSyncPreference()
 
-        viewModel.syncHasBeenExecuted().observe(viewLifecycleOwner) { syncCompleted ->
-            if (syncCompleted) {
-                navToNotes()
+        // If should not sync - navigate to NotesFragment
+        if (shouldSync) {
+            viewModel.syncCacheWithNetwork(sessionManager.authUser.value!!)
+
+            startSyncAnimation()
+
+            viewModel.syncHasBeenExecuted().observe(viewLifecycleOwner) { syncCompleted ->
+                if (syncCompleted) {
+                    navToNotes()
+                }
             }
+        } else {
+            navToNotes()
         }
     }
 
@@ -59,10 +72,11 @@ class SplashFragment : DaggerFragment() {
         syncImage.startAnimation(animation)
     }
 
-    private fun navToNotes() {
+    private fun navToNotes() =
         NavHostFragment
             .findNavController(this)
             .navigate(R.id.action_splashFragment_to_notesFragment)
-    }
 
+
+    private fun getSyncPreference(): Boolean = preferences.getBoolean(SYNC, true)
 }

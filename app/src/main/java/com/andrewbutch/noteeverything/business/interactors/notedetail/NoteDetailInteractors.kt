@@ -7,6 +7,6 @@ import javax.inject.Inject
 class NoteDetailInteractors
 @Inject
 constructor(
-    val updateNote: UpdateNote,
+    val updateNote: UpdateNote<NoteDetailViewState>,
     val deleteNote: DeleteNote<NoteDetailViewState>
 )
