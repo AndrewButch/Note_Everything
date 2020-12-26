@@ -4,12 +4,12 @@ import android.content.Context
 import android.util.Log
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
+import com.andrewbutch.noteeverything.business.domain.model.User
 import com.andrewbutch.noteeverything.di.TestAppComponent
 import com.andrewbutch.noteeverything.framework.datasource.data.NoteDataFactory
 import com.andrewbutch.noteeverything.framework.datasource.network.abstraction.NoteFirestoreService
 import com.andrewbutch.noteeverything.framework.datasource.network.implementation.NoteFirestoreServiceImpl
 import com.andrewbutch.noteeverything.framework.datasource.network.implementation.NoteFirestoreServiceImpl.Companion.NOTES_COLLECTION
-import com.andrewbutch.noteeverything.framework.datasource.network.implementation.NoteFirestoreServiceImpl.Companion.USER_ID
 import com.andrewbutch.noteeverything.framework.datasource.network.implementation.NoteListFirestoreServiceImpl.Companion.NOTE_LISTS_COLLECTION
 import com.andrewbutch.noteeverything.framework.datasource.network.mapper.NoteListNetworkMapper
 import com.andrewbutch.noteeverything.framework.datasource.network.mapper.NoteNetworkMapper
@@ -29,12 +29,17 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import javax.inject.Inject
 
+/**
+ * Use with local firestore emulator
+ * https://firebase.google.com/docs/emulator-suite/install_and_configure?hl=en
+ * Start emulator command: firebase emulators:start --only firestore
+ * */
+
 @ExperimentalCoroutinesApi
 @FlowPreview
 @RunWith(AndroidJUnit4ClassRunner::class)
 class NoteFirestoreServiceTest {
 
-    private val TEST_TAG = "!@#TEST"
 
     // system under test
     private val noteFirestoreService: NoteFirestoreService
@@ -73,12 +78,12 @@ class NoteFirestoreServiceTest {
         noteFirestoreService = NoteFirestoreServiceImpl(
             firestore, noteMapper
         )
-        clearNoteListEntities()
-        clearNoteEntities()
+        removeNoteListEntities()
+        removeNoteEntities()
     }
 
-
-    private fun clearNoteListEntities() = runBlocking {
+    // Remove notes
+    private fun removeNoteListEntities() = runBlocking {
         for (entity in testNoteListEntities) {
             firestore
                 .collection(NOTE_LISTS_COLLECTION)
@@ -91,7 +96,8 @@ class NoteFirestoreServiceTest {
         }
     }
 
-    private fun clearNoteEntities() = runBlocking {
+    // Remove note lists
+    private fun removeNoteEntities() = runBlocking {
         for (entity in testNoteEntities) {
             val notes = firestore
                 .collection(NOTES_COLLECTION)
@@ -113,6 +119,7 @@ class NoteFirestoreServiceTest {
             }
         }
     }
+
 
     private fun insertTestOwnerNoteListEntities() = runBlocking {
         for (entity in testNoteListEntities) {
@@ -165,8 +172,8 @@ class NoteFirestoreServiceTest {
 
     @After
     fun afterTest() {
-        clearNoteListEntities()
-        clearNoteEntities()
+        removeNoteListEntities()
+        removeNoteEntities()
     }
 
     /**
@@ -185,11 +192,11 @@ class NoteFirestoreServiceTest {
         )
 
         // insert note
-        noteFirestoreService.insertOrUpdateNote(newNote,)
+        noteFirestoreService.insertOrUpdateNote(newNote, user)
 
         printNotesByOwnerListId(newNote.listId)
         // confirm by search
-        val searchResult = noteFirestoreService.searchNote(newNote,)
+        val searchResult = noteFirestoreService.searchNote(newNote, user)
         assertTrue(newNote == searchResult)
     }
 
@@ -206,7 +213,7 @@ class NoteFirestoreServiceTest {
     fun updateNote_confirmBySearch() = runBlocking {
         // get random note from test data
         val randomNote = noteMapper.mapFromEntity(testNoteEntities.shuffled().first())
-        var searchResult = noteFirestoreService.searchNote(randomNote,)
+        var searchResult = noteFirestoreService.searchNote(randomNote, user)
 
         // assert note exists in network
         assertTrue(randomNote == searchResult)
@@ -217,10 +224,10 @@ class NoteFirestoreServiceTest {
         randomNote.color = "#AAA"
 
         // update network note
-        noteFirestoreService.insertOrUpdateNote(randomNote,)
+        noteFirestoreService.insertOrUpdateNote(randomNote, user)
 
         // get updated note from network
-        searchResult = noteFirestoreService.searchNote(randomNote,)
+        searchResult = noteFirestoreService.searchNote(randomNote, user)
 
         // confirm equals
         assertTrue(randomNote == searchResult)
@@ -238,16 +245,16 @@ class NoteFirestoreServiceTest {
     fun deleteNote_confirmResultEmpty() = runBlocking {
         // get random note from test data
         val randomNote = noteMapper.mapFromEntity(testNoteEntities.shuffled().first())
-        var searchResult = noteFirestoreService.searchNote(randomNote,)
+        var searchResult = noteFirestoreService.searchNote(randomNote, user)
 
         // assert note exists in network
         assertTrue(randomNote == searchResult)
 
         // delete from network
-        noteFirestoreService.deleteNote(randomNote,)
+        noteFirestoreService.deleteNote(randomNote, user)
 
         // get deleted note from network
-        searchResult = noteFirestoreService.searchNote(randomNote,)
+        searchResult = noteFirestoreService.searchNote(randomNote, user)
 
         // confirm result null
         assertNull(searchResult)
@@ -267,14 +274,14 @@ class NoteFirestoreServiceTest {
         val randomNoteListId = testNoteListEntities.shuffled().first().id
 
         // confirm note list collection non empty
-        var networkResult = noteFirestoreService.getNotesByOwnerListId(randomNoteListId,)
+        var networkResult = noteFirestoreService.getNotesByOwnerListId(randomNoteListId, user)
         assertTrue("Collection is non empty", networkResult.isNotEmpty())
 
         // delete all notes with owner id
-        noteFirestoreService.deleteNotesByOwnerListId(randomNoteListId,)
+        noteFirestoreService.deleteNotesByOwnerListId(randomNoteListId, user)
 
         // search notes with list id
-        networkResult = noteFirestoreService.getNotesByOwnerListId(randomNoteListId,)
+        networkResult = noteFirestoreService.getNotesByOwnerListId(randomNoteListId, user)
 
         // confirm network result is empty
         assertTrue("Result empty?", networkResult.isEmpty())
@@ -293,7 +300,7 @@ class NoteFirestoreServiceTest {
         val randomNote = noteMapper.mapFromEntity(testNoteEntities.shuffled().first())
 
         // search
-        val searchResult = noteFirestoreService.searchNote(randomNote,)
+        val searchResult = noteFirestoreService.searchNote(randomNote, user)
 
         // confirm equals
         assertTrue(randomNote == searchResult)
@@ -315,7 +322,7 @@ class NoteFirestoreServiceTest {
         // get actual result
         val actualResult = noteMapper.mapFromEntityList(getNotesByListId(randomNoteListId))
         // get network result
-        val networkResult = noteFirestoreService.getNotesByOwnerListId(randomNoteListId,)
+        val networkResult = noteFirestoreService.getNotesByOwnerListId(randomNoteListId, user)
 
         // confirm result non empty
         assertTrue("Result empty?", networkResult.isNotEmpty())
@@ -337,4 +344,11 @@ class NoteFirestoreServiceTest {
     }
 
 
+    companion object {
+        private val TEST_TAG = "!@#TEST"
+
+        // User ID for firestore path
+        private val USER_ID = "12345"
+        private val user = User(id = USER_ID, displayName = null, email = null)
+    }
 }

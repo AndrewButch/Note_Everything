@@ -3,6 +3,7 @@ package com.andrewbutch.noteeverything.framework.datasource.network
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
+import com.andrewbutch.noteeverything.business.domain.model.User
 import com.andrewbutch.noteeverything.di.TestAppComponent
 import com.andrewbutch.noteeverything.framework.datasource.data.NoteDataFactory
 import com.andrewbutch.noteeverything.framework.datasource.network.abstraction.NoteListFirestoreService
@@ -61,7 +62,7 @@ class NoteListFirestoreServiceTest {
         for (entity in testEntities) {
             firestore
                 .collection(NoteListFirestoreServiceImpl.NOTE_LISTS_COLLECTION)
-                .document(NoteListFirestoreServiceImpl.USER_ID)
+                .document(USER_ID)
                 .collection(NoteListFirestoreServiceImpl.NOTE_LISTS_COLLECTION)
                 .document(entity.id)
                 .set(entity)
@@ -74,7 +75,7 @@ class NoteListFirestoreServiceTest {
         val allNoteLists: List<NoteListNetworkEntity> =
             firestore
                 .collection(NoteListFirestoreServiceImpl.NOTE_LISTS_COLLECTION)
-                .document(NoteListFirestoreServiceImpl.USER_ID)
+                .document(USER_ID)
                 .collection(NoteListFirestoreServiceImpl.NOTE_LISTS_COLLECTION)
                 .get()
                 .await()
@@ -82,7 +83,7 @@ class NoteListFirestoreServiceTest {
         for (noteList in allNoteLists) {
             firestore
                 .collection(NoteListFirestoreServiceImpl.NOTE_LISTS_COLLECTION)
-                .document(NoteListFirestoreServiceImpl.USER_ID)
+                .document(USER_ID)
                 .collection(NoteListFirestoreServiceImpl.NOTE_LISTS_COLLECTION)
                 .document(noteList.id)
                 .delete()
@@ -113,10 +114,10 @@ class NoteListFirestoreServiceTest {
         val noteList = dataFactory.createSingleNoteList(title = "new list")
 
         // insert note list
-        noteListFirestoreService.insertOrUpdateNoteList(noteList,)
+        noteListFirestoreService.insertOrUpdateNoteList(noteList, user)
 
         // confirm by search
-        val searchResult = noteListFirestoreService.searchNoteList(noteList,)
+        val searchResult = noteListFirestoreService.searchNoteList(noteList, user)
         assertEquals(noteList, searchResult)
     }
 
@@ -142,10 +143,10 @@ class NoteListFirestoreServiceTest {
         )
 
         // update network
-        noteListFirestoreService.insertOrUpdateNoteList(updatedNoteList,)
+        noteListFirestoreService.insertOrUpdateNoteList(updatedNoteList, user)
 
         // get updated note list
-        val updatedNoteResult = noteListFirestoreService.searchNoteList(randomNoteList,)
+        val updatedNoteResult = noteListFirestoreService.searchNoteList(randomNoteList, user)
 
         // confirm updating
         assertEquals(updatedNoteList, updatedNoteResult)
@@ -164,10 +165,10 @@ class NoteListFirestoreServiceTest {
         val randomNoteList = mapper.mapFromEntity(testEntities.shuffled().first())
 
         // delete note list
-        noteListFirestoreService.deleteNoteList(randomNoteList.id,)
+        noteListFirestoreService.deleteNoteList(randomNoteList.id, user)
 
         // get deleted note
-        val deletedNoteResult = noteListFirestoreService.searchNoteList(randomNoteList,)
+        val deletedNoteResult = noteListFirestoreService.searchNoteList(randomNoteList, user)
 
         // confirm result is null
         assertNull(deletedNoteResult)
@@ -187,16 +188,16 @@ class NoteListFirestoreServiceTest {
         val newNoteList = dataFactory.createSingleNoteList(title = "Delete note")
 
         // get all note lists and save size
-        val prevSize = noteListFirestoreService.getAllNoteLists().size
+        val prevSize = noteListFirestoreService.getAllNoteLists(user).size
 
         // try to delete not existing note list
-        noteListFirestoreService.deleteNoteList(newNoteList.id,)
+        noteListFirestoreService.deleteNoteList(newNoteList.id, user)
 
         // check size note change
-        assertEquals(prevSize, noteListFirestoreService.getAllNoteLists().size)
+        assertEquals(prevSize, noteListFirestoreService.getAllNoteLists(user).size)
 
         // check note list not exists
-        assertNull(noteListFirestoreService.searchNoteList(newNoteList,))
+        assertNull(noteListFirestoreService.searchNoteList(newNoteList, user))
     }
 
 
@@ -212,18 +213,18 @@ class NoteListFirestoreServiceTest {
         // confirm note list collection not empty
         assertTrue(
             "Confirm initial collection not empty",
-            noteListFirestoreService.getAllNoteLists().isNotEmpty()
+            noteListFirestoreService.getAllNoteLists(user).isNotEmpty()
         )
 
         // delete all note
-        noteListFirestoreService.deleteAllNotesLists()
+        noteListFirestoreService.deleteAllNotesLists(user)
 
         val randomNoteList = mapper.mapFromEntity(testEntities.shuffled().first())
-        val networkResult = noteListFirestoreService.searchNoteList(randomNoteList,)
+        val networkResult = noteListFirestoreService.searchNoteList(randomNoteList, user)
         assertNull("Confirm random note list is null", networkResult)
 
         // confirm collection is empty
-        assertTrue("Confirm empty", noteListFirestoreService.getAllNoteLists().isEmpty())
+        assertTrue("Confirm empty", noteListFirestoreService.getAllNoteLists(user).isEmpty())
 
     }
 
@@ -237,10 +238,10 @@ class NoteListFirestoreServiceTest {
     @Test
     fun searchExistingNoteList_confirmEquals() = runBlocking {
         // get all note lists and pick up random note list
-        val randomNoteList = noteListFirestoreService.getAllNoteLists().shuffled().first()
+        val randomNoteList = noteListFirestoreService.getAllNoteLists(user).shuffled().first()
 
         // search single note list
-        val searchResult = noteListFirestoreService.searchNoteList(randomNoteList,)
+        val searchResult = noteListFirestoreService.searchNoteList(randomNoteList, user)
 
         // confirm equals
         assertEquals(randomNoteList, searchResult)
@@ -260,7 +261,7 @@ class NoteListFirestoreServiceTest {
         val newNoteList = dataFactory.createSingleNoteList(title = "Not exists")
 
         // search new list
-        val searchResult = noteListFirestoreService.searchNoteList(newNoteList,)
+        val searchResult = noteListFirestoreService.searchNoteList(newNoteList, user)
 
         // confirm search result null
         assertNull(searchResult)
@@ -273,7 +274,13 @@ class NoteListFirestoreServiceTest {
      */
     @Test
     fun getAllNoteLists_confirmSize() = runBlocking {
-        val noteLists = noteListFirestoreService.getAllNoteLists()
+        val noteLists = noteListFirestoreService.getAllNoteLists(user)
         assertEquals(testEntities.size, noteLists.size)
+    }
+    
+    companion object {
+        // User ID for firestore path
+        private val USER_ID = "12345"
+        private val user = User(id = USER_ID, displayName = null, email = null)
     }
 }
