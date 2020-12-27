@@ -13,6 +13,8 @@ import com.andrewbutch.noteeverything.business.domain.state.DataState
 import com.andrewbutch.noteeverything.business.domain.state.MessageType
 import com.andrewbutch.noteeverything.business.domain.state.StateMessage
 import com.andrewbutch.noteeverything.business.domain.state.UIComponentType
+import com.andrewbutch.noteeverything.framework.datasource.cache.database.NOTE_FILTER_DATE_CREATED
+import com.andrewbutch.noteeverything.framework.datasource.cache.database.NOTE_ORDER_DESC
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber
@@ -42,7 +44,7 @@ constructor(
 
     private suspend fun getCachedNotes(noteList: NoteList): List<Note> {
         val cacheResult = safeCacheCall(Dispatchers.IO) {
-            noteCacheDataSource.getNotesByOwnerListId(noteList.id)
+            noteCacheDataSource.getNotesByOwnerListId(noteList.id, NOTE_FILTER_DATE_CREATED + NOTE_ORDER_DESC)
         }
 
         val response = object : CacheResultHandler<List<Note>, List<Note>>(

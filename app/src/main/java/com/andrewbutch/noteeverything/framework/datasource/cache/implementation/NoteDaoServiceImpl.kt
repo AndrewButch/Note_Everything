@@ -4,7 +4,11 @@ import com.andrewbutch.noteeverything.business.domain.model.Note
 import com.andrewbutch.noteeverything.business.domain.util.DateUtil
 import com.andrewbutch.noteeverything.framework.datasource.cache.abstraction.NoteDaoService
 import com.andrewbutch.noteeverything.framework.datasource.cache.database.NoteDao
+import com.andrewbutch.noteeverything.framework.datasource.cache.database.ORDER_BY_ASC_DATE_UPDATED
+import com.andrewbutch.noteeverything.framework.datasource.cache.database.ORDER_BY_ASC_TITLE
+import com.andrewbutch.noteeverything.framework.datasource.cache.database.ORDER_BY_DESC_TITLE
 import com.andrewbutch.noteeverything.framework.datasource.cache.mapper.NoteCacheMapper
+import com.andrewbutch.noteeverything.framework.datasource.cache.model.NoteCacheEntity
 
 class NoteDaoServiceImpl
 constructor(
@@ -43,8 +47,11 @@ constructor(
         }
     }
 
-    override suspend fun getNotesByOwnerListId(ownerListId: String): List<Note> {
-        return mapper.mapFromEntityList(noteDao.getNotesByOwnerListId(ownerListId))
+    override suspend fun getNotesByOwnerListId(
+        ownerListId: String,
+        filterAndOrder: String
+    ): List<Note> {
+        return mapper.mapFromEntityList(getNotesByFilterAndOrder(ownerListId, filterAndOrder))
     }
 
     override suspend fun searchNoteById(id: String): Note? {
@@ -52,4 +59,29 @@ constructor(
             mapper.mapFromEntity(it)
         }
     }
+
+    private suspend fun getNotesByFilterAndOrder(
+        ownerListId: String,
+        filterAndOrder: String
+    ): List<NoteCacheEntity> {
+        when {
+            filterAndOrder.contains(ORDER_BY_ASC_DATE_UPDATED) -> {
+                return noteDao.searchNotesOrderByDateASC(ownerId = ownerListId)
+            }
+
+            filterAndOrder.contains(ORDER_BY_DESC_TITLE) -> {
+                return noteDao.searchNotesOrderByTitleDESC(ownerId = ownerListId)
+            }
+
+            filterAndOrder.contains(ORDER_BY_ASC_TITLE) -> {
+                return noteDao.searchNotesOrderByTitleASC(ownerId = ownerListId)
+            }
+            else ->
+                // Default
+                // ORDER_BY_DESC_DATE_UPDATED
+                return noteDao.searchNotesOrderByDateDESC(ownerId = ownerListId)
+        }
+    }
+
+
 }

@@ -118,7 +118,7 @@ sealed class NoteListStateEvent : StateEvent {
 
     class GetNotesByNoteListEvent(
         val noteList: NoteList,
-        val user: User
+        val user: User,
     ) : NoteListStateEvent() {
         override fun errorInfo(): String {
             return "Error getting notes by owner list"

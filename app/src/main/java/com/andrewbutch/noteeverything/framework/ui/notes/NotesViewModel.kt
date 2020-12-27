@@ -6,6 +6,8 @@ import com.andrewbutch.noteeverything.business.domain.model.User
 import com.andrewbutch.noteeverything.business.domain.state.*
 import com.andrewbutch.noteeverything.business.interactors.notelist.NotesInteractors
 import com.andrewbutch.noteeverything.framework.datasource.NoteDataFactory
+import com.andrewbutch.noteeverything.framework.datasource.cache.database.NOTE_FILTER_DATE_CREATED
+import com.andrewbutch.noteeverything.framework.datasource.cache.database.NOTE_ORDER_DESC
 import com.andrewbutch.noteeverything.framework.ui.BaseViewModel
 import com.andrewbutch.noteeverything.framework.ui.notes.state.NoteListStateEvent
 import com.andrewbutch.noteeverything.framework.ui.notes.state.NoteListViewState
@@ -78,7 +80,8 @@ constructor(
             is NoteListStateEvent.GetNotesByNoteListEvent -> {
                 notesInteractors.getNotesByNoteList.getNotesByNoteList(
                     stateEvent = stateEvent,
-                    ownerListId = stateEvent.noteList.id
+                    ownerListId = stateEvent.noteList.id,
+                    filterAndOrder = getOrder() + getFilter()
                 )
             }
             is NoteListStateEvent.SelectNoteListEvent -> {
@@ -282,6 +285,14 @@ constructor(
             updated.notes = updatedList
             setViewState(updated)
         }
+    }
+
+    fun getFilter(): String {
+        return NOTE_FILTER_DATE_CREATED
+    }
+
+    fun getOrder(): String {
+        return NOTE_ORDER_DESC
     }
 
 

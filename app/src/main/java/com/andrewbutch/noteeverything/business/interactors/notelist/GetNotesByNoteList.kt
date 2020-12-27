@@ -17,10 +17,11 @@ constructor(
 ) {
     fun getNotesByNoteList(
         stateEvent: StateEvent,
-        ownerListId: String
+        ownerListId: String,
+        filterAndOrder: String
     ): Flow<DataState<NoteListViewState>?> = flow {
         val cacheResult = safeCacheCall(Dispatchers.IO) {
-            noteCacheDataSource.getNotesByOwnerListId(ownerListId)
+            noteCacheDataSource.getNotesByOwnerListId(ownerListId, filterAndOrder)
         }
 
         val cacheResponse = object : CacheResultHandler<NoteListViewState, List<Note>>(
