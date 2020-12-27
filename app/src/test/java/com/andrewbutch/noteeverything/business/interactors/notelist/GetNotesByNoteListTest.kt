@@ -8,6 +8,7 @@ import com.andrewbutch.noteeverything.business.domain.state.DataState
 import com.andrewbutch.noteeverything.business.interactors.notelist.GetNotesByNoteList.Companion.GET_NOTES_EMPTY
 import com.andrewbutch.noteeverything.business.interactors.notelist.GetNotesByNoteList.Companion.GET_NOTES_SUCCESS
 import com.andrewbutch.noteeverything.di.DependencyContainer
+import com.andrewbutch.noteeverything.framework.datasource.cache.database.ORDER_BY_DESC_DATE_UPDATED
 import com.andrewbutch.noteeverything.framework.ui.notes.state.NoteListStateEvent.GetNotesByNoteListEvent
 import com.andrewbutch.noteeverything.framework.ui.notes.state.NoteListViewState
 import kotlinx.coroutines.flow.FlowCollector
@@ -43,7 +44,7 @@ class GetNotesByNoteListTest {
 
     private val actualListId = "cfc3414d-5778-4abc-8a2d-d38dbc2c18ae"
     private val user = User("jLfWxedaCBdpxvcdfVpdzQIfzDw2", "", "")
-
+    private val filterAndOrder = ORDER_BY_DESC_DATE_UPDATED
 
     init {
         dependencyContainer.build()
@@ -61,7 +62,8 @@ class GetNotesByNoteListTest {
                 noteListFactory.createNoteList(id = actualListId, title = ""),
                 user = user
             ),
-            actualListId
+            ownerListId = actualListId,
+            filterAndOrder = filterAndOrder
         )
             .collect {
                 object : FlowCollector<DataState<NoteListViewState>?> {
@@ -96,7 +98,8 @@ class GetNotesByNoteListTest {
                 noteListFactory.createNoteList(id = "not exists", title = ""),
                 user = user
             ),
-            "not exists"
+            ownerListId = "not exists",
+            filterAndOrder = filterAndOrder
         )
             .collect {
                 object : FlowCollector<DataState<NoteListViewState>?> {

@@ -10,6 +10,7 @@ import com.andrewbutch.noteeverything.business.domain.state.DataState
 import com.andrewbutch.noteeverything.business.interactors.notedetail.UpdateNote.Companion.UPDATE_NOTE_FAILURE
 import com.andrewbutch.noteeverything.business.interactors.notedetail.UpdateNote.Companion.UPDATE_NOTE_SUCCESS
 import com.andrewbutch.noteeverything.di.DependencyContainer
+import com.andrewbutch.noteeverything.framework.datasource.cache.database.ORDER_BY_DESC_DATE_UPDATED
 import com.andrewbutch.noteeverything.framework.ui.notedetail.state.NoteDetailStateEvent
 import com.andrewbutch.noteeverything.framework.ui.notedetail.state.NoteDetailViewState
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -46,7 +47,7 @@ import org.junit.Test
 class UpdateNoteTest {
 
     // test object
-    private val updateNote: UpdateNote
+    private val updateNote: UpdateNote<NoteDetailViewState>
 
     // Dependency
     private val dependencyContainer = DependencyContainer()
@@ -56,6 +57,7 @@ class UpdateNoteTest {
 
     private val ownerListId = "cfc3414d-5778-4abc-8a2d-d38dbc2c18ae"
     private val user = User("jLfWxedaCBdpxvcdfVpdzQIfzDw2", "", "")
+    private val filterAndOrder = ORDER_BY_DESC_DATE_UPDATED
 
 
     init {
@@ -71,7 +73,10 @@ class UpdateNoteTest {
     fun `Update success, confirm cache and network update`() = runBlocking {
         val newTitle = "updated title"
         // get random note list
-        val randomNote = noteCacheDataSource.getNotesByOwnerListId(ownerListId).shuffled().first()
+        val randomNote = noteCacheDataSource
+            .getNotesByOwnerListId(ownerListId, filterAndOrder)
+            .shuffled()
+            .first()
         // change title
         randomNote.title = newTitle
         randomNote.completed = !randomNote.completed

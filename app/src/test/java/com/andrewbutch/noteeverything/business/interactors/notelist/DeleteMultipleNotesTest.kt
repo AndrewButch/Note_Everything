@@ -10,6 +10,7 @@ import com.andrewbutch.noteeverything.business.domain.state.DataState
 import com.andrewbutch.noteeverything.business.interactors.notelist.DeleteMultipleNotes.Companion.DELETE_MULTIPLE_NOTES_FAILURE
 import com.andrewbutch.noteeverything.business.interactors.notelist.DeleteMultipleNotes.Companion.DELETE_MULTIPLE_NOTES_SUCCESS
 import com.andrewbutch.noteeverything.di.DependencyContainer
+import com.andrewbutch.noteeverything.framework.datasource.cache.database.ORDER_BY_DESC_DATE_UPDATED
 import com.andrewbutch.noteeverything.framework.ui.notes.state.NoteListStateEvent
 import com.andrewbutch.noteeverything.framework.ui.notes.state.NoteListViewState
 import kotlinx.coroutines.flow.FlowCollector
@@ -61,6 +62,8 @@ class DeleteMultipleNotesTest {
 
     private val ownerListId = "cfc3414d-5778-4abc-8a2d-d38dbc2c18ae"
     private val user = User("jLfWxedaCBdpxvcdfVpdzQIfzDw2", "", "")
+    private val filterAndOrder = ORDER_BY_DESC_DATE_UPDATED
+
 
     @Before
     fun before() {
@@ -76,7 +79,7 @@ class DeleteMultipleNotesTest {
     fun `Delete notes success, confirm deletion from cache and network`() = runBlocking {
         // get 3 random notes for deleting
         val allNotesByOwnerIdShuffled =
-            noteCacheDataSource.getNotesByOwnerListId(ownerListId).shuffled()
+            noteCacheDataSource.getNotesByOwnerListId(ownerListId, filterAndOrder).shuffled()
         val notesToDelete = listOf<Note>(
             allNotesByOwnerIdShuffled[0],
             allNotesByOwnerIdShuffled[1],
@@ -111,12 +114,18 @@ class DeleteMultipleNotesTest {
 
     @Test
     fun `Delete notes errors, confirm correct deleting`() = runBlocking {
-        val cacheSizeBefore = noteCacheDataSource.getNotesByOwnerListId(ownerListId).size
-        val networkSizeBefore = noteNetworkDataSource.getNotesByOwnerListId(ownerListId, user).size
+        val cacheSizeBefore =
+            noteCacheDataSource
+                .getNotesByOwnerListId(ownerListId, filterAndOrder)
+                .size
+        val networkSizeBefore =
+            noteNetworkDataSource
+                .getNotesByOwnerListId(ownerListId, user)
+                .size
 
         // get 2 random notes for deleting
         val allNotesByOwnerIdShuffled =
-            noteCacheDataSource.getNotesByOwnerListId(ownerListId).shuffled()
+            noteCacheDataSource.getNotesByOwnerListId(ownerListId, filterAndOrder).shuffled()
         val validNotesToDelete = ArrayList<Note>()
         validNotesToDelete.add(allNotesByOwnerIdShuffled[0])
         validNotesToDelete.add(allNotesByOwnerIdShuffled[1])
@@ -144,7 +153,7 @@ class DeleteMultipleNotesTest {
             }
         }
         // confirm only the valid notes are deleted from cache
-        val cacheNotes = noteCacheDataSource.getNotesByOwnerListId(ownerListId)
+        val cacheNotes = noteCacheDataSource.getNotesByOwnerListId(ownerListId, filterAndOrder)
         assertFalse(
             "Assert valid notes deleted from cache",
             cacheNotes.containsAll(validNotesToDelete)
@@ -172,12 +181,12 @@ class DeleteMultipleNotesTest {
 
     @Test
     fun `Delete exception, confirm cache and network unchanged`() = runBlocking {
-        val cacheSizeBefore = noteCacheDataSource.getNotesByOwnerListId(ownerListId).size
+        val cacheSizeBefore = noteCacheDataSource.getNotesByOwnerListId(ownerListId, filterAndOrder).size
         val networkSizeBefore = noteNetworkDataSource.getNotesByOwnerListId(ownerListId, user).size
 
         // get 2 random notes for deleting
         val allNotesByOwnerIdShuffled =
-            noteCacheDataSource.getNotesByOwnerListId(ownerListId).shuffled()
+            noteCacheDataSource.getNotesByOwnerListId(ownerListId, filterAndOrder).shuffled()
         val validNotesToDelete = ArrayList<Note>()
         validNotesToDelete.add(allNotesByOwnerIdShuffled[0])
         validNotesToDelete.add(allNotesByOwnerIdShuffled[1])
@@ -217,7 +226,7 @@ class DeleteMultipleNotesTest {
             }
         }
         // confirm only the valid notes are deleted from cache
-        val cacheNotes = noteCacheDataSource.getNotesByOwnerListId(ownerListId)
+        val cacheNotes = noteCacheDataSource.getNotesByOwnerListId(ownerListId, filterAndOrder)
         assertFalse(
             "Assert valid notes deleted from cache",
             cacheNotes.containsAll(validNotesToDelete)

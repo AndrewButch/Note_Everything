@@ -64,7 +64,8 @@ class FakeNoteCacheDataSourceImpl(
         }
     }
 
-    override suspend fun getNotesByOwnerListId(ownerListId: String): List<Note> {
+    // Don`t use filter and order, b/c this is testing in androidTest for Room
+    override suspend fun getNotesByOwnerListId(ownerListId: String, filterAndOrder: String): List<Note> {
         val notes = ArrayList<Note>()
         for (note in data.values) {
             if (note.listId == ownerListId) {

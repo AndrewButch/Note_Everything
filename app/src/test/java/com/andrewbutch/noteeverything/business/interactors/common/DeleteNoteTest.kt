@@ -8,6 +8,7 @@ import com.andrewbutch.noteeverything.business.domain.model.NoteFactory
 import com.andrewbutch.noteeverything.business.domain.model.User
 import com.andrewbutch.noteeverything.business.domain.state.DataState
 import com.andrewbutch.noteeverything.di.DependencyContainer
+import com.andrewbutch.noteeverything.framework.datasource.cache.database.ORDER_BY_DESC_DATE_UPDATED
 import com.andrewbutch.noteeverything.framework.ui.notes.state.NoteListStateEvent
 import com.andrewbutch.noteeverything.framework.ui.notes.state.NoteListViewState
 import kotlinx.coroutines.flow.FlowCollector
@@ -30,6 +31,7 @@ class DeleteNoteTest {
 
     private val ownerListId = "cfc3414d-5778-4abc-8a2d-d38dbc2c18ae"
     private val user = User("jLfWxedaCBdpxvcdfVpdzQIfzDw2", "", "")
+    private val filterAndOrder = ORDER_BY_DESC_DATE_UPDATED
 
     init {
         dependencyContainer.build()
@@ -47,7 +49,11 @@ class DeleteNoteTest {
      */
     @Test
     fun `Delete success (return 1), confirm delete from cache and network`() = runBlocking {
-        val randomNote = noteCacheDataSource.getNotesByOwnerListId(ownerListId).shuffled().first()
+        val randomNote =
+            noteCacheDataSource
+                .getNotesByOwnerListId(ownerListId, filterAndOrder)
+                .shuffled()
+                .first()
 
         deleteNote.deleteNote(
             note = randomNote,
@@ -76,7 +82,10 @@ class DeleteNoteTest {
     @Test
     fun `Delete failure (return -1), confirm NOT delete from cache and network`() = runBlocking {
         val noteToDelete = noteFactory.createNote(title = "", listId = "")
-        val cacheSizeBefore = noteCacheDataSource.getNotesByOwnerListId(ownerListId).size
+        val cacheSizeBefore =
+            noteCacheDataSource
+                .getNotesByOwnerListId(ownerListId, filterAndOrder)
+                .size
         val networkSizeBefore = noteNetworkDataSource.getNotesByOwnerListId(ownerListId, user).size
 
 
@@ -96,7 +105,9 @@ class DeleteNoteTest {
         }
 
         // confirm cache unchanged
-        val cacheSizeAfter = noteCacheDataSource.getNotesByOwnerListId(ownerListId).size
+        val cacheSizeAfter = noteCacheDataSource
+            .getNotesByOwnerListId(ownerListId, filterAndOrder)
+            .size
         assertTrue("Assert not delete from cache", cacheSizeBefore == cacheSizeAfter)
 
         // confirm network unchanged
@@ -111,7 +122,9 @@ class DeleteNoteTest {
             title = "",
             listId = ""
         )
-        val cacheSizeBefore = noteCacheDataSource.getNotesByOwnerListId(ownerListId).size
+        val cacheSizeBefore = noteCacheDataSource
+            .getNotesByOwnerListId(ownerListId, filterAndOrder)
+            .size
         val networkSizeBefore = noteNetworkDataSource.getNotesByOwnerListId("", user).size
 
 
@@ -132,7 +145,9 @@ class DeleteNoteTest {
         }
 
         // confirm cache unchanged
-        val cacheSizeAfter = noteCacheDataSource.getNotesByOwnerListId(ownerListId).size
+        val cacheSizeAfter = noteCacheDataSource
+            .getNotesByOwnerListId(ownerListId, filterAndOrder)
+            .size
         assertTrue("Assert not delete from cache", cacheSizeBefore == cacheSizeAfter)
 
         // confirm network unchanged
