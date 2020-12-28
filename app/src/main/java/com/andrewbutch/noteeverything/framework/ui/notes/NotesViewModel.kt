@@ -268,12 +268,13 @@ constructor(
 
     // Update "completed" field when user toggle checkmark
     fun beginPendingNoteUpdate(note: Note) {
-        val noteCopy = note.copy(completed = !note.completed)
-        updateNoteInStateEvent(noteCopy)
-        setStateEvent(NoteListStateEvent.ToggleNoteEvent(noteCopy, getCurrentViewStateOrNew().user!!))
+        val updatedNote = updateNoteInStateEvent(note)
+        updatedNote?.let {
+            setStateEvent(NoteListStateEvent.ToggleNoteEvent(updatedNote, getCurrentViewStateOrNew().user!!))
+        }
     }
 
-    private fun updateNoteInStateEvent(note: Note) {
+    private fun updateNoteInStateEvent(note: Note): Note? {
         val updated = getCurrentViewStateOrNew()
         val list = updated.notes
         if (list?.contains(note) == true) {
@@ -284,15 +285,29 @@ constructor(
             updatedList.add(index, noteCopy)
             updated.notes = updatedList
             setViewState(updated)
+            return noteCopy
         }
+        return null
     }
 
     fun getFilter(): String {
-        return NOTE_FILTER_DATE_CREATED
+        return getCurrentViewStateOrNew().filter ?: NOTE_FILTER_DATE_CREATED
     }
 
     fun getOrder(): String {
-        return NOTE_ORDER_DESC
+        return getCurrentViewStateOrNew().order ?: NOTE_ORDER_DESC
+    }
+
+    fun setNoteFilter(filter: String?) {
+        val updated = getCurrentViewStateOrNew()
+        updated.filter = filter
+        setViewState(updated)
+    }
+
+    fun setNoteOrder(order: String?) {
+        val updated = getCurrentViewStateOrNew()
+        updated.order = order
+        setViewState(updated)
     }
 
 

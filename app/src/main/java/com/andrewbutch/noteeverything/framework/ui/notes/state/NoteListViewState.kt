@@ -15,9 +15,8 @@ data class NoteListViewState(
     var page: Int? = null,
     var newNoteList: NoteList? = null,
     var selectedNoteList: NoteList? = null,
-    var user: User? = null
-    // filter,
-    // order,
-    // search,
+    var user: User? = null,
+    var filter: String? = null,
+    var order: String? = null,
 ) : Parcelable, ViewState {
 }

@@ -141,13 +141,6 @@ class NotesFragment :
 
                 viewState.selectedNoteList?.let { noteList ->
                     showNotesContainer()
-
-//                    viewModel.setStateEvent(
-//                        NoteListStateEvent.GetNotesByNoteListEvent(
-//                            noteList = noteList,
-//                            user = sessionManager.authUser.value!!
-//                        )
-//                    )
                     setTitle(noteList.title)
                 }
                 Timber.i("Selected list: ${viewState.selectedNoteList}")
@@ -255,7 +248,6 @@ class NotesFragment :
     override fun onItemCheck(item: Note) {
         uiController.showToast("Toggle item ${item.title}")
         viewModel.beginPendingNoteUpdate(item)
-
     }
 
     override fun onItemDismiss(item: Note) {
