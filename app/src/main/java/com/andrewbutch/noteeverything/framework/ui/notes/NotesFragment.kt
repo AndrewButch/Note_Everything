@@ -7,6 +7,8 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import android.widget.RadioGroup
+import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
@@ -16,10 +18,17 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.customview.customView
+import com.afollestad.materialdialogs.customview.getCustomView
 import com.andrewbutch.noteeverything.R
 import com.andrewbutch.noteeverything.business.domain.model.Note
 import com.andrewbutch.noteeverything.business.domain.model.NoteList
 import com.andrewbutch.noteeverything.business.interactors.common.DeleteNoteList
+import com.andrewbutch.noteeverything.framework.datasource.cache.database.NOTE_FILTER_DATE_CREATED
+import com.andrewbutch.noteeverything.framework.datasource.cache.database.NOTE_FILTER_TITLE
+import com.andrewbutch.noteeverything.framework.datasource.cache.database.NOTE_ORDER_ASC
+import com.andrewbutch.noteeverything.framework.datasource.cache.database.NOTE_ORDER_DESC
 import com.andrewbutch.noteeverything.framework.session.SessionManager
 import com.andrewbutch.noteeverything.framework.ui.BaseFragment
 import com.andrewbutch.noteeverything.framework.ui.main.UIController.Companion.InputDialogCallback
@@ -29,6 +38,7 @@ import com.andrewbutch.noteeverything.framework.ui.notes.drawer.NavMenuAdapter
 import com.andrewbutch.noteeverything.framework.ui.notes.state.NoteListStateEvent
 import com.andrewbutch.noteeverything.framework.ui.utils.ItemTouchHelperCallback
 import com.andrewbutch.noteeverything.framework.ui.utils.VerticalItemDecoration
+import com.google.android.material.button.MaterialButton
 import kotlinx.android.synthetic.main.fragment_notes.*
 import kotlinx.android.synthetic.main.fragment_notes_content.*
 import kotlinx.android.synthetic.main.nav_header.*
@@ -177,7 +187,11 @@ class NotesFragment :
         hideNotesContainer()
 
         // Recycler
-        notesAdapter = NotesRecyclerAdapter(interaction = this, imgChecked = imgComplete, imgUnchecked = imgUncomplete)
+        notesAdapter = NotesRecyclerAdapter(
+            interaction = this,
+            imgChecked = imgComplete,
+            imgUnchecked = imgUncomplete
+        )
         recycler.apply {
             adapter = notesAdapter
             layoutManager = LinearLayoutManager(requireContext())
@@ -305,7 +319,7 @@ class NotesFragment :
     override fun onResume() {
         super.onResume()
         viewModel.reloadNoteLists(sessionManager.authUser.value!!)
-        viewModel.reloadListItems(sessionManager.authUser.value!!)
+        viewModel.reloadNotes(sessionManager.authUser.value!!)
     }
 
     override fun onPause() {
@@ -345,9 +359,70 @@ class NotesFragment :
                 setSyncPreferences(enableSync)
                 true
             }
+            R.id.filter -> {
+                showFilterDialog()
+                true
+            }
             else -> {
                 super.onOptionsItemSelected(item)
             }
+        }
+    }
+
+    private fun showFilterDialog() {
+        requireActivity().also {
+            val dialog = MaterialDialog(it)
+                .noAutoDismiss()
+                .customView(R.layout.layout_filter_options, noVerticalPadding = true)
+
+            val view = dialog.getCustomView()
+            view.setPadding(0, 0,0,0,)
+
+            val filterOption = viewModel.getFilter()
+            val orderOption = viewModel.getOrder()
+
+            view.findViewById<RadioGroup>(R.id.filterTypeGroup).apply {
+                when (filterOption) {
+                    NOTE_FILTER_DATE_CREATED -> check(R.id.filter_by_created_date)
+                    NOTE_FILTER_TITLE -> check(R.id.filter_by_title)
+                }
+            }
+
+            view.findViewById<RadioGroup>(R.id.filterOrderGroup).apply {
+                when (orderOption) {
+                    NOTE_ORDER_DESC -> check(R.id.filter_desc)
+                    NOTE_ORDER_ASC -> check(R.id.filter_asc)
+                }
+            }
+
+            view.findViewById<TextView>(R.id.filter_apply_btn).setOnClickListener {
+                val newFilterOption =
+                    when (view.findViewById<RadioGroup>(R.id.filterTypeGroup).checkedRadioButtonId) {
+                        R.id.filter_by_title -> NOTE_FILTER_TITLE
+                        R.id.filter_by_created_date -> NOTE_FILTER_DATE_CREATED
+                        else -> NOTE_FILTER_DATE_CREATED
+
+                    }
+
+                val newOrderOption =
+                    when (view.findViewById<RadioGroup>(R.id.filterOrderGroup).checkedRadioButtonId) {
+                        R.id.filter_desc -> NOTE_ORDER_DESC
+                        R.id.filter_asc -> NOTE_ORDER_ASC
+                        else -> NOTE_ORDER_DESC
+
+                    }
+                // TODO save filter options in shared prefs
+                viewModel.setNoteFilter(newFilterOption)
+                viewModel.setNoteOrder(newOrderOption)
+                viewModel.reloadNotes(sessionManager.authUser.value!!)
+                dialog.dismiss()
+            }
+
+            view.findViewById<MaterialButton>(R.id.filter_cancel_btn).setOnClickListener {
+                dialog.dismiss()
+            }
+
+            dialog.show()
         }
     }
 

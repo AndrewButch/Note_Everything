@@ -3,29 +3,34 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/logout"
-        android:title="@string/menu_logout"
         android:orderInCategory="400"
+        android:title="@string/menu_logout"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/info"
-        android:title="О пользователе"
         android:orderInCategory="200"
+        android:title="О пользователе (тест)"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/insert"
-        android:title="Вставить данные"
         android:orderInCategory="300"
+        android:title="Вставить данные (тест)"
         app:showAsAction="never" />
     <item
         android:id="@+id/synch"
-        android:icon="@drawable/ic_completed"
-        android:title="Синхронизация с облаком"
         android:checkable="true"
-
+        android:icon="@drawable/ic_completed"
         android:orderInCategory="100"
-        app:showAsAction="never"
-        />
+        android:title="Синхронизация с облаком"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/filter"
+        android:orderInCategory="1"
+        android:icon="@drawable/ic_baseline_filter_list_24"
+        android:title="@string/filter_title"
+        app:showAsAction="ifRoom" />
 
 </menu>

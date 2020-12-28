@@ -81,7 +81,7 @@ constructor(
                 notesInteractors.getNotesByNoteList.getNotesByNoteList(
                     stateEvent = stateEvent,
                     ownerListId = stateEvent.noteList.id,
-                    filterAndOrder = getOrder() + getFilter()
+                    filterAndOrder = getFilter() + getOrder()
                 )
             }
             is NoteListStateEvent.SelectNoteListEvent -> {
@@ -183,7 +183,7 @@ constructor(
 
     fun getSelectedNoteList() = viewState.value?.selectedNoteList
 
-    fun reloadListItems(user: User) {
+    fun reloadNotes(user: User) {
         val currentNoteList = getCurrentViewStateOrNew().selectedNoteList
         currentNoteList?.let {
             setStateEvent(NoteListStateEvent.GetNotesByNoteListEvent(currentNoteList, user))
@@ -266,7 +266,7 @@ constructor(
         }
     }
 
-    // Update "completed" field when user toggle checkmark
+    // Update Note "completed" field when user toggle checkmark
     fun beginPendingNoteUpdate(note: Note) {
         val updatedNote = updateNoteInStateEvent(note)
         updatedNote?.let {
