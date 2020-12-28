@@ -48,4 +48,13 @@
     <string name="register_confirm_password_hint">Confirm password</string>
     <string name="register_create_user_btn">Создать пользователя</string>
 
+    <!-- Filter menu -->
+    <string name="filter_title">Фильтр списка</string>
+    <string name="filter_type_title">Как будем сортировать список?</string>
+    <string name="filter_by_created_date">По дате создания</string>
+    <string name="filter_by_title">По наименованию</string>
+    <string name="filter_order_title">В каком порядке?</string>
+    <string name="filter_desc">По убыванию</string>
+    <string name="filter_asc">По возрастанию</string>
+
 </resources>
