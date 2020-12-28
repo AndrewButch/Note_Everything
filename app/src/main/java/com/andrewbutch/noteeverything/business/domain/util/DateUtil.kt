@@ -9,7 +9,7 @@ import java.util.*
 class DateUtil
 
 constructor(
-    private val dateFormat: SimpleDateFormat     // Date format: "2019-07-23 HH:mm:ss"
+    private val dateFormat: SimpleDateFormat     // Date format: "2019-07-23 hh:mm:ss"
 ) {
     fun removeTimeFromDateString(sd: String): String {
         return sd.substring(0, sd.indexOf(" "))

@@ -3,6 +3,7 @@ package com.andrewbutch.noteeverything.di
 import androidx.room.Room
 import com.andrewbutch.noteeverything.business.domain.model.NoteFactory
 import com.andrewbutch.noteeverything.business.domain.model.NoteListFactory
+import com.andrewbutch.noteeverything.business.domain.util.DateUtil
 import com.andrewbutch.noteeverything.framework.datasource.cache.database.NotesDatabase
 import com.andrewbutch.noteeverything.framework.datasource.data.NoteDataFactory
 import com.andrewbutch.noteeverything.framework.ui.TestBaseApplication
@@ -59,8 +60,9 @@ object TestModule {
     fun provideNoteDataFactory(
         application: TestBaseApplication,
         noteFactory: NoteFactory,
-        noteListFactory: NoteListFactory
+        noteListFactory: NoteListFactory,
+        dateUtil: DateUtil
     ): NoteDataFactory {
-        return NoteDataFactory(application, noteFactory, noteListFactory)
+        return NoteDataFactory(application, noteFactory, noteListFactory, dateUtil)
     }
 }

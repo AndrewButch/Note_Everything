@@ -18,7 +18,7 @@ constructor(
     fun getNotesByNoteList(
         stateEvent: StateEvent,
         ownerListId: String,
-        filterAndOrder: String
+        filterAndOrder: String?
     ): Flow<DataState<NoteListViewState>?> = flow {
         val cacheResult = safeCacheCall(Dispatchers.IO) {
             noteCacheDataSource.getNotesByOwnerListId(ownerListId, filterAndOrder)

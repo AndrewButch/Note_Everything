@@ -24,7 +24,7 @@ interface NoteCacheDataSource {
 //        page: Int
 //    ): List<Note>
 
-    suspend fun getNotesByOwnerListId(ownerListId: String, filterAndOrder: String): List<Note>
+    suspend fun getNotesByOwnerListId(ownerListId: String, filterAndOrder: String?): List<Note>
 
     suspend fun searchNoteById(id: String): Note?
 

@@ -1,6 +1,7 @@
 package com.andrewbutch.noteeverything.di
 
 import com.andrewbutch.noteeverything.framework.datasource.cache.NoteDaoServiceTest
+import com.andrewbutch.noteeverything.framework.datasource.cache.NoteDataFactoryTest
 import com.andrewbutch.noteeverything.framework.datasource.cache.NoteListDaoServiceTest
 import com.andrewbutch.noteeverything.framework.datasource.network.NoteFirestoreServiceTest
 import com.andrewbutch.noteeverything.framework.datasource.network.NoteListFirestoreServiceTest
@@ -32,4 +33,5 @@ interface TestAppComponent {
     fun inject(noteDaoServiceTest: NoteDaoServiceTest)
     fun inject(noteListFirestoreServiceTest: NoteListFirestoreServiceTest)
     fun inject(noteFirestoreServiceTest: NoteFirestoreServiceTest)
+    fun inject(noteDataFactoryTest: NoteDataFactoryTest)
 }

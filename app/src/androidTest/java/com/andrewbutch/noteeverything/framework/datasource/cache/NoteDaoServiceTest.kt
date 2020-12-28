@@ -8,8 +8,7 @@ import com.andrewbutch.noteeverything.business.domain.model.Note
 import com.andrewbutch.noteeverything.business.domain.util.DateUtil
 import com.andrewbutch.noteeverything.di.TestAppComponent
 import com.andrewbutch.noteeverything.framework.datasource.cache.abstraction.NoteDaoService
-import com.andrewbutch.noteeverything.framework.datasource.cache.database.NoteDao
-import com.andrewbutch.noteeverything.framework.datasource.cache.database.NoteListDao
+import com.andrewbutch.noteeverything.framework.datasource.cache.database.*
 import com.andrewbutch.noteeverything.framework.datasource.cache.implementation.NoteDaoServiceImpl
 import com.andrewbutch.noteeverything.framework.datasource.cache.mapper.NoteCacheMapper
 import com.andrewbutch.noteeverything.framework.datasource.cache.mapper.NoteListCacheMapper
@@ -60,7 +59,6 @@ class NoteDaoServiceTest {
     @Inject
     lateinit var noteListCacheMapper: NoteListCacheMapper // for single NoteList
 
-
     init {
         (application.appComponent as TestAppComponent)
             .inject(this)
@@ -73,16 +71,21 @@ class NoteDaoServiceTest {
     }
 
     private fun insertTestData() = runBlocking {
+        // get hardcoded NoteLists
         val entityNoteLists = noteListCacheMapper.mapToEntityList(
             dataFactory.produceListOfNoteList()
         )
+        // insert NoteLists into Room
         noteListDao.insertMultipleNoteList(entityNoteLists)
 
+        // get hardcoded Notes
         val entityNotes = mapper.mapToEntityList(
             dataFactory.produceListOfNotes()
         )
+        // insert Notes into Room
         noteDao.insertMultipleNotes(entityNotes)
 
+        // ger NoteList which will be used for requests
         ownerNoteList = noteListDao.getAllNoteLists().first()
     }
 
@@ -218,5 +221,97 @@ class NoteDaoServiceTest {
         // confirm delete notes
         allNotes = daoService.getNotesByOwnerListId(ownerNoteList.id)
         assertFalse("Assert deleting", allNotes.containsAll(array10))
+    }
+
+    /**
+     * 1) Setup filter = NOTE_FILTER_TITLE and order = NOTE_ORDER_ASC
+     * 2) Get actual result
+     * 3) Get request result
+     * 4) Compare actual result with request result
+     */
+    @Test
+    fun getNotesOrderedByTitleAscending() = runBlocking {
+        val ownerListId = ownerNoteList.id
+        val filterOption = NOTE_FILTER_TITLE
+        val orderOption = NOTE_ORDER_ASC
+        val actualResult = dataFactory.produceSortedListOfNotesByOwnerList(
+            ownerListId = ownerListId,
+            filter = filterOption,
+            order = orderOption
+        )
+        val requestResult =
+            daoService.getNotesByOwnerListId(ownerListId, filterOption + orderOption)
+        for ((i, note) in actualResult.withIndex()) {
+            assertTrue("Title + ASC: ", note == requestResult[i])
+        }
+    }
+
+    /**
+     * 1) Setup filter = NOTE_FILTER_TITLE and order = NOTE_ORDER_DESC
+     * 2) Get actual result
+     * 3) Get request result
+     * 4) Compare actual result with request result
+     */
+    @Test
+    fun getNotesOrderedByTitleDescending() = runBlocking {
+        val ownerListId = ownerNoteList.id
+        val filterOption = NOTE_FILTER_TITLE
+        val orderOption = NOTE_ORDER_DESC
+        val actualResult = dataFactory.produceSortedListOfNotesByOwnerList(
+            ownerListId = ownerListId,
+            filter = filterOption,
+            order = orderOption
+        )
+        val requestResult =
+            daoService.getNotesByOwnerListId(ownerListId, filterOption + orderOption)
+        for ((i, note) in actualResult.withIndex()) {
+            assertTrue("Title + DESC: ", note == requestResult[i])
+        }
+    }
+
+    /**
+     * 1) Setup filter = NOTE_FILTER_DATE_CREATED and order = NOTE_ORDER_DESC
+     * 2) Get actual result
+     * 3) Get request result
+     * 4) Compare actual result with request result
+     */
+    @Test
+    fun getNoteOrderedByCreateDateDescending() = runBlocking {
+        val ownerListId = ownerNoteList.id
+        val filterOption = NOTE_FILTER_DATE_CREATED
+        val orderOption = NOTE_ORDER_DESC
+        val actualResult = dataFactory.produceSortedListOfNotesByOwnerList(
+            ownerListId = ownerListId,
+            filter = filterOption,
+            order = orderOption
+        )
+        val requestResult =
+            daoService.getNotesByOwnerListId(ownerListId, filterOption + orderOption)
+        for ((i, note) in actualResult.withIndex()) {
+            assertTrue("Created_at + DESC: ", note == requestResult[i])
+        }
+    }
+
+    /**
+     * 1) Setup filter = NOTE_FILTER_DATE_CREATED and order = NOTE_ORDER_ASC
+     * 2) Get actual result
+     * 3) Get request result
+     * 4) Compare actual result with request result
+     */
+    @Test
+    fun getNoteOrderedByCreateDateAscending() = runBlocking {
+        val ownerListId = ownerNoteList.id
+        val filterOption = NOTE_FILTER_DATE_CREATED
+        val orderOption = NOTE_ORDER_ASC
+        val actualResult = dataFactory.produceSortedListOfNotesByOwnerList(
+            ownerListId = ownerListId,
+            filter = filterOption,
+            order = orderOption
+        )
+        val requestResult =
+            daoService.getNotesByOwnerListId(ownerListId, filterOption + orderOption)
+        for ((i, note) in actualResult.withIndex()) {
+            assertTrue("Created_at + ASC: ", note == requestResult[i])
+        }
     }
 }

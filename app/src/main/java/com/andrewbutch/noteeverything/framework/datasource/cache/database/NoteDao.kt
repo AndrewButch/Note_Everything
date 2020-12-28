@@ -11,8 +11,8 @@ const val NOTE_ORDER_DESC: String = "desc"
 const val NOTE_FILTER_TITLE = "title"
 const val NOTE_FILTER_DATE_CREATED = "created_at"
 
-const val ORDER_BY_ASC_DATE_UPDATED = NOTE_FILTER_DATE_CREATED + NOTE_ORDER_ASC
-const val ORDER_BY_DESC_DATE_UPDATED = NOTE_FILTER_DATE_CREATED + NOTE_ORDER_DESC
+const val ORDER_BY_ASC_DATE_CREATED = NOTE_FILTER_DATE_CREATED + NOTE_ORDER_ASC
+const val ORDER_BY_DESC_DATE_CREATED = NOTE_FILTER_DATE_CREATED + NOTE_ORDER_DESC
 const val ORDER_BY_ASC_TITLE = NOTE_FILTER_TITLE + NOTE_ORDER_ASC
 const val ORDER_BY_DESC_TITLE = NOTE_FILTER_TITLE + NOTE_ORDER_DESC
 
@@ -60,7 +60,7 @@ interface NoteDao {
         """
         SELECT * FROM notes 
         WHERE listId = :ownerId
-        ORDER BY updated_at DESC 
+        ORDER BY created_at DESC 
         """
     )
     suspend fun searchNotesOrderByDateDESC(ownerId: String): List<NoteCacheEntity>
@@ -69,7 +69,7 @@ interface NoteDao {
         """
         SELECT * FROM notes 
         WHERE listId = :ownerId
-        ORDER BY updated_at ASC 
+        ORDER BY created_at ASC 
         """
     )
     suspend fun searchNotesOrderByDateASC(ownerId: String): List<NoteCacheEntity>
@@ -91,4 +91,8 @@ interface NoteDao {
         """
     )
     suspend fun searchNotesOrderByTitleASC(ownerId: String): List<NoteCacheEntity>
+
+    companion object {
+
+    }
 }

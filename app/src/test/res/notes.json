@@ -4,8 +4,8 @@
     "title": "note list 0 item 0",
     "completed": true,
     "color": "#7CFC00",
-    "createdAt": "02.24.2015 12:05:01",
-    "updatedAt": "02.04.2020 18:05:01",
+    "createdAt": "2015-02-24 12:05:01",
+    "updatedAt": "2020-02-04 18:05:01",
     "listId": "cfc3414d-5778-4abc-8a2d-d38dbc2c18ae"
   },
   {
@@ -13,8 +13,8 @@
     "title": "note list 0 item 1",
     "completed": false,
     "color": "#7CFC00",
-    "createdAt": "10.10.2018 12:05:01",
-    "updatedAt": "05.12.2020 18:05:01",
+    "createdAt": "2018-10-10 12:05:01",
+    "updatedAt": "2020-05-12 18:05:01",
     "listId": "cfc3414d-5778-4abc-8a2d-d38dbc2c18ae"
   },
   {
@@ -22,8 +22,8 @@
     "title": "note list 0 item 2",
     "completed": true,
     "color": "#7CFC00",
-    "createdAt": "05.12.2017 12:05:01",
-    "updatedAt": "07.13.2020 18:05:01",
+    "createdAt": "2017-05-12 12:05:01",
+    "updatedAt": "2020-07-13 18:05:01",
     "listId": "cfc3414d-5778-4abc-8a2d-d38dbc2c18ae"
   },
   {
@@ -31,8 +31,8 @@
     "title": "note list 0 item 3",
     "completed": false,
     "color": "#9932CC",
-    "createdAt": "03.28.2015 12:05:01",
-    "updatedAt": "01.23.2020 18:05:01",
+    "createdAt": "2015-03-28 12:05:01",
+    "updatedAt": "2020-01-23 18:05:01",
     "listId": "cfc3414d-5778-4abc-8a2d-d38dbc2c18ae"
   },
   {
@@ -40,8 +40,8 @@
     "title": "note list 0 item 4",
     "completed": false,
     "color": "#7F0000",
-    "createdAt": "12.02.2016 12:05:01",
-    "updatedAt": "03.04.2020 18:05:01",
+    "createdAt": "2016-12-02 12:05:01",
+    "updatedAt": "2020-03-04 18:05:01",
     "listId": "cfc3414d-5778-4abc-8a2d-d38dbc2c18ae"
   },
   {
@@ -49,8 +49,8 @@
     "title": "note list 1 item 0",
     "completed": true,
     "color": "#9932CC",
-    "createdAt": "07.31.2017 12:05:01",
-    "updatedAt": "01.26.2020 18:05:01",
+    "createdAt": "2017-07-31 12:05:01",
+    "updatedAt": "2020-01-26 18:05:01",
     "listId": "ef72a932-1bf6-4798-97dd-5cee23289910"
   },
   {
@@ -58,8 +58,8 @@
     "title": "note list 1 item 1",
     "completed": true,
     "color": "#7F0000",
-    "createdAt": "01.20.2014 12:05:01",
-    "updatedAt": "07.06.2020 18:05:01",
+    "createdAt": "2014-01-20 12:05:01",
+    "updatedAt": "2020-07-06 18:05:01",
     "listId": "ef72a932-1bf6-4798-97dd-5cee23289910"
   },
   {
@@ -67,8 +67,8 @@
     "title": "note list 1 item 2",
     "completed": false,
     "color": "#7CFC00",
-    "createdAt": "10.29.2014 12:05:01",
-    "updatedAt": "02.29.2020 18:05:01",
+    "createdAt": "2014-10-29 12:05:01",
+    "updatedAt": "2020-02-29 18:05:01",
     "listId": "ef72a932-1bf6-4798-97dd-5cee23289910"
   },
   {
@@ -76,8 +76,8 @@
     "title": "note list 1 item 3",
     "completed": true,
     "color": "#9932CC",
-    "createdAt": "02.02.2018 12:05:01",
-    "updatedAt": "01.23.2020 18:05:01",
+    "createdAt": "2018-02-02 12:05:01",
+    "updatedAt": "2020-01-23 18:05:01",
     "listId": "ef72a932-1bf6-4798-97dd-5cee23289910"
   },
   {
@@ -85,8 +85,8 @@
     "title": "note list 1 item 4",
     "completed": true,
     "color": "#9932CC",
-    "createdAt": "02.22.2014 12:05:01",
-    "updatedAt": "08.10.2020 18:05:01",
+    "createdAt": "2014-02-22 12:05:01",
+    "updatedAt": "2020-08-10 18:05:01",
     "listId": "ef72a932-1bf6-4798-97dd-5cee23289910"
   },
   {
@@ -94,8 +94,8 @@
     "title": "note list 2 item 0",
     "completed": false,
     "color": "#7CFC00",
-    "createdAt": "08.08.2016 12:05:01",
-    "updatedAt": "02.21.2020 18:05:01",
+    "createdAt": "2016-08-08 12:05:01",
+    "updatedAt": "2020-02-21 18:05:01",
     "listId": "206b57c1-911a-4959-bbdb-9a3b029f5bcb"
   },
   {
@@ -103,8 +103,8 @@
     "title": "note list 2 item 1",
     "completed": false,
     "color": "#9932CC",
-    "createdAt": "10.27.2015 12:05:01",
-    "updatedAt": "08.27.2020 18:05:01",
+    "createdAt": "2015-10-27 12:05:01",
+    "updatedAt": "2020-08-27 18:05:01",
     "listId": "206b57c1-911a-4959-bbdb-9a3b029f5bcb"
   },
   {
@@ -112,8 +112,8 @@
     "title": "note list 2 item 2",
     "completed": true,
     "color": "#9932CC",
-    "createdAt": "08.26.2018 12:05:01",
-    "updatedAt": "05.17.2020 18:05:01",
+    "createdAt": "2018-08-26 12:05:01",
+    "updatedAt": "2020-05-17 18:05:01",
     "listId": "206b57c1-911a-4959-bbdb-9a3b029f5bcb"
   },
   {
@@ -121,8 +121,8 @@
     "title": "note list 2 item 3",
     "completed": true,
     "color": "#7F0000",
-    "createdAt": "01.22.2017 12:05:01",
-    "updatedAt": "02.25.2020 18:05:01",
+    "createdAt": "2017-01-22 12:05:01",
+    "updatedAt": "2020-02-25 18:05:01",
     "listId": "206b57c1-911a-4959-bbdb-9a3b029f5bcb"
   },
   {
@@ -130,8 +130,8 @@
     "title": "note list 2 item 4",
     "completed": false,
     "color": "#7F0000",
-    "createdAt": "07.21.2016 12:05:01",
-    "updatedAt": "07.14.2020 18:05:01",
+    "createdAt": "2016-07-21 12:05:01",
+    "updatedAt": "2020-07-14 18:05:01",
     "listId": "206b57c1-911a-4959-bbdb-9a3b029f5bcb"
   },
   {
@@ -139,8 +139,8 @@
     "title": "note list 3 item 0",
     "completed": false,
     "color": "#7CFC00",
-    "createdAt": "03.30.2014 12:05:01",
-    "updatedAt": "03.21.2020 18:05:01",
+    "createdAt": "2014-03-30 12:05:01",
+    "updatedAt": "2020-03-21 18:05:01",
     "listId": "1e9e8c98-00d4-41e2-8328-e0d22c64d7bb"
   },
   {
@@ -148,8 +148,8 @@
     "title": "note list 3 item 1",
     "completed": false,
     "color": "#7CFC00",
-    "createdAt": "11.24.2017 12:05:01",
-    "updatedAt": "04.02.2020 18:05:01",
+    "createdAt": "2017-11-24 12:05:01",
+    "updatedAt": "2020-04-02 18:05:01",
     "listId": "1e9e8c98-00d4-41e2-8328-e0d22c64d7bb"
   },
   {
@@ -157,8 +157,8 @@
     "title": "note list 3 item 2",
     "completed": true,
     "color": "#9932CC",
-    "createdAt": "01.19.2016 12:05:01",
-    "updatedAt": "04.15.2020 18:05:01",
+    "createdAt": "2016-01-19 12:05:01",
+    "updatedAt": "2020-04-15 18:05:01",
     "listId": "1e9e8c98-00d4-41e2-8328-e0d22c64d7bb"
   },
   {
@@ -166,8 +166,8 @@
     "title": "note list 3 item 3",
     "completed": false,
     "color": "#7F0000",
-    "createdAt": "10.30.2018 12:05:01",
-    "updatedAt": "01.05.2020 18:05:01",
+    "createdAt": "2018-10-30 12:05:01",
+    "updatedAt": "2020-01-05 18:05:01",
     "listId": "1e9e8c98-00d4-41e2-8328-e0d22c64d7bb"
   },
   {
@@ -175,8 +175,8 @@
     "title": "note list 3 item 4",
     "completed": false,
     "color": "#7F0000",
-    "createdAt": "05.19.2018 12:05:01",
-    "updatedAt": "09.07.2020 18:05:01",
+    "createdAt": "2018-05-19 12:05:01",
+    "updatedAt": "2020-09-07 18:05:01",
     "listId": "1e9e8c98-00d4-41e2-8328-e0d22c64d7bb"
   },
   {
@@ -184,8 +184,8 @@
     "title": "note list 4 item 0",
     "completed": true,
     "color": "#7CFC00",
-    "createdAt": "01.05.2014 12:05:01",
-    "updatedAt": "03.02.2020 18:05:01",
+    "createdAt": "2014-01-05 12:05:01",
+    "updatedAt": "2020-03-02 18:05:01",
     "listId": "4041a360-0b01-4d3f-b7d7-8fd1201e2fc6"
   },
   {
@@ -193,8 +193,8 @@
     "title": "note list 4 item 1",
     "completed": false,
     "color": "#9932CC",
-    "createdAt": "11.10.2014 12:05:01",
-    "updatedAt": "02.12.2020 18:05:01",
+    "createdAt": "2014-11-10 12:05:01",
+    "updatedAt": "2020-02-12 18:05:01",
     "listId": "4041a360-0b01-4d3f-b7d7-8fd1201e2fc6"
   },
   {
@@ -202,8 +202,8 @@
     "title": "note list 4 item 2",
     "completed": false,
     "color": "#7F0000",
-    "createdAt": "11.24.2017 12:05:01",
-    "updatedAt": "03.18.2020 18:05:01",
+    "createdAt": "2017-11-24 12:05:01",
+    "updatedAt": "2020-03-18 18:05:01",
     "listId": "4041a360-0b01-4d3f-b7d7-8fd1201e2fc6"
   },
   {
@@ -211,8 +211,8 @@
     "title": "note list 4 item 3",
     "completed": false,
     "color": "#7F0000",
-    "createdAt": "04.17.2014 12:05:01",
-    "updatedAt": "01.24.2020 18:05:01",
+    "createdAt": "2014-04-17 12:05:01",
+    "updatedAt": "2020-01-24 18:05:01",
     "listId": "4041a360-0b01-4d3f-b7d7-8fd1201e2fc6"
   },
   {
@@ -220,8 +220,8 @@
     "title": "note list 4 item 4",
     "completed": false,
     "color": "#9932CC",
-    "createdAt": "05.29.2014 12:05:01",
-    "updatedAt": "07.21.2020 18:05:01",
+    "createdAt": "2014-05-29 12:05:01",
+    "updatedAt": "2020-07-21 18:05:01",
     "listId": "4041a360-0b01-4d3f-b7d7-8fd1201e2fc6"
   }
 ]

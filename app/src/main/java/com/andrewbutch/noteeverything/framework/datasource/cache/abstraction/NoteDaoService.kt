@@ -19,7 +19,7 @@ interface NoteDaoService {
         timestamp: String?
     ): Int
 
-    suspend fun getNotesByOwnerListId(ownerListId: String, filterAndOrder: String): List<Note>
+    suspend fun getNotesByOwnerListId(ownerListId: String, filterAndOrder: String? = null): List<Note>
 
     suspend fun searchNoteById(id: String): Note?
 }
