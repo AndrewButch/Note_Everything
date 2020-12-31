@@ -26,8 +26,8 @@ data class LoginFields(
     }
 
     companion object {
-        const val EMAIL_EMPTY_ERROR = "Fill email field"
-        const val PASSWORD_EMPTY_ERROR = "Fill password field"
+        const val EMAIL_EMPTY_ERROR = "Email field empty"
+        const val PASSWORD_EMPTY_ERROR = "Password field empty"
     }
 }
 
@@ -56,10 +56,10 @@ data class RegistrationFields(
     }
 
     companion object {
-        const val EMAIL_EMPTY_ERROR = "Fill email field"
-        const val PASSWORD_MATCH_ERROR = "Passwords must match"
-        const val PASSWORD_EMPTY_ERROR = "Fill password field"
-        const val CONFIRM_PASSWORD_EMPTY_ERROR = "Fill confirm password field"
+        const val EMAIL_EMPTY_ERROR = "Email field empty"
+        const val PASSWORD_MATCH_ERROR = "Passwords does not match"
+        const val PASSWORD_EMPTY_ERROR = "Password field empty"
+        const val CONFIRM_PASSWORD_EMPTY_ERROR = "Confirm password field empty"
     }
 }
 

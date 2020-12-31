@@ -25,8 +25,8 @@
 
         <ImageView
             android:id="@+id/img_checkbox"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_gravity="center_vertical"
             app:srcCompat="@drawable/ic_uncompleted"
             android:scaleType="center" />
@@ -34,10 +34,9 @@
         <TextView
             android:id="@+id/item_name"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:layout_weight="1"
             android:gravity="center_vertical"
-            android:minHeight="56dp"
             android:textSize="16sp"
             tools:text="textview" />
 

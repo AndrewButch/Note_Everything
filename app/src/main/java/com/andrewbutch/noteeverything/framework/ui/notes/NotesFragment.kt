@@ -1,6 +1,5 @@
 package com.andrewbutch.noteeverything.framework.ui.notes
 
-import android.content.SharedPreferences
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.Menu
@@ -45,10 +44,7 @@ import kotlinx.android.synthetic.main.nav_header.*
 import timber.log.Timber
 import javax.inject.Inject
 
-class NotesFragment :
-    BaseFragment(R.layout.fragment_notes),
-    NotesRecyclerAdapter.Interaction,
-    NavMenuAdapter.Interaction {
+class NotesFragment : BaseFragment(R.layout.fragment_notes) {
 
     lateinit var viewModel: NotesViewModel
     private lateinit var navMenuAdapter: NavMenuAdapter
@@ -59,9 +55,6 @@ class NotesFragment :
 
     @Inject
     lateinit var providerFactory: ViewModelProvider.Factory
-
-    @Inject
-    lateinit var preferences: SharedPreferences
 
     @Inject
     lateinit var sessionManager: SessionManager
@@ -76,23 +69,75 @@ class NotesFragment :
         requireActivity().run {
             viewModel = ViewModelProvider(this, providerFactory).get(NotesViewModel::class.java)
         }
-        viewModel.setUser(sessionManager.authUser.value!!)
 
         setupViews()
+        viewModel.apply {
+            setUser(sessionManager.authUser.value!!)
+            setStateEvent(NoteListStateEvent.GetAllNoteListsEvent(sessionManager.authUser.value!!))
+        }
+        subscribeObservers()
+    }
+
+
+    private fun setupViews() {
+        // Toolbar
+        (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar)
+
+        setupNotesRecycler()
         setupNavDrawer()
-        // FAB
+        setupFab()
+    }
+
+    private fun setupNotesRecycler() {
+        hideNotesContainer()
+        notesAdapter = NotesRecyclerAdapter(
+            interaction = NotesAdapterInteractor(),
+            imgChecked = imgComplete,
+            imgUnchecked = imgUncomplete
+        )
+        recycler.apply {
+            adapter = notesAdapter
+            layoutManager = LinearLayoutManager(requireContext())
+        }
+        recycler.addItemDecoration(VerticalItemDecoration(30))
+
+        // Item touch helper
+        val touchHelperCallback = ItemTouchHelperCallback(notesAdapter)
+        ItemTouchHelper(touchHelperCallback).apply {
+            attachToRecyclerView(recycler)
+        }
+    }
+
+    private fun setupNavDrawer() {
+        // Toggle listener
+        val toggle = ActionBarDrawerToggle(
+            requireActivity(),
+            drawer,
+            toolbar,
+            R.string.navigation_drawer_open, R.string.navigation_drawer_close
+        )
+        drawer.addDrawerListener(toggle)
+        toggle.syncState()
+
+        // button "add list"
+        addNoteListBtn.setOnClickListener {
+            showInputDialog("Новый список", InputDialogType.LIST)
+        }
+
+        // recycler view
+        navMenuAdapter = NavMenuAdapter(interaction = NavDrawerAdapterInteractor())
+        navRecyclerMenu.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = navMenuAdapter
+        }
+        navRecyclerMenu.addItemDecoration(VerticalItemDecoration(20))
+    }
+
+    private fun setupFab() {
         notesFragmentFab.setOnClickListener {
             showInputDialog("Новая заметка", InputDialogType.NOTE)
         }
-
-        subscribeObservers()
-
-
-        viewModel.setStateEvent(NoteListStateEvent.GetAllNoteListsEvent(sessionManager.authUser.value!!))
-
-
     }
-
 
     private fun showInputDialog(title: String, type: InputDialogType) {
         uiController.displayInputDialog(
@@ -137,7 +182,7 @@ class NotesFragment :
                 viewState.noteLists?.let {
                     navMenuAdapter.submitList(it)
                     if (viewState.selectedNoteList == null) {
-                        getFromPreferences()
+                        viewModel.initSelectedNoteList()
                     }
                 }
 
@@ -161,7 +206,7 @@ class NotesFragment :
                 stateMessage.message?.let { message ->
                     if (message == DeleteNoteList.DELETE_NOTE_LIST_SUCCESS) {
                         hideNotesContainer()
-                        viewModel.setSelectedList(null)
+                        viewModel.setSelectedNoteList(selectedList = null)
                         notesAdapter.submitList(emptyList())
                         setTitle("")
                     }
@@ -176,113 +221,22 @@ class NotesFragment :
             }
     }
 
+    // Hide note recycler view and fab
+    private fun hideNotesContainer() {
+        notes_container.visibility = View.GONE
+        notesFragmentFab.visibility = View.GONE
+    }
+
+    // Show note recycler view and fab
+    private fun showNotesContainer() {
+        notes_container.visibility = View.VISIBLE
+        notesFragmentFab.visibility = View.VISIBLE
+    }
+
     private fun setTitle(title: String) {
         toolbar.title = title
     }
 
-    private fun setupViews() {
-        // Toolbar
-        (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar)
-
-        hideNotesContainer()
-
-        // Recycler
-        notesAdapter = NotesRecyclerAdapter(
-            interaction = this,
-            imgChecked = imgComplete,
-            imgUnchecked = imgUncomplete
-        )
-        recycler.apply {
-            adapter = notesAdapter
-            layoutManager = LinearLayoutManager(requireContext())
-        }
-        recycler.addItemDecoration(VerticalItemDecoration(30))
-
-        // Item touch helper
-        val touchHelperCallback = ItemTouchHelperCallback(notesAdapter)
-        val itemTouchHelper = ItemTouchHelper(touchHelperCallback)
-        itemTouchHelper.attachToRecyclerView(recycler)
-    }
-
-    override fun onBackPressed() {
-        requireActivity().finish()
-    }
-
-    private fun setupNavDrawer() {
-        // Toggle listener
-        val toggle = ActionBarDrawerToggle(
-            requireActivity(),
-            drawer,
-            toolbar,
-            R.string.navigation_drawer_open, R.string.navigation_drawer_close
-        )
-        drawer.addDrawerListener(toggle)
-        toggle.syncState()
-
-        // button "add list"
-        addNoteListBtn.setOnClickListener {
-            showInputDialog("Новый список", InputDialogType.LIST)
-        }
-
-        // recycler view
-        navMenuAdapter = NavMenuAdapter(interaction = this)
-        navRecyclerMenu.apply {
-            layoutManager = LinearLayoutManager(requireContext())
-            adapter = navMenuAdapter
-        }
-        navRecyclerMenu.addItemDecoration(VerticalItemDecoration(20))
-    }
-
-    private fun getFromPreferences() {
-        val selectedNoteList = preferences.getString(SELECTED_NOTE, null)
-        selectedNoteList?.let {
-            viewModel.setSelectedList(selectedNoteList)
-        }
-    }
-
-    private fun getSyncPreference(): Boolean = preferences.getBoolean(SYNC, true)
-
-    private fun setPreferences() {
-        val editor = preferences.edit()
-        editor.putString(SELECTED_NOTE, viewModel.getSelectedNoteList()?.id)
-        editor.apply()
-    }
-
-    private fun setSyncPreferences(enableSync: Boolean) {
-        val editor = preferences.edit()
-        editor.putBoolean(SYNC, enableSync)
-        editor.apply()
-    }
-
-    // Note clicked
-    override fun onItemSelected(item: Note) {
-        navToNoteDetail(item)
-    }
-
-    override fun onItemCheck(item: Note) {
-        uiController.showToast("Toggle item ${item.title}")
-        viewModel.beginPendingNoteUpdate(item)
-    }
-
-    override fun onItemDismiss(item: Note) {
-        viewModel.beginPendingNoteDelete(item, sessionManager.authUser.value!!)
-    }
-
-    // List clicked
-    override fun onItemSelected(position: Int, item: NoteList) {
-        drawer.closeDrawer(GravityCompat.START)
-        viewModel.setStateEvent(
-            NoteListStateEvent.SelectNoteListEvent(
-                noteList = item,
-                user = sessionManager.authUser.value!!
-            )
-        )
-    }
-
-    // List long click
-    override fun onLongClick(position: Int, item: NoteList) {
-        navToNoteListDetail(item)
-    }
 
     private fun navToNoteDetail(selectedNote: Note) {
         val bundle = bundleOf(NOTE_DETAIL_BUNDLE_KEY to selectedNote)
@@ -306,14 +260,73 @@ class NotesFragment :
         viewModel.setNewNoteList(null)
     }
 
-    private fun hideNotesContainer() {
-        notes_container.visibility = View.GONE
-        notesFragmentFab.visibility = View.GONE
+    private fun showFilterDialog() {
+        requireActivity().also {
+            val dialog = MaterialDialog(it)
+                .noAutoDismiss()
+                .customView(R.layout.layout_filter_options, noVerticalPadding = true)
+
+            val view = dialog.getCustomView()
+            val filterOption = viewModel.getFilter()
+            val orderOption = viewModel.getOrder()
+
+            setupFilterTypeOptions(view, filterOption)
+            setupFilterOrderOptions(view, orderOption)
+            setupFilterApplyBtn(view, dialog)
+            setupFilterCancelBtn(view, dialog)
+
+            dialog.show()
+        }
     }
 
-    private fun showNotesContainer() {
-        notes_container.visibility = View.VISIBLE
-        notesFragmentFab.visibility = View.VISIBLE
+    private fun setupFilterTypeOptions(view: View, filterOption: String) {
+        view.findViewById<RadioGroup>(R.id.filterTypeGroup).apply {
+            when (filterOption) {
+                NOTE_FILTER_DATE_CREATED -> check(R.id.filter_by_created_date)
+                NOTE_FILTER_TITLE -> check(R.id.filter_by_title)
+            }
+        }
+    }
+
+    private fun setupFilterOrderOptions(view: View, orderOption: String) {
+        view.findViewById<RadioGroup>(R.id.filterOrderGroup).apply {
+            when (orderOption) {
+                NOTE_ORDER_DESC -> check(R.id.filter_desc)
+                NOTE_ORDER_ASC -> check(R.id.filter_asc)
+            }
+        }
+    }
+
+    private fun setupFilterApplyBtn(view: View, dialog: MaterialDialog) {
+        view.findViewById<TextView>(R.id.filter_apply_btn).setOnClickListener {
+            val newFilterOption =
+                when (view.findViewById<RadioGroup>(R.id.filterTypeGroup).checkedRadioButtonId) {
+                    R.id.filter_by_title -> NOTE_FILTER_TITLE
+                    R.id.filter_by_created_date -> NOTE_FILTER_DATE_CREATED
+                    else -> NOTE_FILTER_DATE_CREATED
+
+                }
+
+            val newOrderOption =
+                when (view.findViewById<RadioGroup>(R.id.filterOrderGroup).checkedRadioButtonId) {
+                    R.id.filter_desc -> NOTE_ORDER_DESC
+                    R.id.filter_asc -> NOTE_ORDER_ASC
+                    else -> NOTE_ORDER_DESC
+
+                }
+            viewModel.apply {
+                setNoteFilter(newFilterOption)
+                setNoteOrder(newOrderOption)
+                reloadNotes(sessionManager.authUser.value!!)
+            }
+            dialog.dismiss()
+        }
+    }
+
+    private fun setupFilterCancelBtn(view: View, dialog: MaterialDialog) {
+        view.findViewById<MaterialButton>(R.id.filter_cancel_btn).setOnClickListener {
+            dialog.dismiss()
+        }
     }
 
     override fun onResume() {
@@ -324,13 +337,13 @@ class NotesFragment :
 
     override fun onPause() {
         super.onPause()
-        setPreferences()
+        viewModel.saveSharedPreference()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         menu.clear()
         inflater.inflate(R.menu.menu_notes, menu)
-        val syncEnable = getSyncPreference()
+        val syncEnable = viewModel.getSyncOption()
         menu.findItem(R.id.synch).isChecked = syncEnable
         super.onCreateOptionsMenu(menu, inflater)
     }
@@ -341,22 +354,13 @@ class NotesFragment :
                 viewModel.setStateEvent(
                     NoteListStateEvent.DeleteAllNoteListsEvent(sessionManager.authUser.value!!)
                 )
-                setSyncPreferences(true)
                 sessionManager.logout()
-                true
-            }
-            R.id.info -> {
-                uiController.showToast(sessionManager.authUser.value!!.id)
-                true
-            }
-            R.id.insert -> {
-                viewModel.insertTestData()
                 true
             }
             R.id.synch -> {
                 val enableSync = !item.isChecked
                 item.isChecked = enableSync
-                setSyncPreferences(enableSync)
+                viewModel.setSyncOption(enableSync)
                 true
             }
             R.id.filter -> {
@@ -369,71 +373,46 @@ class NotesFragment :
         }
     }
 
-    private fun showFilterDialog() {
-        requireActivity().also {
-            val dialog = MaterialDialog(it)
-                .noAutoDismiss()
-                .customView(R.layout.layout_filter_options, noVerticalPadding = true)
-
-            val view = dialog.getCustomView()
-            view.setPadding(0, 0,0,0,)
-
-            val filterOption = viewModel.getFilter()
-            val orderOption = viewModel.getOrder()
-
-            view.findViewById<RadioGroup>(R.id.filterTypeGroup).apply {
-                when (filterOption) {
-                    NOTE_FILTER_DATE_CREATED -> check(R.id.filter_by_created_date)
-                    NOTE_FILTER_TITLE -> check(R.id.filter_by_title)
-                }
-            }
-
-            view.findViewById<RadioGroup>(R.id.filterOrderGroup).apply {
-                when (orderOption) {
-                    NOTE_ORDER_DESC -> check(R.id.filter_desc)
-                    NOTE_ORDER_ASC -> check(R.id.filter_asc)
-                }
-            }
-
-            view.findViewById<TextView>(R.id.filter_apply_btn).setOnClickListener {
-                val newFilterOption =
-                    when (view.findViewById<RadioGroup>(R.id.filterTypeGroup).checkedRadioButtonId) {
-                        R.id.filter_by_title -> NOTE_FILTER_TITLE
-                        R.id.filter_by_created_date -> NOTE_FILTER_DATE_CREATED
-                        else -> NOTE_FILTER_DATE_CREATED
-
-                    }
-
-                val newOrderOption =
-                    when (view.findViewById<RadioGroup>(R.id.filterOrderGroup).checkedRadioButtonId) {
-                        R.id.filter_desc -> NOTE_ORDER_DESC
-                        R.id.filter_asc -> NOTE_ORDER_ASC
-                        else -> NOTE_ORDER_DESC
-
-                    }
-                // TODO save filter options in shared prefs
-                viewModel.setNoteFilter(newFilterOption)
-                viewModel.setNoteOrder(newOrderOption)
-                viewModel.reloadNotes(sessionManager.authUser.value!!)
-                dialog.dismiss()
-            }
-
-            view.findViewById<MaterialButton>(R.id.filter_cancel_btn).setOnClickListener {
-                dialog.dismiss()
-            }
-
-            dialog.show()
-        }
+    override fun onBackPressed() {
+        requireActivity().finish()
     }
-
 
     enum class InputDialogType {
         NOTE, LIST
     }
 
-    companion object {
-        const val SELECTED_NOTE = "com.andrewbutch.noteeverything.framework.ui.notes.SELECTED_NOTE"
-        const val SYNC = "com.andrewbutch.noteeverything.framework.ui.notes.SYNC"
+    inner class NotesAdapterInteractor : NotesRecyclerAdapter.Interaction {
+        override fun onItemSelected(item: Note) {
+            this@NotesFragment.navToNoteDetail(item)
+        }
+
+        override fun onItemCheck(item: Note) {
+            this@NotesFragment.viewModel.beginPendingNoteUpdate(item)
+        }
+
+        override fun onItemDismiss(item: Note) {
+            this@NotesFragment.viewModel.beginPendingNoteDelete(
+                item,
+                sessionManager.authUser.value!!
+            )
+        }
+
     }
 
+    inner class NavDrawerAdapterInteractor : NavMenuAdapter.Interaction {
+        override fun onItemSelected(position: Int, item: NoteList) {
+            this@NotesFragment.drawer.closeDrawer(GravityCompat.START)
+            viewModel.setStateEvent(
+                NoteListStateEvent.SelectNoteListEvent(
+                    noteList = item,
+                    user = sessionManager.authUser.value!!
+                )
+            )
+        }
+
+        override fun onLongClick(position: Int, item: NoteList) {
+            this@NotesFragment.navToNoteListDetail(item)
+        }
+
+    }
 }

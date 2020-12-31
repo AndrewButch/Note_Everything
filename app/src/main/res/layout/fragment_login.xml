@@ -20,8 +20,7 @@
             android:hint="@string/email_hint"
             android:imeOptions="actionNext"
             android:maxLength="50"
-            android:singleLine="true"
-            android:text="testuser2@mail.ru" />
+            android:singleLine="true" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -39,8 +38,7 @@
             android:imeOptions="actionDone"
             android:inputType="textPassword"
             android:maxLength="50"
-            android:singleLine="true"
-            android:text="123456" />
+            android:singleLine="true" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.button.MaterialButton

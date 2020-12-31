@@ -12,7 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import com.andrewbutch.noteeverything.R
 import com.andrewbutch.noteeverything.framework.session.SessionManager
-import com.andrewbutch.noteeverything.framework.ui.notes.NotesFragment.Companion.SYNC
+import com.andrewbutch.noteeverything.framework.ui.PreferenceKeys.Companion.SYNC
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.splash_fragment.*
 import javax.inject.Inject

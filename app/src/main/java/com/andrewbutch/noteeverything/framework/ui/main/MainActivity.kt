@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
-import android.view.Menu
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
@@ -71,7 +70,9 @@ class MainActivity : DaggerAppCompatActivity(), UIController {
     ) {
         dialogInView = MaterialDialog(this).show {
             title(text = title)
+
             input(
+                hintRes = R.string.list_title_hint,
                 allowEmpty = false,
                 waitForPositiveButton = true,
                 inputType = InputType.TYPE_TEXT_VARIATION_PASSWORD,
@@ -140,9 +141,5 @@ class MainActivity : DaggerAppCompatActivity(), UIController {
         val intent = Intent(this, AuthActivity::class.java)
         startActivity(intent)
         finish()
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        return super.onCreateOptionsMenu(menu)
     }
 }

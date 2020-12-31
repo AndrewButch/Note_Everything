@@ -18,5 +18,6 @@ data class NoteListViewState(
     var user: User? = null,
     var filter: String? = null,
     var order: String? = null,
+    var enableSync: Boolean = true
 ) : Parcelable, ViewState {
 }

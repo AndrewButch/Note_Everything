@@ -2,24 +2,18 @@
     <string name="app_name">Note Everything</string>
 
     <!-- Navigation drawer-->
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
-    <string name="nav_header_desc">Navigation header</string>
+    <string name="navigation_drawer_open">Открыть навигацию</string>
+    <string name="navigation_drawer_close">Закрыть навигацию</string>
     <string name="nav_btn_add_text">Добавить список</string>
-    <string name="nav_btn_logout">Выйти</string>
-    <string name="title_activity_main">MainActivity</string>
-    <string name="action_settings">Settings</string>
 
     <!-- Note list detail fragment -->
-    <string name="list_title_hint">Название</string>
+    <string name="list_title_hint">Наименование</string>
     <string name="save_btn_text">Сохранить</string>
     <string name="color_text">Цвет</string>
     <string name="completed_text">Выполнено</string>
 
     <!-- Note detail fragment -->
-    <string name="note_title_hint">Название</string>
+    <string name="note_title_hint">Наименование</string>
 
     <!-- Menu detail -->
     <string name="menu_delete">Удалить</string>
@@ -33,19 +27,22 @@
     <!-- Splash fragment -->
     <string name="sync">Синхронизация…</string>
 
-
     <!-- Login fragment -->
     <string name="email_hint">Email</string>
     <string name="password_hint">Password</string>
     <string name="enter_button">Войти</string>
     <string name="registration_button">Регистрация</string>
-    <string name="forgot_password_button">Забыли пароль</string>
+
+    <string name="empty_email_error">Введите адрес эл.почты</string>
+    <string name="empty_password_error">Введите пароль</string>
+    <string name="empty_confirm_password_error">Повторите пароль</string>
+    <string name="password_match_error">Пароли должны совпадать</string>
 
     <!-- Registration fragment -->
     <string name="register_title">Создание пользователя</string>
     <string name="register_email_hint">Email</string>
-    <string name="register_password_hint">Password</string>
-    <string name="register_confirm_password_hint">Confirm password</string>
+    <string name="register_password_hint">Пароль</string>
+    <string name="register_confirm_password_hint">Подверждение пароля</string>
     <string name="register_create_user_btn">Создать пользователя</string>
 
     <!-- Filter menu -->

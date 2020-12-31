@@ -2,7 +2,7 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="48dp"
     android:focusable="true"
     android:clickable="true"
     android:foreground="?android:attr/selectableItemBackground"
@@ -10,42 +10,27 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="horizontal">
+
+        <FrameLayout
+            android:id="@+id/color_indicator"
+            android:layout_width="6dp"
+            android:layout_height="match_parent"
+            tools:background="@color/error"/>
 
         <TextView
             android:id="@+id/title"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             android:gravity="center_vertical"
             android:textSize="16sp"
-            android:minHeight="56dp"
             tools:text="Menu 1" />
 
 
-<!--        <TextView-->
-<!--            android:id="@+id/count"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:minHeight="56dp"-->
-<!--            android:textSize="16sp"-->
-<!--            android:layout_marginStart="8dp"-->
-<!--            android:layout_gravity="center_vertical"-->
-<!--            android:gravity="center"-->
-<!--            android:textColor="@color/colorError"-->
-<!--            tools:text="1000"-->
-<!--            android:lines="1" />-->
-
-<!--        <ImageView-->
-<!--            android:id="@+id/img_reorder"-->
-<!--            android:layout_width="56dp"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:padding="16dp"-->
-<!--            android:layout_gravity="center_vertical"-->
-<!--            app:srcCompat="@drawable/ic_reorder_black_24dp" />-->
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

@@ -49,11 +49,6 @@ class LoginFragment : BaseFragment(R.layout.fragment_login) {
             navToRegistration()
         }
 
-//        // Forgot password button
-//        forgotPassBtn.setOnClickListener {
-//            navToForgotPassword()
-//        }
-
         checkPreviousAuthUser()
 
         subscribeObservers()
@@ -68,10 +63,10 @@ class LoginFragment : BaseFragment(R.layout.fragment_login) {
             if (stateMessage != null) {
                 stateMessage.message?.let { message ->
                     if (message.contains(LoginFields.EMAIL_EMPTY_ERROR)) {
-                        emailTextView.error = LoginFields.EMAIL_EMPTY_ERROR
+                        emailTextView.error = resources.getString(R.string.empty_email_error)
                     }
                     if (message.contains(LoginFields.PASSWORD_EMPTY_ERROR)) {
-                        passwordTextView.error = LoginFields.PASSWORD_EMPTY_ERROR
+                        passwordTextView.error = resources.getString(R.string.empty_password_error)
                     }
                 }
                 viewModel.removeStateMessage()
@@ -82,16 +77,11 @@ class LoginFragment : BaseFragment(R.layout.fragment_login) {
         }
     }
 
-//    private fun navToForgotPassword() {
-//        uiController.showToast("Восстановление пароля")
-//    }
-
     private fun navToRegistration() {
-        uiController.showToast("Регистрация")
         findNavController().navigate(R.id.action_loginFragment_to_registrationFragment)
     }
 
     fun checkPreviousAuthUser() {
         viewModel.setStateEvent(AuthStateEvent.CheckPreviousAuth)
     }
-    }
+}

@@ -1,5 +1,6 @@
 package com.andrewbutch.noteeverything.framework.ui.notes.drawer
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -70,6 +71,13 @@ class NavMenuAdapter(private val interaction: Interaction? = null) :
                 true
             }
             title.text = item.title
+
+            val color: String = item.color
+            if (color != "null") {
+                color_indicator.setBackgroundColor(Color.parseColor(color))
+            } else {
+                color_indicator.setBackgroundColor(Color.parseColor("#FFFFFF"))
+            }
         }
     }
 

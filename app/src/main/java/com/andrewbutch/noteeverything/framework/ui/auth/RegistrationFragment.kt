@@ -63,19 +63,20 @@ class RegistrationFragment : BaseFragment(R.layout.fragment_registration) {
             if (stateMessage != null) {
                 stateMessage.message?.let { message ->
                     if (message.contains(RegistrationFields.EMAIL_EMPTY_ERROR)) {
-                        emailTextView.error = RegistrationFields.EMAIL_EMPTY_ERROR
+                        emailTextView.error = resources.getString(R.string.empty_email_error)
                     }
                     if (message.contains(RegistrationFields.PASSWORD_MATCH_ERROR)) {
-                        passwordTextView.error = RegistrationFields.PASSWORD_MATCH_ERROR
-                        confirmPasswordTextView.error = RegistrationFields.PASSWORD_MATCH_ERROR
+                        passwordTextView.error = resources.getString(R.string.password_match_error)
+                        confirmPasswordTextView.error =
+                            resources.getString(R.string.password_match_error)
                     }
                     if (message.contains(RegistrationFields.PASSWORD_EMPTY_ERROR)) {
-                        passwordTextView.error = RegistrationFields.PASSWORD_EMPTY_ERROR
+                        passwordTextView.error = resources.getString(R.string.empty_password_error)
 
                     }
                     if (message.contains(RegistrationFields.CONFIRM_PASSWORD_EMPTY_ERROR)) {
                         confirmPasswordTextView.error =
-                            RegistrationFields.CONFIRM_PASSWORD_EMPTY_ERROR
+                            resources.getString(R.string.empty_confirm_password_error)
                     }
                 }
                 viewModel.removeStateMessage()
