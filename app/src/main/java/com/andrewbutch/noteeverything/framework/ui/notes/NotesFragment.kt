@@ -23,6 +23,7 @@ import com.afollestad.materialdialogs.customview.getCustomView
 import com.andrewbutch.noteeverything.R
 import com.andrewbutch.noteeverything.business.domain.model.Note
 import com.andrewbutch.noteeverything.business.domain.model.NoteList
+import com.andrewbutch.noteeverything.business.interactors.common.DeleteNote.Companion.DELETE_NOTE_SUCCESS
 import com.andrewbutch.noteeverything.business.interactors.common.DeleteNoteList
 import com.andrewbutch.noteeverything.framework.datasource.cache.database.NOTE_FILTER_DATE_CREATED
 import com.andrewbutch.noteeverything.framework.datasource.cache.database.NOTE_FILTER_TITLE
@@ -59,7 +60,6 @@ class NotesFragment : BaseFragment(R.layout.fragment_notes) {
     @Inject
     lateinit var sessionManager: SessionManager
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -77,7 +77,6 @@ class NotesFragment : BaseFragment(R.layout.fragment_notes) {
         }
         subscribeObservers()
     }
-
 
     private fun setupViews() {
         // Toolbar
@@ -181,9 +180,6 @@ class NotesFragment : BaseFragment(R.layout.fragment_notes) {
 
                 viewState.noteLists?.let {
                     navMenuAdapter.submitList(it)
-                    if (viewState.selectedNoteList == null) {
-                        viewModel.initSelectedNoteList()
-                    }
                 }
 
                 viewState.newNote?.let {
@@ -207,8 +203,13 @@ class NotesFragment : BaseFragment(R.layout.fragment_notes) {
                     if (message == DeleteNoteList.DELETE_NOTE_LIST_SUCCESS) {
                         hideNotesContainer()
                         viewModel.setSelectedNoteList(selectedList = null)
+                        viewModel.setNotes(notes = null)
                         notesAdapter.submitList(emptyList())
                         setTitle("")
+                        uiController.showToast(resources.getString(R.string.delete_note_list_success))
+                    }
+                    if (message == DELETE_NOTE_SUCCESS) {
+                        uiController.showToast(resources.getString(R.string.delete_note_success))
                     }
                     viewModel.removeStateMessage()
                 }
@@ -236,7 +237,6 @@ class NotesFragment : BaseFragment(R.layout.fragment_notes) {
     private fun setTitle(title: String) {
         toolbar.title = title
     }
-
 
     private fun navToNoteDetail(selectedNote: Note) {
         val bundle = bundleOf(NOTE_DETAIL_BUNDLE_KEY to selectedNote)
@@ -351,9 +351,13 @@ class NotesFragment : BaseFragment(R.layout.fragment_notes) {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.logout -> {
-                viewModel.setStateEvent(
-                    NoteListStateEvent.DeleteAllNoteListsEvent(sessionManager.authUser.value!!)
-                )
+                viewModel.apply {
+                    setStateEvent(
+                        NoteListStateEvent.DeleteAllNoteListsEvent(sessionManager.authUser.value!!)
+                    )
+                    setUser(null)
+                    clearSharedPreference()
+                }
                 sessionManager.logout()
                 true
             }

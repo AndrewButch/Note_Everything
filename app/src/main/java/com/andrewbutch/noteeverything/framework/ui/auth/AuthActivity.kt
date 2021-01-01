@@ -18,6 +18,8 @@ import kotlinx.coroutines.FlowPreview
 import javax.inject.Inject
 
 
+@ExperimentalCoroutinesApi
+@FlowPreview
 class AuthActivity : DaggerAppCompatActivity(), UIController {
 
     @Inject
@@ -47,7 +49,6 @@ class AuthActivity : DaggerAppCompatActivity(), UIController {
             user?.let {
                 if (it.id.isNotEmpty()) {
                     navToMain()
-                    Toast.makeText(this, "${user.email}", Toast.LENGTH_SHORT).show()
                 }
             }
         }

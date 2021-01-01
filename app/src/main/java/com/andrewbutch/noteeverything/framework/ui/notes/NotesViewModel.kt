@@ -5,8 +5,7 @@ import com.andrewbutch.noteeverything.business.domain.model.Note
 import com.andrewbutch.noteeverything.business.domain.model.NoteList
 import com.andrewbutch.noteeverything.business.domain.model.User
 import com.andrewbutch.noteeverything.business.domain.state.*
-import com.andrewbutch.noteeverything.business.interactors.notelist.NotesInteractors
-import com.andrewbutch.noteeverything.framework.datasource.NoteDataFactory
+import com.andrewbutch.noteeverything.business.interactors.notes.NotesInteractors
 import com.andrewbutch.noteeverything.framework.datasource.cache.database.NOTE_FILTER_DATE_CREATED
 import com.andrewbutch.noteeverything.framework.datasource.cache.database.NOTE_ORDER_DESC
 import com.andrewbutch.noteeverything.framework.ui.BaseViewModel
@@ -16,18 +15,13 @@ import com.andrewbutch.noteeverything.framework.ui.PreferenceKeys.Companion.SELE
 import com.andrewbutch.noteeverything.framework.ui.PreferenceKeys.Companion.SYNC
 import com.andrewbutch.noteeverything.framework.ui.notes.state.NoteListStateEvent
 import com.andrewbutch.noteeverything.framework.ui.notes.state.NoteListViewState
-import kotlinx.coroutines.*
-import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.launchIn
 import javax.inject.Inject
 
 class NotesViewModel
 @Inject
 constructor(
-    private val noteDataFactory: NoteDataFactory,
     private val notesInteractors: NotesInteractors,
     private val sharedPreferences: SharedPreferences,
     eventStore: StateEventStore,
@@ -146,6 +140,9 @@ constructor(
         }
         viewState.noteLists?.let {
             setNoteLists(it)
+            if(getSelectedNoteList() == null) {
+                initSelectedNoteList()
+            }
         }
         viewState.notes?.let {
             setNotes(it)
@@ -204,7 +201,7 @@ constructor(
         setViewState(updated)
     }
 
-    private fun setNotes(notes: ArrayList<Note>?) {
+    fun setNotes(notes: ArrayList<Note>?) {
         val updated = getCurrentViewStateOrNew()
         updated.notes = notes
         setViewState(updated)
@@ -331,53 +328,25 @@ constructor(
     }
 
 
-
     fun saveSharedPreference() {
+        if (getUser().id != "-1") {
+            val editor = sharedPreferences.edit()
+            editor.putString(SELECTED_NOTE, getSelectedNoteList()?.id)
+            editor.putBoolean(SYNC, getSyncOption())
+            editor.putString(FILTER_TYPE, getFilter())
+            editor.putString(FILTER_ORDER, getOrder())
+            editor.apply()
+        }
+    }
+
+    fun clearSharedPreference() {
         val editor = sharedPreferences.edit()
-        editor.putString(SELECTED_NOTE, getSelectedNoteList()?.id)
-        editor.putBoolean(SYNC, getSyncOption())
-        editor.putString(FILTER_TYPE, getFilter())
-        editor.putString(FILTER_ORDER, getOrder())
+        editor.clear()
         editor.apply()
     }
 
     companion object {
         const val NOTE_LIST_SELECTED_MESSAGE = "Note list selected: "
     }
-
-
-    /** ONLY FOR TEST */
-    fun insertTestData() {
-        // Inserting notes
-        val notes = noteDataFactory.produceListOfNotes()
-        val ownerListId = viewState.value?.selectedNoteList?.id!!
-        CoroutineScope(IO).launch {
-            val jobs: ArrayList<Job> = ArrayList()
-            for ((index, note) in notes.withIndex()) {
-                val job = notesInteractors.insertNewNote.insertNote(
-                    id = null,
-                    title = "Note $index, list ${getSelectedNoteList()?.title}",
-                    color = note.color,
-                    ownerListId = ownerListId,
-                    stateEvent = NoteListStateEvent.InsertNewNoteEvent(
-                        note.title,
-                        note.completed,
-                        note.color,
-                        ownerListId,
-                        user = getUser()
-                    ),
-                    user = viewState.value?.user!!
-                )
-                    .launchIn(CoroutineScope(IO))
-                jobs.add(job)
-            }
-
-            withContext(Main) {
-                joinAll(*jobs.toTypedArray())
-                reloadNotes(getUser())
-            }
-        }
-    }
-
 
 }
