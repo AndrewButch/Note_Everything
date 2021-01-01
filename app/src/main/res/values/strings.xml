@@ -56,4 +56,10 @@
     <string name="filter_cancel_btn">Отменить</string>
     <string name="filter_apply_btn">Применить</string>
 
+    <!-- Toast messages -->
+    <string name="delete_note_list_success">Список удалён</string>
+    <string name="delete_note_success">Запись удалена</string>
+
+
+
 </resources>

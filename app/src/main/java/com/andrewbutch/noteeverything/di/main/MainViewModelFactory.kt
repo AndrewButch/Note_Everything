@@ -5,11 +5,6 @@ import androidx.lifecycle.ViewModelProvider
 import javax.inject.Inject
 import javax.inject.Provider
 
-/**
- *
- * Class from google arch samples
- * ViewModelFactory which uses Dagger to create the instances.
- */
 @MainScope
 class MainViewModelFactory @Inject constructor(
     private val creators: @JvmSuppressWildcards Map<Class<out ViewModel>, Provider<ViewModel>>

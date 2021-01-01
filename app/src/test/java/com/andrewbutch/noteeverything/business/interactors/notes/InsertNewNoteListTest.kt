@@ -1,4 +1,4 @@
-package com.andrewbutch.noteeverything.business.interactors.notelist
+package com.andrewbutch.noteeverything.business.interactors.notes
 
 import com.andrewbutch.noteeverything.business.data.cache.CacheConstants
 import com.andrewbutch.noteeverything.business.data.cache.FakeNoteListCacheDataSourceImpl
@@ -7,8 +7,8 @@ import com.andrewbutch.noteeverything.business.data.network.abstraction.NoteList
 import com.andrewbutch.noteeverything.business.domain.model.NoteListFactory
 import com.andrewbutch.noteeverything.business.domain.model.User
 import com.andrewbutch.noteeverything.business.domain.state.DataState
-import com.andrewbutch.noteeverything.business.interactors.notelist.InsertNewNoteList.Companion.INSERT_NOTE_LIST_FAILED
-import com.andrewbutch.noteeverything.business.interactors.notelist.InsertNewNoteList.Companion.INSERT_NOTE_LIST_SUCCESS
+import com.andrewbutch.noteeverything.business.interactors.notes.InsertNewNoteList.Companion.INSERT_NOTE_LIST_FAILED
+import com.andrewbutch.noteeverything.business.interactors.notes.InsertNewNoteList.Companion.INSERT_NOTE_LIST_SUCCESS
 import com.andrewbutch.noteeverything.di.DependencyContainer
 import com.andrewbutch.noteeverything.framework.ui.notes.state.NoteListStateEvent
 import com.andrewbutch.noteeverything.framework.ui.notes.state.NoteListViewState

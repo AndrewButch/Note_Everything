@@ -20,7 +20,7 @@ import com.andrewbutch.noteeverything.business.domain.util.DateUtil
 import com.andrewbutch.noteeverything.business.interactors.common.DeleteNote
 import com.andrewbutch.noteeverything.business.interactors.common.DeleteNoteList
 import com.andrewbutch.noteeverything.business.interactors.notedetail.UpdateNote
-import com.andrewbutch.noteeverything.business.interactors.notelist.*
+import com.andrewbutch.noteeverything.business.interactors.notes.*
 import com.andrewbutch.noteeverything.framework.BaseApplication
 import com.andrewbutch.noteeverything.framework.datasource.NoteDataFactory
 import com.andrewbutch.noteeverything.framework.datasource.cache.abstraction.NoteDaoService
@@ -39,7 +39,6 @@ import com.andrewbutch.noteeverything.framework.datasource.network.implementatio
 import com.andrewbutch.noteeverything.framework.datasource.network.implementation.NoteListFirestoreServiceImpl
 import com.andrewbutch.noteeverything.framework.datasource.network.mapper.NoteListNetworkMapper
 import com.andrewbutch.noteeverything.framework.datasource.network.mapper.NoteNetworkMapper
-import com.andrewbutch.noteeverything.framework.ui.notes.state.NoteListViewState
 import com.andrewbutch.noteeverything.util.PreferenceKeys
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
@@ -138,7 +137,7 @@ object AppModule {
             InsertNewNoteList(noteListCacheDataSource, noteListNetworkDataSource, noteListFactory),
             DeleteNote(noteCacheDataSource, noteNetworkDataSource),
             DeleteNoteList(noteListCacheDataSource, noteListNetworkDataSource),
-            UpdateNote<NoteListViewState>(noteCacheDataSource, noteNetworkDataSource)
+            UpdateNote(noteCacheDataSource, noteNetworkDataSource)
         )
 
     @JvmStatic

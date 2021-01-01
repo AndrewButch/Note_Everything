@@ -1,4 +1,4 @@
-package com.andrewbutch.noteeverything.business.interactors.notelist
+package com.andrewbutch.noteeverything.business.interactors.notes
 
 import com.andrewbutch.noteeverything.business.interactors.common.DeleteNote
 import com.andrewbutch.noteeverything.business.interactors.common.DeleteNoteList

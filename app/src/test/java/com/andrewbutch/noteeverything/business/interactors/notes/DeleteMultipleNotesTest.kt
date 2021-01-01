@@ -1,4 +1,4 @@
-package com.andrewbutch.noteeverything.business.interactors.notelist
+package com.andrewbutch.noteeverything.business.interactors.notes
 
 import com.andrewbutch.noteeverything.business.data.cache.FakeNoteCacheDataSourceImpl.Companion.FORCE_DELETE_NOTE_EXCEPTION
 import com.andrewbutch.noteeverything.business.data.cache.abstraction.NoteCacheDataSource
@@ -7,8 +7,8 @@ import com.andrewbutch.noteeverything.business.domain.model.Note
 import com.andrewbutch.noteeverything.business.domain.model.NoteFactory
 import com.andrewbutch.noteeverything.business.domain.model.User
 import com.andrewbutch.noteeverything.business.domain.state.DataState
-import com.andrewbutch.noteeverything.business.interactors.notelist.DeleteMultipleNotes.Companion.DELETE_MULTIPLE_NOTES_FAILURE
-import com.andrewbutch.noteeverything.business.interactors.notelist.DeleteMultipleNotes.Companion.DELETE_MULTIPLE_NOTES_SUCCESS
+import com.andrewbutch.noteeverything.business.interactors.notes.DeleteMultipleNotes.Companion.DELETE_MULTIPLE_NOTES_FAILURE
+import com.andrewbutch.noteeverything.business.interactors.notes.DeleteMultipleNotes.Companion.DELETE_MULTIPLE_NOTES_SUCCESS
 import com.andrewbutch.noteeverything.di.DependencyContainer
 import com.andrewbutch.noteeverything.framework.datasource.cache.database.ORDER_BY_DESC_DATE_CREATED
 import com.andrewbutch.noteeverything.framework.ui.notes.state.NoteListStateEvent
