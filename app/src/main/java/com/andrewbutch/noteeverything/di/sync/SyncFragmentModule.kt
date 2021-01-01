@@ -1,4 +1,4 @@
-package com.andrewbutch.noteeverything.di.splash
+package com.andrewbutch.noteeverything.di.sync
 
 import com.andrewbutch.noteeverything.business.data.cache.abstraction.NoteCacheDataSource
 import com.andrewbutch.noteeverything.business.data.cache.abstraction.NoteListCacheDataSource
@@ -7,12 +7,12 @@ import com.andrewbutch.noteeverything.business.data.network.abstraction.NoteNetw
 import com.andrewbutch.noteeverything.business.interactors.splash.SyncNoteLists
 import com.andrewbutch.noteeverything.business.interactors.splash.SyncNotes
 import com.andrewbutch.noteeverything.di.main.FragmentScope
-import com.andrewbutch.noteeverything.framework.ui.splash.SyncManager
+import com.andrewbutch.noteeverything.framework.ui.sync.SyncManager
 import dagger.Module
 import dagger.Provides
 
 @Module
-object SplashFragmentModule {
+object SyncFragmentModule {
 
     @FragmentScope
     @JvmStatic

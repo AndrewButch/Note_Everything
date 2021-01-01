@@ -1,4 +1,4 @@
-package com.andrewbutch.noteeverything.framework.ui.splash
+package com.andrewbutch.noteeverything.framework.ui.sync
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -18,11 +18,11 @@ import kotlinx.android.synthetic.main.splash_fragment.*
 import javax.inject.Inject
 
 
-class SplashFragment : DaggerFragment() {
+class SyncFragment : DaggerFragment() {
     @Inject
     lateinit var providerFactory: ViewModelProvider.Factory
 
-    private lateinit var viewModel: SplashViewModel
+    private lateinit var viewModel: SyncViewModel
 
     @Inject
     lateinit var sessionManager: SessionManager
@@ -33,7 +33,7 @@ class SplashFragment : DaggerFragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         viewModel =
-            ViewModelProvider(viewModelStore, providerFactory).get(SplashViewModel::class.java)
+            ViewModelProvider(viewModelStore, providerFactory).get(SyncViewModel::class.java)
     }
 
     override fun onCreateView(

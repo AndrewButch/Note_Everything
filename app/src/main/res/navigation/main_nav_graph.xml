@@ -57,7 +57,7 @@
     </fragment>
     <fragment
         android:id="@+id/splashFragment"
-        android:name="com.andrewbutch.noteeverything.framework.ui.splash.SplashFragment"
+        android:name="com.andrewbutch.noteeverything.framework.ui.sync.SyncFragment"
         android:label="splash_fragment"
         tools:layout="@layout/splash_fragment" >
         <action

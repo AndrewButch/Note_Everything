@@ -1,4 +1,4 @@
-package com.andrewbutch.noteeverything.framework.ui.splash
+package com.andrewbutch.noteeverything.framework.ui.sync
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

@@ -2,11 +2,11 @@ package com.andrewbutch.noteeverything.di.main
 
 import com.andrewbutch.noteeverything.di.notedetail.NoteDetailModule
 import com.andrewbutch.noteeverything.di.notelistdetail.NoteListDetailModule
-import com.andrewbutch.noteeverything.di.splash.SplashFragmentModule
+import com.andrewbutch.noteeverything.di.sync.SyncFragmentModule
 import com.andrewbutch.noteeverything.framework.ui.notedetail.NoteDetailFragment
 import com.andrewbutch.noteeverything.framework.ui.notelistdetail.NoteListDetailFragment
 import com.andrewbutch.noteeverything.framework.ui.notes.NotesFragment
-import com.andrewbutch.noteeverything.framework.ui.splash.SplashFragment
+import com.andrewbutch.noteeverything.framework.ui.sync.SyncFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -15,10 +15,10 @@ abstract class MainFragmentsBuilderModule {
     @FragmentScope
     @ContributesAndroidInjector(
         modules = [
-            SplashFragmentModule::class
+            SyncFragmentModule::class
         ]
     )
-    abstract fun contributeSplashFragment(): SplashFragment
+    abstract fun contributeSplashFragment(): SyncFragment
 
     @FragmentScope
     @ContributesAndroidInjector
