@@ -39,12 +39,6 @@ class AuthActivity : DaggerAppCompatActivity(), UIController {
     }
 
     private fun subscribeObservers() {
-        viewModel.viewState.observe(this) { viewState ->
-            viewState.user?.let {
-                sessionManager.login(user = it)
-            }
-        }
-
         sessionManager.authUser.observe(this) { user ->
             user?.let {
                 if (it.id.isNotEmpty()) {

@@ -5,6 +5,7 @@ import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.andrewbutch.noteeverything.R
+import com.andrewbutch.noteeverything.framework.session.SessionManager
 import com.andrewbutch.noteeverything.framework.ui.BaseFragment
 import com.andrewbutch.noteeverything.framework.ui.auth.state.AuthStateEvent
 import com.andrewbutch.noteeverything.framework.ui.auth.state.LoginFields
@@ -18,6 +19,8 @@ class LoginFragment : BaseFragment(R.layout.fragment_login) {
 
     lateinit var viewModel: AuthViewModel
 
+    @Inject
+    lateinit var sessionManager: SessionManager
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -74,6 +77,11 @@ class LoginFragment : BaseFragment(R.layout.fragment_login) {
         }
         viewModel.shouldDisplayProgressBar().observe(viewLifecycleOwner) { displayProgressBar ->
             uiController.displayProgressBar(displayProgressBar)
+        }
+        viewModel.viewState.observe(viewLifecycleOwner) { viewState ->
+            viewState.user?.let {
+                sessionManager.login(user = it)
+            }
         }
     }
 

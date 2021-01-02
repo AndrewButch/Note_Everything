@@ -91,5 +91,9 @@ constructor(
         setViewState(updated)
     }
 
+    fun getUser(): User? {
+        return getCurrentViewStateOrNew().user
+    }
+
     override fun getNewViewState(): AuthViewState = AuthViewState()
 }

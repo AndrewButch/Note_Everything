@@ -10,9 +10,8 @@
     <color name="item_background">#FFFFFF</color>
     <color name="error">#B00020</color>
 
-    <color name="fab">#F44336</color>
-    <color name="buttonAddList">#F44336</color>
-    <color name="buttonLogout">#2196F3</color>
+    <color name="fab">@color/colorAccent</color>
+    <color name="buttonAddList">@color/colorAccent</color>
 
     <color name="menu_item_color">#000000</color>
 
