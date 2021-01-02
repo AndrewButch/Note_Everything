@@ -3,6 +3,8 @@ package com.andrewbutch.noteeverything.di.auth
 import com.andrewbutch.noteeverything.business.data.cache.abstraction.UserCacheDataSource
 import com.andrewbutch.noteeverything.business.data.network.abstraction.UserNetworkDataSource
 import com.andrewbutch.noteeverything.business.data.network.implementation.UserNetworkDataSourceImpl
+import com.andrewbutch.noteeverything.business.domain.state.MessageStack
+import com.andrewbutch.noteeverything.business.domain.state.StateEventStore
 import com.andrewbutch.noteeverything.business.interactors.auth.AuthInteractors
 import com.andrewbutch.noteeverything.business.interactors.auth.Login
 import com.andrewbutch.noteeverything.business.interactors.auth.Registration
@@ -34,4 +36,14 @@ object AuthModule {
             previousSession = PreviousSession(userCacheDataSource)
         )
     }
+
+    @JvmStatic
+    @AuthScope
+    @Provides
+    fun provideMessageStack(): MessageStack = MessageStack()
+
+    @JvmStatic
+    @AuthScope
+    @Provides
+    fun provideStateEventStore(): StateEventStore = StateEventStore()
 }

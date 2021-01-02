@@ -14,8 +14,6 @@ import com.andrewbutch.noteeverything.business.data.network.implementation.NoteL
 import com.andrewbutch.noteeverything.business.data.network.implementation.NoteNetworkDatasourceImpl
 import com.andrewbutch.noteeverything.business.domain.model.NoteFactory
 import com.andrewbutch.noteeverything.business.domain.model.NoteListFactory
-import com.andrewbutch.noteeverything.business.domain.state.MessageStack
-import com.andrewbutch.noteeverything.business.domain.state.StateEventStore
 import com.andrewbutch.noteeverything.business.domain.util.DateUtil
 import com.andrewbutch.noteeverything.business.interactors.common.DeleteNote
 import com.andrewbutch.noteeverything.business.interactors.common.DeleteNoteList
@@ -191,16 +189,6 @@ object AppModule {
         noteFirestoreService: NoteFirestoreService
     ): NoteNetworkDataSource =
         NoteNetworkDatasourceImpl(noteFirestoreService)
-
-    @JvmStatic
-    @Singleton
-    @Provides
-    fun provideMessageStack(): MessageStack = MessageStack()
-
-    @JvmStatic
-    @Singleton
-    @Provides
-    fun provideStateEventStore(): StateEventStore = StateEventStore()
 
     @JvmStatic
     @Singleton

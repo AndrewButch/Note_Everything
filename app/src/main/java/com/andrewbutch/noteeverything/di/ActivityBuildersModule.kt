@@ -1,10 +1,7 @@
 package com.andrewbutch.noteeverything.di
 
 import com.andrewbutch.noteeverything.di.auth.*
-import com.andrewbutch.noteeverything.di.main.MainFragmentsBuilderModule
-import com.andrewbutch.noteeverything.di.main.MainScope
-import com.andrewbutch.noteeverything.di.main.MainViewModelBuilderModule
-import com.andrewbutch.noteeverything.di.main.MainViewModelModule
+import com.andrewbutch.noteeverything.di.main.*
 import com.andrewbutch.noteeverything.framework.ui.auth.AuthActivity
 import com.andrewbutch.noteeverything.framework.ui.main.MainActivity
 import dagger.Module
@@ -20,6 +17,7 @@ abstract class ActivityBuildersModule {
     @MainScope
     @ContributesAndroidInjector(
         modules = [
+            MainModule::class,
             MainFragmentsBuilderModule::class,
             MainViewModelBuilderModule::class,
             MainViewModelModule::class]
