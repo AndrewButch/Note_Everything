@@ -49,7 +49,7 @@ class LoginFragment : BaseFragment(R.layout.fragment_login) {
             navToRegistration()
         }
 
-        checkPreviousAuthUser()
+
 
         subscribeObservers()
     }
@@ -81,7 +81,5 @@ class LoginFragment : BaseFragment(R.layout.fragment_login) {
         findNavController().navigate(R.id.action_loginFragment_to_registrationFragment)
     }
 
-    fun checkPreviousAuthUser() {
-        viewModel.setStateEvent(AuthStateEvent.CheckPreviousAuth)
-    }
+
 }

@@ -41,7 +41,7 @@ constructor(
                         ),
                         stateEvent = stateEvent
                     )
-                }else {
+                } else {
                     // previous session exists
                     DataState.data(
                         stateMessage = StateMessage(

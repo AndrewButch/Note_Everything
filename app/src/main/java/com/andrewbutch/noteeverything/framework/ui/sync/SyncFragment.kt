@@ -14,7 +14,7 @@ import com.andrewbutch.noteeverything.R
 import com.andrewbutch.noteeverything.framework.session.SessionManager
 import com.andrewbutch.noteeverything.framework.ui.PreferenceKeys.Companion.SYNC
 import dagger.android.support.DaggerFragment
-import kotlinx.android.synthetic.main.splash_fragment.*
+import kotlinx.android.synthetic.main.fragment_sync.*
 import javax.inject.Inject
 
 
@@ -40,7 +40,7 @@ class SyncFragment : DaggerFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.splash_fragment, container, false)
+        return inflater.inflate(R.layout.fragment_sync, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -75,7 +75,7 @@ class SyncFragment : DaggerFragment() {
     private fun navToNotes() =
         NavHostFragment
             .findNavController(this)
-            .navigate(R.id.action_splashFragment_to_notesFragment)
+            .navigate(R.id.action_syncFragment_to_notesFragment)
 
 
     private fun getSyncPreference(): Boolean = preferences.getBoolean(SYNC, true)
