@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.andrewbutch.noteeverything.R
+import com.andrewbutch.noteeverything.framework.session.SessionManager
 import com.andrewbutch.noteeverything.framework.ui.BaseFragment
 import com.andrewbutch.noteeverything.framework.ui.auth.state.AuthStateEvent
 import com.andrewbutch.noteeverything.framework.ui.auth.state.RegistrationFields
@@ -19,6 +20,8 @@ class RegistrationFragment : BaseFragment(R.layout.fragment_registration) {
     lateinit var providerFactory: ViewModelProvider.Factory
 
     lateinit var viewModel: AuthViewModel
+    @Inject
+    lateinit var sessionManager: SessionManager
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -85,6 +88,11 @@ class RegistrationFragment : BaseFragment(R.layout.fragment_registration) {
 
         viewModel.shouldDisplayProgressBar().observe(viewLifecycleOwner) { displayProgressBar ->
             uiController.displayProgressBar(displayProgressBar)
+        }
+        viewModel.viewState.observe(viewLifecycleOwner) { viewState ->
+            viewState.user?.let {
+                sessionManager.login(user = it)
+            }
         }
     }
 
